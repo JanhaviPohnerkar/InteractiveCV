@@ -3494,13 +3494,53 @@ function updatePopupScreenPosition() {
   const anchor = bGroup.userData.anchorPos.clone();
   anchor.project(camera);
 
+  // If building is behind camera, hide or don't position awkwardly
+  if (anchor.z > 1.0) {
+    container.style.opacity = '0';
+    return;
+  } else {
+    container.style.opacity = '1';
+  }
+
   const screenW = window.innerWidth;
   const screenH = window.innerHeight;
 
-  const x = (anchor.x * 0.5 + 0.5) * screenW;
-  const y = (-(anchor.y * 0.5) + 0.5) * screenH;
+  const cardW = Math.min(352, screenW * 0.9); // ~22rem
+  const cardH = container.offsetHeight || 300;
+  const margin = 16;
 
-  container.style.left = `${Math.round(x)}px`;
-  container.style.top = `${Math.round(y - 30)}px`;
-  container.style.transform = 'translate(-50%, -100%)';
+  // Screen anchor point
+  const rawX = (anchor.x * 0.5 + 0.5) * screenW;
+  const rawY = (-(anchor.y * 0.5) + 0.5) * screenH;
+
+  // Clamp horizontal position so popup never bleeds off left or right edge
+  const minLeft = margin;
+  const maxLeft = screenW - cardW - margin;
+  let targetLeft = rawX - (cardW / 2);
+  targetLeft = Math.max(minLeft, Math.min(targetLeft, maxLeft));
+
+  // Determine vertical placement: place above building anchor if space permits, otherwise place below
+  let targetTop = rawY - cardH - 24;
+  let arrowClass = 'arrow-bottom';
+
+  if (targetTop < margin + 60) {
+    // If placing above would cut off near top (like under the header or off-screen), flip below anchor
+    targetTop = Math.min(screenH - cardH - margin - 80, rawY + 24);
+    arrowClass = 'arrow-top';
+  } else {
+    targetTop = Math.max(margin + 60, targetTop);
+  }
+
+  container.style.left = `${Math.round(targetLeft)}px`;
+  container.style.top = `${Math.round(targetTop)}px`;
+  container.style.transform = 'none';
+
+  // Position arrow directly pointing towards the 3D building's screen X position
+  const card = container.querySelector('.milestone-popup-card');
+  if (card) {
+    card.classList.remove('arrow-top', 'arrow-bottom');
+    card.classList.add(arrowClass);
+    const arrowX = Math.max(24, Math.min(rawX - targetLeft, cardW - 24));
+    card.style.setProperty('--arrow-x', `${Math.round(arrowX)}px`);
+  }
 }

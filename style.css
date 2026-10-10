@@ -163,13 +163,23 @@ html, body {
 .milestone-popup-card::after {
   content: '';
   position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
   width: 16px;
   height: 16px;
   background: #FFFFFF;
+  left: var(--arrow-x, 50%);
+  transform: translateX(-50%);
+}
+
+.milestone-popup-card.arrow-bottom::after {
+  bottom: -8px;
+  top: auto;
   clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+
+.milestone-popup-card.arrow-top::after {
+  top: -8px;
+  bottom: auto;
+  clip-path: polygon(50% 0%, 0 100%, 100% 100%);
 }
 
 .popup-close-btn {
