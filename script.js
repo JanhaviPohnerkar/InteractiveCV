@@ -451,11 +451,11 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Cheerful Warm Spring Meadow (Vibrant yet pastel, removes dull washed-out look)
+  // 1. Warm Golden Sand / Ochre Clay Meadow (Matching reference town aesthetic)
   const groundGeo = new THREE.PlaneGeometry(500, 500);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
-    color: 0x93C572, // Pistachio / Fresh Spring Meadow green (cheerful & easy on eyes)
+    color: 0xE8BD8C, // Warm golden sand / apricot clay meadow from reference
     roughness: 0.88,
     metalness: 0.0
   });

@@ -4,11 +4,11 @@
    ========================================================================== */
 
 :root {
-  --clay-ground: #B8CDB5;
-  --clay-ground-dark: #9CB799;
+  --clay-ground: #E8BD8C;
+  --clay-ground-dark: #D4A373;
   --clay-white: #FFFFFF;
-  --clay-tree-green: #8DAA82;
-  --clay-tree-dark: #8C7866;
+  --clay-tree-green: #6DAF55;
+  --clay-tree-dark: #78553D;
   --clay-car-red: #D47A6B;
   --font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
 }
