@@ -1,12 +1,14 @@
 /* ==========================================================================
    Janhavi's 3D World - Bruno Simon Minimal Clay Environment
    Featuring:
-   - "SIMPLIFIED NEUTRAL ADVENTURER - GIRL" Character (Reference Matched)
-     * Cream sleeveless tunic over brown inner shirt
-     * Olive green shorts & green backpack with rolled sleeping mat
+   - "SIMPLIFIED NEUTRAL ADVENTURER - GIRL" Character
+     * Black hair & black swept-back ponytail
+     * Green and brown dress (green tunic with brown trim & inner shirt)
+     * Olive shorts & backpack with rolled sleeping mat
      * Wooden hiking walking stick in hand
-     * Sturdy hiking boots & low-poly ponytail
-     * Procedural walking gait animation with bobbing & leg/arm swings
+     * Sturdy hiking boots
+     * Responsive brisk walking speed & smooth procedural gait
+   - Road lying strictly PARALLEL to the ground (Flat horizontal ribbon)
    - Big 3D Extruded White Sculpture: "JANHAVI"
    - 7 Stylized Architectural Milestone Buildings along the road
    - Small minimal on-screen popups when buildings are clicked or approached
@@ -96,17 +98,17 @@ let buildingMeshes = [];
 let roadPoints = [];
 let activePopupId = null;
 
-// Character State & Movement
+// Character State & Movement (Increased speed & snappy responsiveness!)
 const charState = {
   x: 0,
   z: 0,
   rotation: -Math.PI / 2, // Facing forward along initial road
   speed: 0,
-  maxWalkSpeed: 0.17,
-  maxBackSpeed: -0.09,
-  accel: 0.018,
+  maxWalkSpeed: 0.36,     // Increased speed as requested (snappy & brisk!)
+  maxBackSpeed: -0.18,
+  accel: 0.038,
   friction: 0.88,
-  turnSpeed: 0.048,
+  turnSpeed: 0.072,
   walkCycle: 0,
   isWalking: false
 };
@@ -185,7 +187,7 @@ function initBrunoWorld() {
   // 2. Build 3D Extruded Text "JANHAVI" at Spawn
   buildBigSculpturalText();
 
-  // 3. Build Road Network
+  // 3. Build Road Network (Strictly PARALLEL to the ground!)
   buildClayRoad();
 
   // 4. Build 7 Milestone Buildings along the Road
@@ -194,7 +196,7 @@ function initBrunoWorld() {
   // 5. Build Scattered Low-Poly Trees and White Chalk Rocks
   buildFoliageAndRocks();
 
-  // 6. Build the Reference-Matched Walking Adventurer Girl Character
+  // 6. Build the Adventurer Girl Character (Black hair, green & brown dress!)
   buildAdventurerCharacter();
 
   // 7. Setup Controls & Raycasting
@@ -326,54 +328,82 @@ function buildBigSculpturalText() {
 }
 
 /* --------------------------------------------------------------------------
-   5. ROAD PATHWAY
+   5. ROAD PATHWAY — STRICTLY PARALLEL TO GROUND (FLAT HORIZONTAL RIBBON)
    -------------------------------------------------------------------------- */
 function buildClayRoad() {
   roadPoints = [
-    new THREE.Vector3(0, 0.02, 0),
-    new THREE.Vector3(0, 0.02, -18),
-    new THREE.Vector3(14, 0.02, -35),
-    new THREE.Vector3(25, 0.02, -58),
-    new THREE.Vector3(12, 0.02, -85),
-    new THREE.Vector3(-12, 0.02, -110),
-    new THREE.Vector3(-22, 0.02, -140),
-    new THREE.Vector3(-8, 0.02, -170),
-    new THREE.Vector3(16, 0.02, -200),
-    new THREE.Vector3(20, 0.02, -235),
-    new THREE.Vector3(0, 0.02, -270)
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(0, 0, -18),
+    new THREE.Vector3(14, 0, -35),
+    new THREE.Vector3(25, 0, -58),
+    new THREE.Vector3(12, 0, -85),
+    new THREE.Vector3(-12, 0, -110),
+    new THREE.Vector3(-22, 0, -140),
+    new THREE.Vector3(-8, 0, -170),
+    new THREE.Vector3(16, 0, -200),
+    new THREE.Vector3(20, 0, -235),
+    new THREE.Vector3(0, 0, -270)
   ];
 
   const roadCurve = new THREE.CatmullRomCurve3(roadPoints);
-  const roadWidth = 4.8;
-  const segments = 200;
+  const roadWidth = 5.0;
+  const segments = 240;
 
-  const roadShape = new THREE.Shape();
-  roadShape.moveTo(-roadWidth / 2, 0);
-  roadShape.lineTo(roadWidth / 2, 0);
-  roadShape.lineTo(roadWidth / 2, -0.04);
-  roadShape.lineTo(-roadWidth / 2, -0.04);
-  roadShape.closePath();
+  // Custom flat horizontal ribbon geometry lying completely flat on XZ plane
+  const vertices = [];
+  const uvs = [];
+  const indices = [];
 
-  const extrudeSettings = {
-    steps: segments,
-    bevelEnabled: false,
-    extrudePath: roadCurve
-  };
+  const UP = new THREE.Vector3(0, 1, 0);
 
-  const roadGeo = new THREE.ExtrudeGeometry(roadShape, extrudeSettings);
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const pt = roadCurve.getPointAt(t);
+    const tangent = roadCurve.getTangentAt(t).normalize();
+    // Horizontal normal in the XZ plane perpendicular to the tangent
+    const side = new THREE.Vector3().crossVectors(tangent, UP).normalize();
+
+    // Left and right edges lying horizontally flat on the ground (Y = 0.025)
+    const leftPt = pt.clone().sub(side.clone().multiplyScalar(roadWidth / 2));
+    const rightPt = pt.clone().add(side.clone().multiplyScalar(roadWidth / 2));
+
+    leftPt.y = 0.025;
+    rightPt.y = 0.025;
+
+    vertices.push(leftPt.x, leftPt.y, leftPt.z);
+    vertices.push(rightPt.x, rightPt.y, rightPt.z);
+
+    uvs.push(0, t);
+    uvs.push(1, t);
+
+    if (i < segments) {
+      const baseIdx = i * 2;
+      indices.push(baseIdx, baseIdx + 1, baseIdx + 2);
+      indices.push(baseIdx + 1, baseIdx + 3, baseIdx + 2);
+    }
+  }
+
+  const roadGeo = new THREE.BufferGeometry();
+  roadGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  roadGeo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  roadGeo.setIndex(indices);
+  roadGeo.computeVertexNormals();
+
   const roadMat = new THREE.MeshStandardMaterial({
-    color: 0xE87E4C,
+    color: 0xE87E4C, // Warm terracotta asphalt
     roughness: 0.85,
-    metalness: 0.0
+    metalness: 0.0,
+    side: THREE.DoubleSide
   });
 
   const roadMesh = new THREE.Mesh(roadGeo, roadMat);
   roadMesh.receiveShadow = true;
   scene.add(roadMesh);
 
-  // Dashed white markings
+  // Dashed white center markings lying flat on the road surface
   const dashCount = 65;
-  const dashGeo = new THREE.BoxGeometry(0.25, 0.04, 1.8);
+  const dashGeo = new THREE.PlaneGeometry(0.28, 1.8);
+  dashGeo.rotateX(-Math.PI / 2); // Lies flat on the ground!
   const dashMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
 
   for (let i = 0; i < dashCount; i++) {
@@ -382,8 +412,9 @@ function buildClayRoad() {
     const tangent = roadCurve.getTangentAt(t).normalize();
 
     const dash = new THREE.Mesh(dashGeo, dashMat);
-    dash.position.copy(pt).add(new THREE.Vector3(0, 0.03, 0));
-    dash.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
+    dash.position.set(pt.x, 0.035, pt.z);
+    const angle = Math.atan2(tangent.x, tangent.z);
+    dash.rotation.y = angle;
     scene.add(dash);
   }
 }
@@ -551,6 +582,7 @@ function createProceduralBuilding(group, cfg) {
 
     const roof = new THREE.Mesh(new THREE.BoxGeometry(7.8, 0.8, 6.4), roofMat);
     roof.position.y = 5.2;
+    roof.castShadow = true;
     group.add(roof);
   }
   else if (cfg.type === "makerLab") {
@@ -714,56 +746,61 @@ function buildFoliageAndRocks() {
 }
 
 /* --------------------------------------------------------------------------
-   8. "SIMPLIFIED NEUTRAL ADVENTURER - GIRL" WALKING CHARACTER
-      Direct match with uploaded reference sheet palette & geometry:
-      - Tunic: Cream #FFFDD0
-      - Shorts & Backpack: Olive Green #6B8E23
-      - Inner shirt & Boots: Dark Brown #8B4513 / #4A3525
-      - Skin tone: Sandy Beige #D2B48C
-      - Hair & Ponytail: Ash Blonde / Light Brown #C5A880
-      - Sleeping mat roll on top of backpack: Khaki #E0D7C6
-      - Wooden hiking walking stick in hand
+   8. ADVENTURER GIRL CHARACTER
+      Updates:
+      - Hair & Ponytail: Deep Rich Black (#1A1A1A)
+      - Dress: Green and Brown (Rich Forest/Olive Green with Warm Brown Trim & Inner Shirt)
+      - Snappy & Fast Walking Speed
    -------------------------------------------------------------------------- */
 function buildAdventurerCharacter() {
   characterGroup = new THREE.Group();
   characterGroup.position.set(0, 0, 0);
 
-  // Exact Palette Materials from Reference Sheet
+  // Updated Materials
   const skinMat = new THREE.MeshStandardMaterial({ color: 0xD2B48C, roughness: 0.65, flatShading: true });
-  const tunicCreamMat = new THREE.MeshStandardMaterial({ color: 0xFFFDD0, roughness: 0.7, flatShading: true });
-  const innerShirtMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8, flatShading: true });
-  const greenGearMat = new THREE.MeshStandardMaterial({ color: 0x6B8E23, roughness: 0.75, flatShading: true });
+  // Dress: Rich Green (#557A2B) with Warm Brown (#78350F)
+  const dressGreenMat = new THREE.MeshStandardMaterial({ color: 0x557A2B, roughness: 0.7, flatShading: true });
+  const dressBrownMat = new THREE.MeshStandardMaterial({ color: 0x78350F, roughness: 0.75, flatShading: true });
+  const greenShortsMat = new THREE.MeshStandardMaterial({ color: 0x4D7C0F, roughness: 0.75, flatShading: true });
   const bootsMat = new THREE.MeshStandardMaterial({ color: 0x4A3525, roughness: 0.85, flatShading: true });
-  const hairMat = new THREE.MeshStandardMaterial({ color: 0xC5A880, roughness: 0.75, flatShading: true });
+  
+  // Black Hair & Eyebrows (Deep Rich Black)
+  const hairBlackMat = new THREE.MeshStandardMaterial({ color: 0x1A1A1A, roughness: 0.6, flatShading: true });
+  const eyeBrowMat = new THREE.MeshBasicMaterial({ color: 0x111111 });
+
   const bedrollMat = new THREE.MeshStandardMaterial({ color: 0xE0D7C6, roughness: 0.8, flatShading: true });
   const stickMat = new THREE.MeshStandardMaterial({ color: 0x5C3A21, roughness: 0.9, flatShading: true });
-  const eyeBrowMat = new THREE.MeshBasicMaterial({ color: 0x3E2723 });
   const buckleMat = new THREE.MeshStandardMaterial({ color: 0xCBD5E1, roughness: 0.3, metalness: 0.6 });
 
   characterBody = new THREE.Group();
 
-  // 1. Torso: Dark brown inner shirt + Cream outer sleeveless tunic
-  const innerTorso = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.95, 0.48), innerShirtMat);
+  // 1. Torso: Warm brown inner shirt + Rich green outer sleeveless tunic/dress with brown trim
+  const innerTorso = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.95, 0.48), dressBrownMat);
   innerTorso.position.y = 1.35;
   innerTorso.castShadow = true;
   characterBody.add(innerTorso);
 
-  // Flared Cream Tunic (sleeveless over-tunic as shown in reference)
-  // Tapered cylinder / box shape extending down over the hips
-  const tunicGeo = new THREE.CylinderGeometry(0.38, 0.52, 0.9, 8);
-  const tunicMesh = new THREE.Mesh(tunicGeo, tunicCreamMat);
+  // Green Flared Tunic / Dress
+  const tunicGeo = new THREE.CylinderGeometry(0.38, 0.54, 0.92, 8);
+  const tunicMesh = new THREE.Mesh(tunicGeo, dressGreenMat);
   tunicMesh.position.set(0, 1.25, 0);
   tunicMesh.castShadow = true;
   tunicMesh.receiveShadow = true;
   characterBody.add(tunicMesh);
 
-  // V-Neck collar cutout accent
+  // Brown Leather Belt & Collar Trim on Dress
+  const beltGeo = new THREE.CylinderGeometry(0.46, 0.47, 0.14, 8);
+  const belt = new THREE.Mesh(beltGeo, dressBrownMat);
+  belt.position.set(0, 1.28, 0);
+  characterBody.add(belt);
+
+  // Brown V-neck collar trim
   const collarGeo = new THREE.BoxGeometry(0.28, 0.18, 0.05);
-  const collar = new THREE.Mesh(collarGeo, innerShirtMat);
+  const collar = new THREE.Mesh(collarGeo, dressBrownMat);
   collar.position.set(0, 1.62, 0.25);
   characterBody.add(collar);
 
-  // 2. Head, Ponytail & Face Details
+  // 2. Head, BLACK Ponytail & Face Details
   characterHead = new THREE.Group();
   characterHead.position.set(0, 2.05, 0);
 
@@ -772,30 +809,30 @@ function buildAdventurerCharacter() {
   neck.position.y = -0.15;
   characterHead.add(neck);
 
-  // Head Box (Faceted, friendly neutral face)
+  // Head Box (Faceted skin tone)
   const headGeo = new THREE.BoxGeometry(0.64, 0.65, 0.58);
   const headMesh = new THREE.Mesh(headGeo, skinMat);
   headMesh.castShadow = true;
   characterHead.add(headMesh);
 
-  // Hair Base (Hair swept back into ponytail)
+  // BLACK Hair Base
   const hairCapGeo = new THREE.BoxGeometry(0.68, 0.32, 0.62);
-  const hairCap = new THREE.Mesh(hairCapGeo, hairMat);
+  const hairCap = new THREE.Mesh(hairCapGeo, hairBlackMat);
   hairCap.position.set(0, 0.22, -0.04);
   characterHead.add(hairCap);
 
-  // Swept-Back Ponytail / Topknot (Matching the "Head Detail" reference!)
+  // BLACK Ponytail
   ponytailMesh = new THREE.Group();
   ponytailMesh.position.set(0, 0.22, -0.32);
 
   const knotGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.25, 8);
   knotGeo.rotateX(Math.PI / 3);
-  const knot = new THREE.Mesh(knotGeo, hairMat);
+  const knot = new THREE.Mesh(knotGeo, hairBlackMat);
   ponytailMesh.add(knot);
 
   const tailGeo = new THREE.ConeGeometry(0.24, 0.65, 7);
   tailGeo.rotateX(-Math.PI / 2.5);
-  const tail = new THREE.Mesh(tailGeo, hairMat);
+  const tail = new THREE.Mesh(tailGeo, hairBlackMat);
   tail.position.set(0, 0.05, -0.35);
   ponytailMesh.add(tail);
 
@@ -821,7 +858,7 @@ function buildAdventurerCharacter() {
   eyeR.position.set(0.16, -0.02, 0.3);
   characterHead.add(eyeR);
 
-  // Subtle cute nose
+  // Cute nose
   const nose = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.1, 4), skinMat);
   nose.position.set(0, -0.07, 0.32);
   nose.rotation.x = Math.PI / 2;
@@ -829,30 +866,27 @@ function buildAdventurerCharacter() {
 
   characterBody.add(characterHead);
 
-  // 3. Hiking Backpack (Matching "Backpack Detail" callout)
+  // 3. Hiking Backpack
   const backpackGroup = new THREE.Group();
   backpackGroup.position.set(0, 1.35, -0.38);
 
-  // Main olive-green pack body
-  const packMain = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.82, 0.38), greenGearMat);
+  const packMain = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.82, 0.38), dressGreenMat);
   packMain.castShadow = true;
   backpackGroup.add(packMain);
 
-  // Front pouch / pocket flap
-  const packPouch = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.38, 0.12), greenGearMat);
+  const packPouch = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.38, 0.12), dressGreenMat);
   packPouch.position.set(0, -0.15, -0.22);
   backpackGroup.add(packPouch);
 
-  // Brown leather straps on pack
-  const strap1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.04), innerShirtMat);
+  // Brown leather straps
+  const strap1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.04), dressBrownMat);
   strap1.position.set(-0.16, -0.05, -0.25);
   backpackGroup.add(strap1);
 
-  const strap2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.04), innerShirtMat);
+  const strap2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.04), dressBrownMat);
   strap2.position.set(0.16, -0.05, -0.25);
   backpackGroup.add(strap2);
 
-  // Tiny silver buckles
   const b1 = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.05), buckleMat);
   b1.position.set(-0.16, -0.12, -0.26);
   backpackGroup.add(b1);
@@ -861,7 +895,7 @@ function buildAdventurerCharacter() {
   b2.position.set(0.16, -0.12, -0.26);
   backpackGroup.add(b2);
 
-  // Rolled Sleeping Mat (Bedroll strapped horizontally across top)
+  // Bedroll
   const bedrollGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.88, 12);
   bedrollGeo.rotateZ(Math.PI / 2);
   const bedroll = new THREE.Mesh(bedrollGeo, bedrollMat);
@@ -869,11 +903,10 @@ function buildAdventurerCharacter() {
   bedroll.castShadow = true;
   backpackGroup.add(bedroll);
 
-  // Bedroll holding strap rings
   [-0.26, 0.26].forEach(xPos => {
     const ringGeo = new THREE.TorusGeometry(0.19, 0.02, 6, 16);
     ringGeo.rotateY(Math.PI / 2);
-    const ring = new THREE.Mesh(ringGeo, innerShirtMat);
+    const ring = new THREE.Mesh(ringGeo, dressBrownMat);
     ring.position.set(xPos, 0.48, -0.06);
     backpackGroup.add(ring);
   });
@@ -881,12 +914,12 @@ function buildAdventurerCharacter() {
   characterBody.add(backpackGroup);
   characterGroup.add(characterBody);
 
-  // 4. Arms (Left Arm & Right Arm with Walking Stick)
-  // Left Arm
+  // 4. Arms
+  // Left Arm (Brown sleeve + Skin forearm & hand)
   leftArmPivot = new THREE.Group();
   leftArmPivot.position.set(-0.48, 1.7, 0);
 
-  const lSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 8), innerShirtMat);
+  const lSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 8), dressBrownMat);
   lSleeve.position.y = -0.14;
   leftArmPivot.add(lSleeve);
 
@@ -905,7 +938,7 @@ function buildAdventurerCharacter() {
   rightArmPivot = new THREE.Group();
   rightArmPivot.position.set(0.48, 1.7, 0);
 
-  const rSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 8), innerShirtMat);
+  const rSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 8), dressBrownMat);
   rSleeve.position.y = -0.14;
   rightArmPivot.add(rSleeve);
 
@@ -918,7 +951,7 @@ function buildAdventurerCharacter() {
   rHand.position.y = -0.74;
   rightArmPivot.add(rHand);
 
-  // Wooden Walking Stick (Matching "Hand Detail" reference sheet)
+  // Wooden Walking Stick
   const stickGeo = new THREE.CylinderGeometry(0.038, 0.045, 1.85, 8);
   walkingStickMesh = new THREE.Mesh(stickGeo, stickMat);
   walkingStickMesh.position.set(0.08, -0.45, 0.25);
@@ -926,7 +959,6 @@ function buildAdventurerCharacter() {
   walkingStickMesh.castShadow = true;
   rightArmPivot.add(walkingStickMesh);
 
-  // Carved top knob on walking stick
   const stickKnob = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), stickMat);
   stickKnob.position.set(0.08, 0.48, 0.35);
   rightArmPivot.add(stickKnob);
@@ -934,11 +966,10 @@ function buildAdventurerCharacter() {
   characterGroup.add(rightArmPivot);
 
   // 5. Legs & Sturdy Hiking Boots
-  // Left Leg (Olive shorts + Knee + Sturdy brown hiking boot)
   leftLegPivot = new THREE.Group();
   leftLegPivot.position.set(-0.22, 0.82, 0);
 
-  const lShorts = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.32, 8), greenGearMat);
+  const lShorts = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.32, 8), greenShortsMat);
   lShorts.position.y = -0.16;
   leftLegPivot.add(lShorts);
 
@@ -946,7 +977,6 @@ function buildAdventurerCharacter() {
   lKnee.position.y = -0.4;
   leftLegPivot.add(lKnee);
 
-  // Hiking Boot
   const lBoot = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.32, 0.45), bootsMat);
   lBoot.position.set(0, -0.66, 0.06);
   lBoot.castShadow = true;
@@ -954,11 +984,10 @@ function buildAdventurerCharacter() {
 
   characterGroup.add(leftLegPivot);
 
-  // Right Leg
   rightLegPivot = new THREE.Group();
   rightLegPivot.position.set(0.22, 0.82, 0);
 
-  const rShorts = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.32, 8), greenGearMat);
+  const rShorts = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.32, 8), greenShortsMat);
   rShorts.position.y = -0.16;
   rightLegPivot.add(rShorts);
 
@@ -973,11 +1002,10 @@ function buildAdventurerCharacter() {
 
   characterGroup.add(rightLegPivot);
 
-  // Character overall scale
+  // Scale & initial position
   characterGroup.scale.set(1.15, 1.15, 1.15);
   scene.add(characterGroup);
 
-  // Initialize Position & Rotation
   charState.x = 0;
   charState.z = 0;
   charState.rotation = -Math.PI / 2;
@@ -986,10 +1014,10 @@ function buildAdventurerCharacter() {
 }
 
 /* --------------------------------------------------------------------------
-   9. WALKING PHYSICS & PROCEDURAL GAIT ANIMATION
+   9. WALKING PHYSICS & PROCEDURAL GAIT ANIMATION (FAST & RESPONSIVE)
    -------------------------------------------------------------------------- */
 function updateCharacterPhysics(delta) {
-  // Forward / Backward walking acceleration
+  // Snappy walking acceleration
   if (input.forward) {
     charState.speed += charState.accel;
     if (charState.speed > charState.maxWalkSpeed) charState.speed = charState.maxWalkSpeed;
@@ -998,10 +1026,10 @@ function updateCharacterPhysics(delta) {
     if (charState.speed < charState.maxBackSpeed) charState.speed = charState.maxBackSpeed;
   } else {
     charState.speed *= charState.friction;
-    if (Math.abs(charState.speed) < 0.002) charState.speed = 0;
+    if (Math.abs(charState.speed) < 0.003) charState.speed = 0;
   }
 
-  // Steering / Turning Left & Right
+  // Snappy steering
   if (input.left) {
     charState.rotation += charState.turnSpeed;
   }
@@ -1009,37 +1037,37 @@ function updateCharacterPhysics(delta) {
     charState.rotation -= charState.turnSpeed;
   }
 
-  // Update Character World Position
+  // Update World Position
   charState.x += Math.sin(charState.rotation) * charState.speed;
   charState.z += Math.cos(charState.rotation) * charState.speed;
 
   characterGroup.position.set(charState.x, 0, charState.z);
   characterGroup.rotation.y = charState.rotation;
 
-  // Walking Animation Gait
+  // Walking Animation Gait (scales with increased speed)
   const isMoving = Math.abs(charState.speed) > 0.005;
 
   if (isMoving) {
-    charState.walkCycle += delta * (charState.speed > 0 ? 11 : 8);
+    charState.walkCycle += delta * (charState.speed > 0 ? 14 : 10);
 
-    // Body Bobbing with walking cadence
-    const bob = Math.abs(Math.sin(charState.walkCycle * 2)) * 0.06;
+    // Body Bobbing
+    const bob = Math.abs(Math.sin(charState.walkCycle * 2)) * 0.07;
     characterBody.position.y = bob;
 
-    // Ponytail gentle bounce
+    // Ponytail bounce
     if (ponytailMesh) {
-      ponytailMesh.rotation.x = Math.sin(charState.walkCycle * 2) * 0.15;
+      ponytailMesh.rotation.x = Math.sin(charState.walkCycle * 2) * 0.2;
     }
 
-    // Legs: counter-oscillating stride
-    leftLegPivot.rotation.x = Math.sin(charState.walkCycle) * 0.65;
-    rightLegPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.65;
+    // Legs stride
+    leftLegPivot.rotation.x = Math.sin(charState.walkCycle) * 0.7;
+    rightLegPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.7;
 
-    // Arms: counter-swinging with walking stick
-    leftArmPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.55;
-    rightArmPivot.rotation.x = Math.sin(charState.walkCycle) * 0.45;
+    // Arms counter-swing
+    leftArmPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.6;
+    rightArmPivot.rotation.x = Math.sin(charState.walkCycle) * 0.5;
   } else {
-    // Return to natural idle standing posture
+    // Return smoothly to idle stance
     characterBody.position.y *= 0.8;
     leftLegPivot.rotation.x *= 0.8;
     rightLegPivot.rotation.x *= 0.8;
@@ -1055,11 +1083,10 @@ function updateCharacterPhysics(delta) {
 function updateCameraFollow() {
   if (!camera || !characterGroup) return;
 
-  // Bruno Simon Isometric Diagonal Offset tracking the adventurer
   const camOffset = new THREE.Vector3(-14, 18, 14);
   const targetCamPos = characterGroup.position.clone().add(camOffset);
 
-  camera.position.lerp(targetCamPos, 0.08);
+  camera.position.lerp(targetCamPos, 0.09);
   camera.lookAt(characterGroup.position.x, characterGroup.position.y + 1.2, characterGroup.position.z);
 }
 
@@ -1067,7 +1094,6 @@ function updateCameraFollow() {
    10. INTERACTIVE CLICK POPUPS & CONTROLS
    -------------------------------------------------------------------------- */
 function setupWorldControls(container) {
-  // Keyboard Input (WASD or Arrow Keys)
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
       input.forward = true;
@@ -1097,7 +1123,6 @@ function setupWorldControls(container) {
     if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') input.right = false;
   });
 
-  // Mobile / Touch Buttons
   const pWalk = document.getElementById('touch-pedal-walk');
   const pBack = document.getElementById('touch-pedal-back');
   const pLeft = document.getElementById('touch-steer-left');
@@ -1118,7 +1143,6 @@ function setupWorldControls(container) {
   bindTouch(pLeft, 'left');
   bindTouch(pRight, 'right');
 
-  // Reset Position Button
   const resetBtn = document.getElementById('reset-char-btn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
@@ -1130,7 +1154,6 @@ function setupWorldControls(container) {
     });
   }
 
-  // Raycasting on Click: Detect Clicks on Milestone Buildings
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
