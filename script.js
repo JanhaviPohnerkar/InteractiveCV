@@ -881,49 +881,69 @@ function buildClayRoad() {
    -------------------------------------------------------------------------- */
 function createLogoBadgeBannerTexture(proj) {
   const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
+  canvas.width = 1024;
+  canvas.height = 768;
   const ctx = canvas.getContext('2d');
 
   function renderBanner(loadedImg) {
-    // Clean, crisp card background
+    // Rich bright card background
     ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, 512, 512);
+    ctx.fillRect(0, 0, 1024, 768);
 
     // Sturdy dark outer border
-    ctx.strokeStyle = '#1E293B';
-    ctx.lineWidth = 20;
-    ctx.strokeRect(10, 10, 492, 492);
+    ctx.strokeStyle = '#0F172A';
+    ctx.lineWidth = 32;
+    ctx.strokeRect(16, 16, 992, 736);
 
-    // Inner vibrant theme accent border
+    // Inner bright theme accent border
     ctx.strokeStyle = proj.themeColor || '#2563EB';
-    ctx.lineWidth = 8;
-    ctx.strokeRect(30, 30, 452, 452);
+    ctx.lineWidth = 14;
+    ctx.strokeRect(48, 48, 928, 672);
 
-    if (loadedImg) {
-      // Draw user's custom designed logo inside centered frame
-      const imgSize = 290;
-      const ix = (512 - imgSize) / 2;
-      const iy = 50;
-      ctx.drawImage(loadedImg, ix, iy, imgSize, imgSize);
-    } else {
-      // Graphical icon fallback while image streams
-      ctx.font = '130px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(proj.icon || '📦', 256, 190);
-    }
-
-    // Lower banner bar for project badge title
-    ctx.fillStyle = proj.themeColor || '#1E293B';
-    ctx.fillRect(34, 380, 444, 94);
-
-    // Bold title text
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '900 36px "Outfit", system-ui, sans-serif';
+    // Header category pill
+    ctx.fillStyle = '#F1F5F9';
+    ctx.fillRect(60, 60, 904, 80);
+    ctx.fillStyle = proj.themeColor || '#2563EB';
+    ctx.font = '900 38px "Outfit", system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(proj.badge || proj.title, 256, 427);
+    ctx.fillText(`★ ${proj.badge || 'PROJECT'} ★`, 512, 102);
+
+    if (loadedImg) {
+      // Draw user's custom designed logo bold and centered
+      const imgMaxH = 430;
+      const imgMaxW = 750;
+      let drawW = loadedImg.width;
+      let drawH = loadedImg.height;
+      const scale = Math.min(imgMaxW / drawW, imgMaxH / drawH);
+      drawW = drawW * scale;
+      drawH = drawH * scale;
+
+      const ix = (1024 - drawW) / 2;
+      const iy = 150 + (imgMaxH - drawH) / 2;
+      ctx.drawImage(loadedImg, ix, iy, drawW, drawH);
+    } else {
+      ctx.font = '220px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(proj.icon || '📦', 512, 360);
+    }
+
+    // Bold bottom banner headline bar
+    ctx.fillStyle = proj.themeColor || '#0F172A';
+    ctx.fillRect(48, 590, 928, 130);
+
+    // Large high-contrast project title
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 46px "Outfit", system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    // Trim title if very long for billboard punchiness
+    let dispTitle = proj.title;
+    if (dispTitle.length > 34) {
+      dispTitle = dispTitle.substring(0, 32) + '...';
+    }
+    ctx.fillText(dispTitle, 512, 655);
   }
 
   renderBanner(null);
@@ -934,7 +954,6 @@ function createLogoBadgeBannerTexture(proj) {
   texture.magFilter = THREE.LinearFilter;
   texture.needsUpdate = true;
 
-  // Asynchronously load the user's custom logo image if provided
   if (proj.logoPath) {
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -1401,29 +1420,46 @@ function buildFoliageAndRocks() {
       bannerMountY = 5.4;
     }
 
-    // Small Square Logo Banner mounted above rooftop (Inspired by Reference Town Image Signs)
+    // Prominent, Attention-Catching Rooftop Billboard Banner
     const logoTexture = createLogoBadgeBannerTexture(proj);
 
-    // Sturdy dark mounting post
-    const signPole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 1.6, 8), lamppostMat);
-    signPole.position.set(0, bannerMountY + 0.8, 0);
-    pGroup.add(signPole);
+    // Twin sturdy steel mounting pylons/trusses
+    const trussMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.6, metalness: 0.3 });
+    const pylonL = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 2.2, 8), trussMat);
+    pylonL.position.set(-1.6, bannerMountY + 1.1, 0);
+    pGroup.add(pylonL);
 
-    // Outer dark sign frame
+    const pylonR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 2.2, 8), trussMat);
+    pylonR.position.set(1.6, bannerMountY + 1.1, 0);
+    pGroup.add(pylonR);
+
+    // Cross brace between pylons
+    const xBrace = new THREE.Mesh(new THREE.BoxGeometry(3.3, 0.08, 0.08), trussMat);
+    xBrace.position.set(0, bannerMountY + 0.9, 0);
+    pGroup.add(xBrace);
+
+    // Large outer dark billboard bezel frame (4.9m wide x 3.7m tall)
+    const billboardW = 4.8;
+    const billboardH = 3.6;
     const frameMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(2.5, 2.5, 0.16),
-      new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 })
+      new THREE.BoxGeometry(billboardW + 0.22, billboardH + 0.22, 0.22),
+      new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.45, metalness: 0.2 })
     );
-    frameMesh.position.set(0, bannerMountY + 1.8, 0);
+    frameMesh.position.set(0, bannerMountY + 2.4, 0);
     frameMesh.castShadow = true;
     pGroup.add(frameMesh);
 
-    // Front high-res logo canvas texture
+    // Top banner spotlight fixture
+    const spotFixture = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.15, 0.3), trussMat);
+    spotFixture.position.set(0, bannerMountY + 2.4 + (billboardH / 2) + 0.1, 0.2);
+    pGroup.add(spotFixture);
+
+    // Front high-res big banner plane (Wide 4:3 billboard)
     const bannerBoard = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.35, 2.35),
-      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.25 })
+      new THREE.PlaneGeometry(billboardW, billboardH),
+      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.2, metalness: 0.05 })
     );
-    bannerBoard.position.set(0, bannerMountY + 1.8, 0.09);
+    bannerBoard.position.set(0, bannerMountY + 2.4, 0.12);
     bannerBoard.userData = {
       isProjectTownBanner: true,
       projectId: proj.id,
@@ -1431,12 +1467,12 @@ function buildFoliageAndRocks() {
     };
     pGroup.add(bannerBoard);
 
-    // Back texture as well so it's readable from all orbit angles
+    // Back banner plane so it is fully visible and legible from every angle
     const bannerBoardBack = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.35, 2.35),
-      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.25 })
+      new THREE.PlaneGeometry(billboardW, billboardH),
+      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.2, metalness: 0.05 })
     );
-    bannerBoardBack.position.set(0, bannerMountY + 1.8, -0.09);
+    bannerBoardBack.position.set(0, bannerMountY + 2.4, -0.12);
     bannerBoardBack.rotation.y = Math.PI;
     bannerBoardBack.userData = {
       isProjectTownBanner: true,
@@ -1448,7 +1484,7 @@ function buildFoliageAndRocks() {
     pGroup.userData = {
       isTownProjectBuilding: true,
       projectId: proj.id,
-      anchorPos: new THREE.Vector3(proj.pos.x, bannerMountY + 2.5, proj.pos.z)
+      anchorPos: new THREE.Vector3(proj.pos.x, bannerMountY + 3.8, proj.pos.z)
     };
 
     scene.add(pGroup);
