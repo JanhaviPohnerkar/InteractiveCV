@@ -201,6 +201,7 @@ let activePopupId = null;
 let milestoneThresholds = [];
 const milestoneVisited = new Set();
 let cloudGroups = [];
+let worldAnimals = [];
 
 /* --------------------------------------------------------------------------
    PROJECT BUILDINGS IN THE SURROUNDING TOWN (WITH LOGO BANNERS)
@@ -486,10 +487,13 @@ function initBrunoWorld() {
   // 8. Build Directional Scenic Biomes: Dreamy Horizon Hills (North), Dense Forest (West), and Ponds & Lakes (East)
   buildScenicBiomes();
 
-  // 9. Setup Controls & Raycasting
+  // 9. Build Animated Wildlife: Hopping Rabbits, Grazing Deer, and Swimming Ducks
+  buildAnimatedWildlife();
+
+  // 10. Setup Controls & Raycasting
   setupWorldControls(container);
 
-  // 9. OrbitControls — enabled when character is idle for free camera panning
+  // 11. OrbitControls — enabled when character is idle for free camera panning
   if (typeof THREE.OrbitControls !== 'undefined') {
     window.orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
     window.orbitControls.enableDamping = true;
@@ -517,6 +521,7 @@ function initBrunoWorld() {
     updateCameraFollow();
     updatePopupScreenPosition();
     updateSkyClouds(delta);
+    updateAnimatedWildlife(delta);
 
     if (window.orbitControls) window.orbitControls.update();
 
@@ -1683,22 +1688,34 @@ function buildWesternDeepForest() {
   });
 }
 
-// 3. EAST: SPARKLING WATER LAKES, PONDS, LILY PADS & WOODEN DOCKS
+// 3. EAST: NATURAL ORGANIC SHAPED LAKES & PONDS (ROCKS, SHORELINE GRASS, DOCKS, LILIES)
 function buildEasternPondsAndLakes() {
   const waterMat = new THREE.MeshPhysicalMaterial({
     color: 0x38BDF8, // Vibrant crystal cyan blue
     roughness: 0.12,
-    metalness: 0.1,
+    metalness: 0.08,
     transmission: 0.6,
     ior: 1.333,
-    reflectivity: 0.8,
+    reflectivity: 0.85,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.1
+    clearcoatRoughness: 0.08
   });
 
   const shoreMat = new THREE.MeshStandardMaterial({
     color: 0xF59E0B, // Sunlit golden shoreline sand
     roughness: 0.85,
+    flatShading: true
+  });
+
+  const rockMats = [
+    new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true }), // Chalk white river boulder
+    new THREE.MeshStandardMaterial({ color: 0x94A3B8, roughness: 0.85, flatShading: true }), // Slate blue water pebble
+    new THREE.MeshStandardMaterial({ color: 0xCBD5E1, roughness: 0.88, flatShading: true })  // Cool stone
+  ];
+
+  const grassTuftMat = new THREE.MeshStandardMaterial({
+    color: 0x65A30D, // Rich warm green riverbank grass
+    roughness: 0.8,
     flatShading: true
   });
 
@@ -1719,55 +1736,111 @@ function buildEasternPondsAndLakes() {
   });
 
   const reedMat = new THREE.MeshStandardMaterial({
-    color: 0x65A30D, // Green shoreline reeds
+    color: 0x4D7C0F, // Green shoreline reeds
     roughness: 0.8
   });
+
+  // Helper to create an organic, natural lake boundary using harmonic radial lobe deformation
+  function createOrganicLakeMesh(baseRx, baseRz, lobes, amp, material, height, yPos) {
+    const segments = 48;
+    const shape = new THREE.Shape();
+    for (let i = 0; i <= segments; i++) {
+      const theta = (i / segments) * Math.PI * 2;
+      // Natural organic lobe variation
+      const rMod = 1.0 + Math.sin(theta * lobes) * amp + Math.cos(theta * 2) * (amp * 0.5);
+      const px = Math.cos(theta) * baseRx * rMod;
+      const pz = Math.sin(theta) * baseRz * rMod;
+      if (i === 0) shape.moveTo(px, pz);
+      else shape.lineTo(px, pz);
+    }
+
+    const extrudeSettings = { depth: height, bevelEnabled: false };
+    const geo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    geo.rotateX(-Math.PI / 2); // Orient horizontally
+    const mesh = new THREE.Mesh(geo, material);
+    mesh.position.y = yPos;
+    return mesh;
+  }
 
   // Scenic water bodies along the Eastern landscape
   const waterBodies = [
     // 1. Serene Morning Pond near Entrance (East)
-    { cx: 58, cz: 5, rx: 16, rz: 14, dock: true, dockRot: 0.3 },
+    { cx: 58, cz: 5, rx: 16, rz: 14, lobes: 3, amp: 0.16, dock: true, dockRot: 0.3 },
     // 2. Crystal Lake adjacent to IoT & Tech quarter
-    { cx: 68, cz: -85, rx: 24, rz: 18, dock: true, dockRot: -0.4 },
+    { cx: 68, cz: -85, rx: 24, rz: 18, lobes: 4, amp: 0.18, dock: true, dockRot: -0.4 },
     // 3. Mirror Pond between R&D stations
-    { cx: 62, cz: -165, rx: 18, rz: 15, dock: false },
+    { cx: 62, cz: -165, rx: 18, rz: 15, lobes: 3, amp: 0.15, dock: false },
     // 4. Grand Tranquil Lake near Milestone 6 & graduation grounds
-    { cx: 72, cz: -250, rx: 26, rz: 22, dock: true, dockRot: 0.15 }
+    { cx: 72, cz: -250, rx: 26, rz: 22, lobes: 5, amp: 0.17, dock: true, dockRot: 0.15 }
   ];
 
-  waterBodies.forEach(wb => {
+  waterBodies.forEach((wb, lakeIdx) => {
     const waterGroup = new THREE.Group();
     waterGroup.position.set(wb.cx, 0, wb.cz);
 
-    // Shoreline sandy rim (slightly larger disk just below water)
-    const shoreGeo = new THREE.CylinderGeometry(wb.rx + 1.5, wb.rx + 2.2, 0.15, 20);
-    const shore = new THREE.Mesh(shoreGeo, shoreMat);
-    shore.position.y = 0.04;
-    shore.scale.set(1.0, 1.0, wb.rz / wb.rx);
-    shore.receiveShadow = true;
-    waterGroup.add(shore);
+    // Natural organic sandy shoreline bank
+    const shoreMesh = createOrganicLakeMesh(wb.rx + 2.0, wb.rz + 2.0, wb.lobes, wb.amp, shoreMat, 0.08, 0.01);
+    shoreMesh.receiveShadow = true;
+    waterGroup.add(shoreMesh);
 
-    // Smooth crystal water surface
-    const waterGeo = new THREE.CylinderGeometry(wb.rx, wb.rx, 0.12, 24);
-    const waterMesh = new THREE.Mesh(waterGeo, waterMat);
-    waterMesh.position.y = 0.08;
-    waterMesh.scale.set(1.0, 1.0, wb.rz / wb.rx);
+    // Natural organic crystal water surface
+    const waterMesh = createOrganicLakeMesh(wb.rx, wb.rz, wb.lobes, wb.amp, waterMat, 0.08, 0.05);
     waterMesh.receiveShadow = true;
     waterGroup.add(waterMesh);
 
-    // Floating water lily pads and lotus blooms
+    // Shoreline cluster of natural low-poly river boulders & pebbles
+    const numRocks = 18 + lakeIdx * 4;
+    for (let k = 0; k < numRocks; k++) {
+      const angle = (k / numRocks) * Math.PI * 2 + (lakeIdx * 0.4);
+      const rMod = 1.0 + Math.sin(angle * wb.lobes) * wb.amp;
+      const dist = (wb.rx * rMod) + ((k % 3) * 0.8) + 0.4;
+      const rx = Math.cos(angle) * dist;
+      const rz = Math.sin(angle) * (dist * (wb.rz / wb.rx));
+
+      const rockScale = 0.5 + ((k % 4) * 0.3);
+      const rock = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(rockScale, 0),
+        rockMats[k % rockMats.length]
+      );
+      rock.position.set(rx, rockScale * 0.6, rz);
+      rock.rotation.set((k % 3) * 0.4, angle, (k % 2) * 0.3);
+      rock.castShadow = true;
+      rock.receiveShadow = true;
+      waterGroup.add(rock);
+    }
+
+    // Lush shoreline grass tufts sprouting around the water edge
+    const numGrass = 22 + lakeIdx * 5;
+    for (let g = 0; g < numGrass; g++) {
+      const gAngle = (g / numGrass) * Math.PI * 2 + 0.2;
+      const rMod = 1.0 + Math.sin(gAngle * wb.lobes) * wb.amp;
+      const gDist = (wb.rx * rMod) + 1.2 + ((g % 3) * 0.6);
+      const gx = Math.cos(gAngle) * gDist;
+      const gz = Math.sin(gAngle) * (gDist * (wb.rz / wb.rx));
+
+      const grassTuft = new THREE.Group();
+      grassTuft.position.set(gx, 0, gz);
+      for (let b = 0; b < 3; b++) {
+        const blade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.7 + (b % 3) * 0.25, 4), grassTuftMat);
+        blade.position.set((b - 1) * 0.18, 0.35, 0);
+        blade.rotation.z = (b - 1) * 0.2;
+        blade.castShadow = true;
+        grassTuft.add(blade);
+      }
+      waterGroup.add(grassTuft);
+    }
+
+    // Floating water lily pads and lotus blooms inside the organic lake
     for (let l = 0; l < 8; l++) {
       const lAngle = (l * 0.8) + 0.4;
       const lDist = (wb.rx * 0.35) + ((l % 4) * (wb.rx * 0.12));
       const lx = Math.cos(lAngle) * lDist;
       const lz = Math.sin(lAngle) * (lDist * (wb.rz / wb.rx));
 
-      // Lily pad disk
       const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.04, 8), lilyMat);
       pad.position.set(lx, 0.15, lz);
       waterGroup.add(pad);
 
-      // Pink lotus bloom on select pads
       if (l % 2 === 0) {
         const bloom = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35, 0), flowerMat);
         bloom.position.set(lx, 0.28, lz);
@@ -1789,20 +1862,18 @@ function buildEasternPondsAndLakes() {
       waterGroup.add(reed);
     }
 
-    // Rustic wooden dock extending over the water
+    // Rustic wooden dock extending naturally into the water
     if (wb.dock) {
       const dockGroup = new THREE.Group();
       dockGroup.position.set(-wb.rx * 0.75, 0, 0);
       dockGroup.rotation.y = wb.dockRot;
 
-      // Wooden planks deck
       const deck = new THREE.Mesh(new THREE.BoxGeometry(7.0, 0.22, 2.4), dockWoodMat);
       deck.position.set(2.0, 0.25, 0);
       deck.castShadow = true;
       deck.receiveShadow = true;
       dockGroup.add(deck);
 
-      // Dock support stilts / posts
       const postGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.9, 6);
       [0.0, 2.2, 4.4].forEach(px => {
         [-1.0, 1.0].forEach(pz => {
@@ -1817,6 +1888,248 @@ function buildEasternPondsAndLakes() {
     }
 
     scene.add(waterGroup);
+  });
+}
+
+/* --------------------------------------------------------------------------
+   7D. ANIMATED WILDLIFE (HOPPING RABBITS, SWIMMING DUCKS & GRAZING DEER)
+   -------------------------------------------------------------------------- */
+function buildAnimatedWildlife() {
+  worldAnimals = [];
+
+  // 1. SWIMMING DUCKS IN THE EASTERN LAKES & PONDS
+  const duckWhiteMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.6 });
+  const duckBeakMat = new THREE.MeshStandardMaterial({ color: 0xF59E0B, roughness: 0.4 }); // Amber yellow beak
+
+  const duckPonds = [
+    { cx: 58, cz: 5,   radius: 7, speed: 0.6, phase: 0.0 },
+    { cx: 58, cz: 5,   radius: 5, speed: -0.5, phase: 2.5 },
+    { cx: 68, cz: -85, radius: 10, speed: 0.5, phase: 1.2 },
+    { cx: 68, cz: -85, radius: 6, speed: -0.65, phase: 3.8 },
+    { cx: 72, cz: -250, radius: 12, speed: 0.45, phase: 0.8 },
+    { cx: 72, cz: -250, radius: 7, speed: -0.55, phase: 4.1 }
+  ];
+
+  duckPonds.forEach(dp => {
+    const duckGroup = new THREE.Group();
+
+    // Body
+    const body = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.8, 6), duckWhiteMat);
+    body.rotation.x = Math.PI / 2;
+    body.position.y = 0.2;
+    body.castShadow = true;
+    duckGroup.add(body);
+
+    // Head
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 8), duckWhiteMat);
+    head.position.set(0, 0.38, 0.35);
+    head.castShadow = true;
+    duckGroup.add(head);
+
+    // Beak
+    const beak = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.22, 4), duckBeakMat);
+    beak.rotation.x = Math.PI / 2;
+    beak.position.set(0, 0.36, 0.58);
+    duckGroup.add(beak);
+
+    duckGroup.userData = {
+      type: "duck",
+      cx: dp.cx,
+      cz: dp.cz,
+      radius: dp.radius,
+      speed: dp.speed,
+      angle: dp.phase,
+      bobOffset: Math.random() * Math.PI
+    };
+
+    scene.add(duckGroup);
+    worldAnimals.push(duckGroup);
+  });
+
+  // 2. CUTE HOPPING BUNNIES IN MEADOWS & WOODLAND CLEARINGS
+  const bunnyMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, roughness: 0.75, flatShading: true }); // Fluffy snow bunny
+  const earInnerMat = new THREE.MeshStandardMaterial({ color: 0xFCA5A5, roughness: 0.5 }); // Pink ear inner
+
+  const bunnyLocations = [
+    { x: -14, z: 12, range: 4.0 },
+    { x: 12,  z: 16, range: 3.5 },
+    { x: -35, z: -20, range: 4.5 },
+    { x: -28, z: -70, range: 4.0 },
+    { x: 34,  z: -125, range: 4.2 },
+    { x: -38, z: -160, range: 5.0 },
+    { x: 26,  z: -210, range: 4.0 },
+    { x: -22, z: -250, range: 4.5 }
+  ];
+
+  bunnyLocations.forEach(bl => {
+    const bunny = new THREE.Group();
+
+    // Body
+    const bBody = new THREE.Mesh(new THREE.DodecahedronGeometry(0.42, 0), bunnyMat);
+    bBody.position.y = 0.35;
+    bBody.castShadow = true;
+    bunny.add(bBody);
+
+    // Head
+    const bHead = new THREE.Mesh(new THREE.SphereGeometry(0.28, 6, 6), bunnyMat);
+    bHead.position.set(0, 0.62, 0.22);
+    bHead.castShadow = true;
+    bunny.add(bHead);
+
+    // Left Ear
+    const earL = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.36, 4), bunnyMat);
+    earL.position.set(-0.12, 0.88, 0.18);
+    earL.rotation.z = -0.15;
+    bunny.add(earL);
+
+    // Right Ear
+    const earR = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.36, 4), bunnyMat);
+    earR.position.set(0.12, 0.88, 0.18);
+    earR.rotation.z = 0.15;
+    bunny.add(earR);
+
+    // Fluffy tail
+    const tail = new THREE.Mesh(new THREE.SphereGeometry(0.12, 4, 4), bunnyMat);
+    tail.position.set(0, 0.32, -0.4);
+    bunny.add(tail);
+
+    bunny.position.set(bl.x, 0, bl.z);
+    bunny.userData = {
+      type: "bunny",
+      originX: bl.x,
+      originZ: bl.z,
+      range: bl.range,
+      hopTime: Math.random() * 5.0,
+      direction: Math.random() * Math.PI * 2
+    };
+
+    scene.add(bunny);
+    worldAnimals.push(bunny);
+  });
+
+  // 3. GRAZING FAWNS / DEER IN THE WESTERN FOREST CLEARINGS
+  const deerFurMat = new THREE.MeshStandardMaterial({ color: 0x9A3412, roughness: 0.8, flatShading: true }); // Warm chestnut fawn coat
+  const deerSpotMat = new THREE.MeshStandardMaterial({ color: 0xFEF3C7, roughness: 0.7 }); // Cream belly & spots
+  const antlerMat = new THREE.MeshStandardMaterial({ color: 0x78350F, roughness: 0.85 });
+
+  const deerLocations = [
+    { x: -55, z: 5,   rot: 0.8 },
+    { x: -75, z: -45, rot: -0.5 },
+    { x: -80, z: -125, rot: 1.2 },
+    { x: -72, z: -190, rot: -0.9 },
+    { x: -62, z: -275, rot: 0.4 }
+  ];
+
+  deerLocations.forEach(dl => {
+    const deer = new THREE.Group();
+
+    // Torso
+    const torso = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 1.4), deerFurMat);
+    torso.position.y = 1.2;
+    torso.castShadow = true;
+    deer.add(torso);
+
+    // 4 Slender Legs
+    const legGeo = new THREE.CylinderGeometry(0.08, 0.06, 1.0, 6);
+    [[-0.32, -0.45], [0.32, -0.45], [-0.32, 0.45], [0.32, 0.45]].forEach(coord => {
+      const leg = new THREE.Mesh(legGeo, deerFurMat);
+      leg.position.set(coord[0], 0.5, coord[1]);
+      leg.castShadow = true;
+      deer.add(leg);
+    });
+
+    // Neck & Head Pivot (for gentle grazing animation)
+    const neckPivot = new THREE.Group();
+    neckPivot.position.set(0, 1.4, 0.6);
+
+    const neck = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.75, 0.35), deerFurMat);
+    neck.position.set(0, 0.3, 0.15);
+    neck.rotation.x = -0.45;
+    neck.castShadow = true;
+    neckPivot.add(neck);
+
+    const dHead = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.38, 0.55), deerFurMat);
+    dHead.position.set(0, 0.65, 0.35);
+    dHead.castShadow = true;
+    neckPivot.add(dHead);
+
+    // Antlers
+    const a1 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.5, 4), antlerMat);
+    a1.position.set(-0.15, 0.95, 0.3);
+    a1.rotation.z = -0.35;
+    neckPivot.add(a1);
+
+    const a2 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.5, 4), antlerMat);
+    a2.position.set(0.15, 0.95, 0.3);
+    a2.rotation.z = 0.35;
+    neckPivot.add(a2);
+
+    deer.add(neckPivot);
+
+    deer.position.set(dl.x, 0, dl.z);
+    deer.rotation.y = dl.rot;
+    deer.userData = {
+      type: "deer",
+      neckPivot: neckPivot,
+      baseNeckRot: -0.45,
+      grazeTime: Math.random() * 6.0
+    };
+
+    scene.add(deer);
+    worldAnimals.push(deer);
+  });
+}
+
+function updateAnimatedWildlife(delta) {
+  if (!worldAnimals || !worldAnimals.length) return;
+
+  worldAnimals.forEach(animal => {
+    if (animal.userData.type === "duck") {
+      // Swimming duck: circles smoothly on the water surface and bobs
+      const ud = animal.userData;
+      ud.angle += ud.speed * delta;
+      animal.position.x = ud.cx + Math.cos(ud.angle) * ud.radius;
+      animal.position.z = ud.cz + Math.sin(ud.angle) * ud.radius;
+      animal.position.y = 0.08 + Math.sin(Date.now() * 0.004 + ud.bobOffset) * 0.03; // Gentle water bobbing
+      // Face heading tangent
+      animal.rotation.y = -ud.angle + (ud.speed > 0 ? 0 : Math.PI);
+    } else if (animal.userData.type === "bunny") {
+      // Hopping bunny: periodic hop forward and look around
+      const ud = animal.userData;
+      ud.hopTime += delta * 2.8;
+
+      const hopCycle = ud.hopTime % 3.0; // Hop for 1 sec, rest for 2 sec
+      if (hopCycle < 1.0) {
+        // In mid-hop
+        const hopHeight = Math.sin(hopCycle * Math.PI) * 0.45;
+        animal.position.y = hopHeight;
+        // Move in direction
+        const hopSpeed = 1.4 * delta;
+        animal.position.x += Math.sin(ud.direction) * hopSpeed;
+        animal.position.z += Math.cos(ud.direction) * hopSpeed;
+
+        // Turn back if wandering too far from home clearing
+        const distFromOrigin = Math.hypot(animal.position.x - ud.originX, animal.position.z - ud.originZ);
+        if (distFromOrigin > ud.range) {
+          ud.direction = Math.atan2(ud.originX - animal.position.x, ud.originZ - animal.position.z);
+        }
+      } else {
+        // Rest on ground, slight twitch / look
+        animal.position.y = 0;
+        if (Math.abs(hopCycle - 1.0) < 0.1) {
+          ud.direction += (Math.random() - 0.5) * 1.2;
+        }
+      }
+      animal.rotation.y = ud.direction;
+    } else if (animal.userData.type === "deer") {
+      // Grazing deer: smoothly lowers head to graze grass, then lifts head alertly
+      const ud = animal.userData;
+      ud.grazeTime += delta * 0.7;
+      const grazePhase = (Math.sin(ud.grazeTime) + 1) / 2; // 0 to 1
+      if (ud.neckPivot) {
+        ud.neckPivot.rotation.x = -0.15 - (grazePhase * 0.75); // Tilts down towards grass
+      }
+    }
   });
 }
 
