@@ -483,8 +483,8 @@ function initBrunoWorld() {
   // 7. Build Fluffy Low-Poly Sky Clouds drifting peacefully overhead
   buildSkyClouds();
 
-  // 8. Build Distant Low-Poly Mountain Ranges in the Open Valleys & Horizons
-  buildLowPolyMountains();
+  // 8. Build Directional Scenic Biomes: Dreamy Horizon Hills (North), Dense Forest (West), and Ponds & Lakes (East)
+  buildScenicBiomes();
 
   // 9. Setup Controls & Raycasting
   setupWorldControls(container);
@@ -1525,111 +1525,298 @@ function updateSkyClouds(delta) {
 }
 
 /* --------------------------------------------------------------------------
-   7C. LOW-POLY MOUNTAINS IN OPEN MEADOWS & DISTANT HORIZONS (WHERE NO BUILDINGS LIE)
+   7C. DIRECTIONAL SCENIC BIOMES
+   - North: Small, dreamy, pastel rolling hills with soft chalk peaks
+   - West: Dense, whimsical green woodland forest with birch groves
+   - East: Sparkling crystal water lakes & ponds with docks, lily pads and reeds
    -------------------------------------------------------------------------- */
-function buildLowPolyMountains() {
-  // Cohesive clay mountain materials (warm terracotta rock, dusty canyon ochre, and warm chalk caps)
-  const mountainMats = [
-    new THREE.MeshStandardMaterial({ color: 0xC06A42, roughness: 0.88, flatShading: true }), // Deep terracotta rock
-    new THREE.MeshStandardMaterial({ color: 0xCF7F4E, roughness: 0.86, flatShading: true }), // Warm clay canyon stone
-    new THREE.MeshStandardMaterial({ color: 0xB55C36, roughness: 0.90, flatShading: true }), // Earthy rust ridge
-    new THREE.MeshStandardMaterial({ color: 0x9F4C28, roughness: 0.92, flatShading: true })  // Rich shaded cliff
+function buildScenicBiomes() {
+  buildDreamyNorthernHills();
+  buildWesternDeepForest();
+  buildEasternPondsAndLakes();
+}
+
+// 1. NORTH: SMALL, DREAMY ROLLING CLAY HILLS (BEHIND SPAWN & NORTH HORIZON)
+function buildDreamyNorthernHills() {
+  const hillMats = [
+    new THREE.MeshStandardMaterial({ color: 0xD48459, roughness: 0.88, flatShading: true }), // Soft warm terracotta clay
+    new THREE.MeshStandardMaterial({ color: 0xDE966E, roughness: 0.85, flatShading: true }), // Gentle peach hill
+    new THREE.MeshStandardMaterial({ color: 0xC8764B, roughness: 0.90, flatShading: true })  // Sunbaked apricot slope
   ];
-  const capMat = new THREE.MeshStandardMaterial({ color: 0xFDEED9, roughness: 0.85, flatShading: true }); // Soft warm chalk peak
+  const chalkCapMat = new THREE.MeshStandardMaterial({ color: 0xFEF3C7, roughness: 0.82, flatShading: true }); // Creamy sunlit butter cap
 
-  // Mountain ridges strategically placed in valleys and distant perimeters where no buildings or roads exist
-  const mountainClusters = [
-    // 1. Far North Horizon (Behind Spawn point JANHAVI text)
-    { x: -110, z: 90, r: 42, h: 58, sides: 5, matIdx: 0, cap: true },
-    { x: -60,  z: 110, r: 50, h: 72, sides: 6, matIdx: 1, cap: true },
-    { x: 0,    z: 125, r: 56, h: 80, sides: 5, matIdx: 0, cap: true },
-    { x: 65,   z: 110, r: 48, h: 68, sides: 6, matIdx: 2, cap: true },
-    { x: 120,  z: 85,  r: 40, h: 54, sides: 5, matIdx: 1, cap: true },
-
-    // 2. Distant Far-West Mountain Range (X between -80 and -140, completely clear of west buildings)
-    { x: -105, z: 40,   r: 38, h: 52, sides: 5, matIdx: 1, cap: true },
-    { x: -120, z: -10,  r: 44, h: 62, sides: 6, matIdx: 0, cap: true },
-    { x: -95,  z: -45,  r: 34, h: 46, sides: 5, matIdx: 2, cap: false },
-    { x: -125, z: -75,  r: 46, h: 66, sides: 6, matIdx: 1, cap: true },
-    { x: -105, z: -110, r: 40, h: 56, sides: 5, matIdx: 0, cap: true },
-    { x: -130, z: -145, r: 48, h: 70, sides: 6, matIdx: 2, cap: true },
-    { x: -110, z: -180, r: 42, h: 58, sides: 5, matIdx: 1, cap: true },
-    { x: -125, z: -215, r: 46, h: 64, sides: 6, matIdx: 0, cap: true },
-    { x: -95,  z: -245, r: 36, h: 50, sides: 5, matIdx: 2, cap: false },
-    { x: -115, z: -280, r: 44, h: 62, sides: 6, matIdx: 1, cap: true },
-
-    // 3. Distant Far-East Mountain Range (X between 80 and 150, completely clear of east buildings)
-    { x: 105, z: 35,   r: 36, h: 50, sides: 5, matIdx: 0, cap: true },
-    { x: 125, z: -15,  r: 45, h: 64, sides: 6, matIdx: 1, cap: true },
-    { x: 95,  z: -50,  r: 34, h: 45, sides: 5, matIdx: 2, cap: false },
-    { x: 130, z: -80,  r: 48, h: 72, sides: 6, matIdx: 0, cap: true },
-    { x: 105, z: -115, r: 38, h: 54, sides: 5, matIdx: 1, cap: true },
-    { x: 125, z: -150, r: 46, h: 68, sides: 6, matIdx: 2, cap: true },
-    { x: 100, z: -185, r: 40, h: 56, sides: 5, matIdx: 0, cap: true },
-    { x: 135, z: -220, r: 50, h: 74, sides: 6, matIdx: 1, cap: true },
-    { x: 110, z: -255, r: 42, h: 60, sides: 5, matIdx: 2, cap: true },
-    { x: 125, z: -290, r: 46, h: 65, sides: 6, matIdx: 0, cap: true },
-
-    // 4. Distant Southern Horizon (Beyond the terminus of the road at z = -270)
-    { x: -95,  z: -340, r: 48, h: 68, sides: 6, matIdx: 1, cap: true },
-    { x: -45,  z: -360, r: 54, h: 78, sides: 5, matIdx: 0, cap: true },
-    { x: 10,   z: -375, r: 60, h: 86, sides: 6, matIdx: 2, cap: true },
-    { x: 65,   z: -360, r: 52, h: 74, sides: 5, matIdx: 1, cap: true },
-    { x: 115,  z: -335, r: 46, h: 64, sides: 6, matIdx: 0, cap: true },
-    { x: -10,  z: -330, r: 38, h: 52, sides: 5, matIdx: 1, cap: true },
-
-    // 5. Open Scenic Meadow Valleys (Deep empty gaps between milestone building clearings)
-    // Between Welcome Gateway and Milestone 1 (East meadow pocket)
-    { x: 68,  z: -10,  r: 28, h: 36, sides: 5, matIdx: 2, cap: false },
-    { x: 78,  z: 15,   r: 24, h: 30, sides: 5, matIdx: 1, cap: false },
-    // Deep West Valley behind Milestone 1
-    { x: -68, z: -55,  r: 26, h: 34, sides: 5, matIdx: 0, cap: false },
-    // Deep East Valley behind Milestone 3
-    { x: 72,  z: -95,  r: 27, h: 35, sides: 5, matIdx: 1, cap: false },
-    // Deep West Valley between Milestone 3 and Milestone 4
-    { x: -65, z: -140, r: 25, h: 32, sides: 5, matIdx: 2, cap: false },
-    // Deep East Valley between Milestone 5 and Milestone 6
-    { x: 74,  z: -215, r: 26, h: 34, sides: 5, matIdx: 0, cap: false },
-    // Deep West Valley between Milestone 6 and 7
-    { x: -62, z: -270, r: 24, h: 30, sides: 5, matIdx: 1, cap: false }
+  // Dreamy, gentle mounds & rounded hills along the northern perimeter
+  const hills = [
+    { x: -90, z: 75,  r: 22, h: 22, s: 7, cap: true },
+    { x: -55, z: 92,  r: 26, h: 26, s: 8, cap: true },
+    { x: -20, z: 80,  r: 20, h: 19, s: 7, cap: false },
+    { x: 15,  z: 88,  r: 24, h: 24, s: 8, cap: true },
+    { x: 50,  z: 82,  r: 22, h: 21, s: 7, cap: false },
+    { x: 85,  z: 75,  r: 25, h: 25, s: 8, cap: true },
+    { x: -115, z: 98, r: 28, h: 27, s: 7, cap: true },
+    { x: 110, z: 95,  r: 27, h: 26, s: 8, cap: true }
   ];
 
-  mountainClusters.forEach(m => {
-    const mGroup = new THREE.Group();
-    mGroup.position.set(m.x, 0, m.z);
+  hills.forEach((h, idx) => {
+    const hGroup = new THREE.Group();
+    hGroup.position.set(h.x, 0, h.z);
 
-    const chosenMat = mountainMats[m.matIdx % mountainMats.length];
+    const mat = hillMats[idx % hillMats.length];
+    // Rounded dreamy mound using faceted low-poly cone with wider base
+    const moundGeo = new THREE.ConeGeometry(h.r, h.h, h.s);
+    const mound = new THREE.Mesh(moundGeo, mat);
+    mound.position.y = h.h / 2;
+    mound.rotation.y = idx * 0.7;
+    mound.castShadow = true;
+    mound.receiveShadow = true;
+    hGroup.add(mound);
 
-    // Primary low-poly faceted cone for stylized mountain body
-    const coneGeo = new THREE.ConeGeometry(m.r, m.h, m.sides);
-    const coneMesh = new THREE.Mesh(coneGeo, chosenMat);
-    coneMesh.position.y = m.h / 2;
-    coneMesh.rotation.y = (m.x * 0.17 + m.z * 0.11);
-    coneMesh.castShadow = true;
-    coneMesh.receiveShadow = true;
-    mGroup.add(coneMesh);
+    // Subsidiary gentle shoulder
+    const subGeo = new THREE.ConeGeometry(h.r * 0.6, h.h * 0.62, h.s);
+    const sub = new THREE.Mesh(subGeo, mat);
+    sub.position.set(h.r * 0.35, (h.h * 0.62) / 2, h.r * 0.2);
+    sub.rotation.y = mound.rotation.y + 0.5;
+    sub.castShadow = true;
+    sub.receiveShadow = true;
+    hGroup.add(sub);
 
-    // Subsidiary ridge shoulder peak for natural organic mountain silhouette
-    const subGeo = new THREE.ConeGeometry(m.r * 0.65, m.h * 0.68, m.sides);
-    const subMesh = new THREE.Mesh(subGeo, chosenMat);
-    subMesh.position.set(m.r * 0.35, (m.h * 0.68) / 2, m.r * 0.25);
-    subMesh.rotation.y = coneMesh.rotation.y + 0.8;
-    subMesh.castShadow = true;
-    subMesh.receiveShadow = true;
-    mGroup.add(subMesh);
-
-    // Warm chalk / snow-dusted peak cap on major summits
-    if (m.cap) {
-      const capH = m.h * 0.28;
-      const capGeo = new THREE.ConeGeometry(m.r * 0.28, capH, m.sides);
-      const capMesh = new THREE.Mesh(capGeo, capMat);
-      capMesh.position.y = m.h - (capH / 2);
-      capMesh.rotation.y = coneMesh.rotation.y;
-      capMesh.castShadow = true;
-      mGroup.add(capMesh);
+    // Soft dreamy creamy cap
+    if (h.cap) {
+      const capH = h.h * 0.25;
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(h.r * 0.25, capH, h.s), chalkCapMat);
+      cap.position.y = h.h - (capH / 2);
+      cap.rotation.y = mound.rotation.y;
+      cap.castShadow = true;
+      hGroup.add(cap);
     }
 
-    scene.add(mGroup);
+    scene.add(hGroup);
+  });
+}
+
+// 2. WEST: DENSE ENCHANTED FOREST (ALL WEST FLANK FROM X = -50 TO -120)
+function buildWesternDeepForest() {
+  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78553D, roughness: 0.85 });
+  const birchTrunkMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.6 });
+  const forestLeafMats = [
+    new THREE.MeshStandardMaterial({ color: 0x65A30D, roughness: 0.74, flatShading: true }), // Warm Golden Olive
+    new THREE.MeshStandardMaterial({ color: 0x4D7C0F, roughness: 0.76, flatShading: true }), // Deep Warm Forest Moss
+    new THREE.MeshStandardMaterial({ color: 0x84CC16, roughness: 0.72, flatShading: true }), // Sunny Lime
+    new THREE.MeshStandardMaterial({ color: 0x3F6212, roughness: 0.78, flatShading: true }), // Dense Woodland Moss
+    new THREE.MeshStandardMaterial({ color: 0xA3E635, roughness: 0.70, flatShading: true })  // Fresh Chartreuse
+  ];
+
+  // Deep woodland grove cluster centers along the western territory
+  const forestGroves = [
+    { cx: -60,  cz: 20,   count: 7, radius: 8 },
+    { cx: -85,  cz: 10,   count: 9, radius: 10 },
+    { cx: -65,  cz: -15,  count: 8, radius: 9 },
+    { cx: -90,  cz: -30,  count: 10, radius: 11 },
+    { cx: -68,  cz: -60,  count: 8, radius: 9 },
+    { cx: -95,  cz: -85,  count: 11, radius: 12 },
+    { cx: -72,  cz: -115, count: 8, radius: 9 },
+    { cx: -98,  cz: -140, count: 10, radius: 11 },
+    { cx: -68,  cz: -170, count: 8, radius: 9 },
+    { cx: -95,  cz: -205, count: 11, radius: 12 },
+    { cx: -70,  cz: -235, count: 8, radius: 9 },
+    { cx: -92,  cz: -265, count: 10, radius: 11 },
+    { cx: -65,  cz: -295, count: 8, radius: 9 }
+  ];
+
+  let treeNum = 0;
+  forestGroves.forEach(grove => {
+    for (let i = 0; i < grove.count; i++) {
+      treeNum++;
+      const angle = (i * ((Math.PI * 2) / grove.count)) + ((treeNum % 7) * 0.25);
+      const dist = (i === 0) ? 0 : 2.0 + (i / grove.count) * (grove.radius - 2.0);
+      const tx = grove.cx + Math.cos(angle) * dist;
+      const tz = grove.cz + Math.sin(angle) * dist;
+      const th = 4.2 + ((treeNum % 6) * 0.45);
+      const isBirch = (treeNum % 3 === 0);
+
+      const tree = new THREE.Group();
+      tree.position.set(tx, 0, tz);
+
+      const tH = th * 0.42;
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.2, 0.28, tH, 6),
+        isBirch ? birchTrunkMat : trunkMat
+      );
+      trunk.position.y = tH / 2;
+      trunk.castShadow = true;
+      tree.add(trunk);
+
+      const lMat = forestLeafMats[treeNum % forestLeafMats.length];
+      if (treeNum % 3 === 0) {
+        // Fluffy multi-dome canopy
+        const c1 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.6 * (th / 4.8), 0), lMat);
+        c1.position.y = tH + 0.9;
+        c1.castShadow = true;
+        tree.add(c1);
+
+        const c2 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.15 * (th / 4.8), 0), lMat);
+        c2.position.set(0.3, tH + 1.9, 0.2);
+        c2.castShadow = true;
+        tree.add(c2);
+      } else if (treeNum % 3 === 1) {
+        // Tall alpine cone
+        const p1 = new THREE.Mesh(new THREE.ConeGeometry(1.8 * (th / 4.8), 2.2, 5), lMat);
+        p1.position.y = tH + 0.85;
+        p1.castShadow = true;
+        tree.add(p1);
+
+        const p2 = new THREE.Mesh(new THREE.ConeGeometry(1.3 * (th / 4.8), 1.9, 5), lMat);
+        p2.position.y = tH + 1.85;
+        p2.castShadow = true;
+        tree.add(p2);
+      } else {
+        // Broadleaf layered canopy
+        const b1 = new THREE.Mesh(new THREE.BoxGeometry(2.2 * (th / 4.8), 2.3 * (th / 4.8), 2.2 * (th / 4.8)), lMat);
+        b1.position.y = tH + 1.2;
+        b1.rotation.y = (treeNum % 4) * (Math.PI / 8);
+        b1.castShadow = true;
+        tree.add(b1);
+      }
+
+      scene.add(tree);
+    }
+  });
+}
+
+// 3. EAST: SPARKLING WATER LAKES, PONDS, LILY PADS & WOODEN DOCKS
+function buildEasternPondsAndLakes() {
+  const waterMat = new THREE.MeshPhysicalMaterial({
+    color: 0x38BDF8, // Vibrant crystal cyan blue
+    roughness: 0.12,
+    metalness: 0.1,
+    transmission: 0.6,
+    ior: 1.333,
+    reflectivity: 0.8,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1
+  });
+
+  const shoreMat = new THREE.MeshStandardMaterial({
+    color: 0xF59E0B, // Sunlit golden shoreline sand
+    roughness: 0.85,
+    flatShading: true
+  });
+
+  const lilyMat = new THREE.MeshStandardMaterial({
+    color: 0x4ADE80, // Bright emerald water lily pad
+    roughness: 0.6,
+    flatShading: true
+  });
+
+  const flowerMat = new THREE.MeshStandardMaterial({
+    color: 0xFB7185, // Pink lotus bloom
+    roughness: 0.5
+  });
+
+  const dockWoodMat = new THREE.MeshStandardMaterial({
+    color: 0x92400E, // Rustic timber dock wood
+    roughness: 0.8
+  });
+
+  const reedMat = new THREE.MeshStandardMaterial({
+    color: 0x65A30D, // Green shoreline reeds
+    roughness: 0.8
+  });
+
+  // Scenic water bodies along the Eastern landscape
+  const waterBodies = [
+    // 1. Serene Morning Pond near Entrance (East)
+    { cx: 58, cz: 5, rx: 16, rz: 14, dock: true, dockRot: 0.3 },
+    // 2. Crystal Lake adjacent to IoT & Tech quarter
+    { cx: 68, cz: -85, rx: 24, rz: 18, dock: true, dockRot: -0.4 },
+    // 3. Mirror Pond between R&D stations
+    { cx: 62, cz: -165, rx: 18, rz: 15, dock: false },
+    // 4. Grand Tranquil Lake near Milestone 6 & graduation grounds
+    { cx: 72, cz: -250, rx: 26, rz: 22, dock: true, dockRot: 0.15 }
+  ];
+
+  waterBodies.forEach(wb => {
+    const waterGroup = new THREE.Group();
+    waterGroup.position.set(wb.cx, 0, wb.cz);
+
+    // Shoreline sandy rim (slightly larger disk just below water)
+    const shoreGeo = new THREE.CylinderGeometry(wb.rx + 1.5, wb.rx + 2.2, 0.15, 20);
+    const shore = new THREE.Mesh(shoreGeo, shoreMat);
+    shore.position.y = 0.04;
+    shore.scale.set(1.0, 1.0, wb.rz / wb.rx);
+    shore.receiveShadow = true;
+    waterGroup.add(shore);
+
+    // Smooth crystal water surface
+    const waterGeo = new THREE.CylinderGeometry(wb.rx, wb.rx, 0.12, 24);
+    const waterMesh = new THREE.Mesh(waterGeo, waterMat);
+    waterMesh.position.y = 0.08;
+    waterMesh.scale.set(1.0, 1.0, wb.rz / wb.rx);
+    waterMesh.receiveShadow = true;
+    waterGroup.add(waterMesh);
+
+    // Floating water lily pads and lotus blooms
+    for (let l = 0; l < 8; l++) {
+      const lAngle = (l * 0.8) + 0.4;
+      const lDist = (wb.rx * 0.35) + ((l % 4) * (wb.rx * 0.12));
+      const lx = Math.cos(lAngle) * lDist;
+      const lz = Math.sin(lAngle) * (lDist * (wb.rz / wb.rx));
+
+      // Lily pad disk
+      const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.04, 8), lilyMat);
+      pad.position.set(lx, 0.15, lz);
+      waterGroup.add(pad);
+
+      // Pink lotus bloom on select pads
+      if (l % 2 === 0) {
+        const bloom = new THREE.Mesh(new THREE.DodecahedronGeometry(0.35, 0), flowerMat);
+        bloom.position.set(lx, 0.28, lz);
+        bloom.castShadow = true;
+        waterGroup.add(bloom);
+      }
+    }
+
+    // Shoreline water reeds
+    for (let r = 0; r < 14; r++) {
+      const rAngle = r * 0.48;
+      const rx = Math.cos(rAngle) * (wb.rx + 0.6);
+      const rz = Math.sin(rAngle) * (wb.rz + 0.6);
+
+      const reed = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.07, 1.6 + (r % 3) * 0.4, 4), reedMat);
+      reed.position.set(rx, 0.8, rz);
+      reed.rotation.z = ((r % 5) - 2) * 0.05;
+      reed.castShadow = true;
+      waterGroup.add(reed);
+    }
+
+    // Rustic wooden dock extending over the water
+    if (wb.dock) {
+      const dockGroup = new THREE.Group();
+      dockGroup.position.set(-wb.rx * 0.75, 0, 0);
+      dockGroup.rotation.y = wb.dockRot;
+
+      // Wooden planks deck
+      const deck = new THREE.Mesh(new THREE.BoxGeometry(7.0, 0.22, 2.4), dockWoodMat);
+      deck.position.set(2.0, 0.25, 0);
+      deck.castShadow = true;
+      deck.receiveShadow = true;
+      dockGroup.add(deck);
+
+      // Dock support stilts / posts
+      const postGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.9, 6);
+      [0.0, 2.2, 4.4].forEach(px => {
+        [-1.0, 1.0].forEach(pz => {
+          const post = new THREE.Mesh(postGeo, dockWoodMat);
+          post.position.set(px, 0.2, pz);
+          post.castShadow = true;
+          dockGroup.add(post);
+        });
+      });
+
+      waterGroup.add(dockGroup);
+    }
+
+    scene.add(waterGroup);
   });
 }
 
