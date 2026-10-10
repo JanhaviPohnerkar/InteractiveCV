@@ -202,6 +202,7 @@ let milestoneThresholds = [];
 const milestoneVisited = new Set();
 let cloudGroups = [];
 let worldAnimals = [];
+let billboardArrows = [];
 
 /* --------------------------------------------------------------------------
    PROJECT BUILDINGS IN THE SURROUNDING TOWN (WITH LOGO BANNERS)
@@ -589,6 +590,14 @@ function initBrunoWorld() {
     updateSkyClouds(delta);
     updateAnimatedWildlife(delta);
 
+    // Gently bob billboard indicator arrows up and down
+    if (billboardArrows && billboardArrows.length) {
+      const now = Date.now() * 0.004;
+      billboardArrows.forEach(arr => {
+        arr.position.y = arr.userData.baseY + Math.sin(now + arr.userData.phase) * 0.28;
+      });
+    }
+
     if (window.orbitControls) window.orbitControls.update();
 
     renderer.render(scene, camera);
@@ -880,90 +889,53 @@ function buildClayRoad() {
    Creates small square logo banners with white cards, dark borders, and icons
    -------------------------------------------------------------------------- */
 function createLogoBadgeBannerTexture(proj) {
+  // If a custom logo image path is provided, load it directly via THREE.TextureLoader
+  if (proj.logoPath) {
+    const loader = new THREE.TextureLoader();
+    const tex = loader.load(
+      proj.logoPath,
+      (t) => {
+        t.colorSpace = THREE.SRGBColorSpace;
+        t.generateMipmaps = true;
+        t.minFilter = THREE.LinearMipmapLinearFilter;
+        t.magFilter = THREE.LinearFilter;
+        t.needsUpdate = true;
+      },
+      undefined,
+      (err) => {
+        console.warn(`Could not load logo from ${proj.logoPath}, using fallback canvas`, err);
+      }
+    );
+    return tex;
+  }
+
+  // Fallback procedural canvas texture if no logoPath
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
   canvas.height = 768;
   const ctx = canvas.getContext('2d');
 
-  function renderBanner(loadedImg) {
-    // Rich bright card background
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, 1024, 768);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, 1024, 768);
 
-    // Sturdy dark outer border
-    ctx.strokeStyle = '#0F172A';
-    ctx.lineWidth = 32;
-    ctx.strokeRect(16, 16, 992, 736);
+  ctx.strokeStyle = proj.themeColor || '#2563EB';
+  ctx.lineWidth = 24;
+  ctx.strokeRect(12, 12, 1000, 744);
 
-    // Inner bright theme accent border
-    ctx.strokeStyle = proj.themeColor || '#2563EB';
-    ctx.lineWidth = 14;
-    ctx.strokeRect(48, 48, 928, 672);
+  ctx.font = '220px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(proj.icon || '📦', 512, 340);
 
-    // Header category pill
-    ctx.fillStyle = '#F1F5F9';
-    ctx.fillRect(60, 60, 904, 80);
-    ctx.fillStyle = proj.themeColor || '#2563EB';
-    ctx.font = '900 38px "Outfit", system-ui, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`★ ${proj.badge || 'PROJECT'} ★`, 512, 102);
+  ctx.fillStyle = proj.themeColor || '#0F172A';
+  ctx.fillRect(36, 590, 952, 140);
 
-    if (loadedImg) {
-      // Draw user's custom designed logo bold and centered
-      const imgMaxH = 430;
-      const imgMaxW = 750;
-      let drawW = loadedImg.width;
-      let drawH = loadedImg.height;
-      const scale = Math.min(imgMaxW / drawW, imgMaxH / drawH);
-      drawW = drawW * scale;
-      drawH = drawH * scale;
-
-      const ix = (1024 - drawW) / 2;
-      const iy = 150 + (imgMaxH - drawH) / 2;
-      ctx.drawImage(loadedImg, ix, iy, drawW, drawH);
-    } else {
-      ctx.font = '220px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(proj.icon || '📦', 512, 360);
-    }
-
-    // Bold bottom banner headline bar
-    ctx.fillStyle = proj.themeColor || '#0F172A';
-    ctx.fillRect(48, 590, 928, 130);
-
-    // Large high-contrast project title
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '900 46px "Outfit", system-ui, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    // Trim title if very long for billboard punchiness
-    let dispTitle = proj.title;
-    if (dispTitle.length > 34) {
-      dispTitle = dispTitle.substring(0, 32) + '...';
-    }
-    ctx.fillText(dispTitle, 512, 655);
-  }
-
-  renderBanner(null);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '900 48px "Outfit", system-ui, sans-serif';
+  ctx.fillText(proj.badge || proj.title, 512, 660);
 
   const texture = new THREE.CanvasTexture(canvas);
-  texture.generateMipmaps = true;
-  texture.minFilter = THREE.LinearMipmapLinearFilter;
-  texture.magFilter = THREE.LinearFilter;
   texture.needsUpdate = true;
-
-  if (proj.logoPath) {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      renderBanner(img);
-      texture.needsUpdate = true;
-    };
-    img.src = proj.logoPath;
-  }
-
   return texture;
 }
 
@@ -1488,6 +1460,37 @@ function buildFoliageAndRocks() {
       parentBuilding: pGroup
     };
     billboardGroup.add(bannerBoardBack);
+
+    // Floating thick vibrant blue 3D indicator arrow pointing down to billboard
+    const arrowGroup = new THREE.Group();
+    const arrowBlueMat = new THREE.MeshStandardMaterial({
+      color: 0x0284C7, // Vibrant cyan-blue
+      roughness: 0.3,
+      emissive: 0x0369A1,
+      emissiveIntensity: 0.65
+    });
+
+    // Arrow stem (thick cylinder)
+    const arrowStem = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.85, 8), arrowBlueMat);
+    arrowStem.position.y = 0.85;
+    arrowStem.castShadow = true;
+    arrowGroup.add(arrowStem);
+
+    // Arrow head (thick downward-pointing cone)
+    const arrowHead = new THREE.Mesh(new THREE.ConeGeometry(0.65, 0.9, 8), arrowBlueMat);
+    arrowHead.position.y = 0.25;
+    arrowHead.rotation.x = Math.PI; // Points downward directly towards the billboard
+    arrowHead.castShadow = true;
+    arrowGroup.add(arrowHead);
+
+    const baseArrowY = 2.5 + (billboardH / 2) + 1.25;
+    arrowGroup.position.set(0, baseArrowY, 0);
+    arrowGroup.userData = {
+      baseY: baseArrowY,
+      phase: Math.random() * Math.PI * 2
+    };
+    billboardGroup.add(arrowGroup);
+    billboardArrows.push(arrowGroup);
 
     pGroup.add(billboardGroup);
 
