@@ -815,28 +815,67 @@ function buildAdventurerCharacter() {
   headMesh.castShadow = true;
   characterHead.add(headMesh);
 
-  // BLACK Hair Base
-  const hairCapGeo = new THREE.BoxGeometry(0.68, 0.32, 0.62);
-  const hairCap = new THREE.Mesh(hairCapGeo, hairBlackMat);
-  hairCap.position.set(0, 0.22, -0.04);
-  characterHead.add(hairCap);
+  // Cute Black Short Cut Hair (Pixie / Bob cut, NO ponytail)
+  const shortHairGroup = new THREE.Group();
 
-  // BLACK Ponytail
-  ponytailMesh = new THREE.Group();
-  ponytailMesh.position.set(0, 0.22, -0.32);
+  // Crown & top volume
+  const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.70, 0.26, 0.64), hairBlackMat);
+  hairTop.position.set(0, 0.24, -0.02);
+  hairTop.castShadow = true;
+  shortHairGroup.add(hairTop);
 
-  const knotGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.25, 8);
-  knotGeo.rotateX(Math.PI / 3);
-  const knot = new THREE.Mesh(knotGeo, hairBlackMat);
-  ponytailMesh.add(knot);
+  // Upper back of head
+  const hairBackTop = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.36, 0.14), hairBlackMat);
+  hairBackTop.position.set(0, 0.08, -0.28);
+  hairBackTop.castShadow = true;
+  shortHairGroup.add(hairBackTop);
 
-  const tailGeo = new THREE.ConeGeometry(0.24, 0.65, 7);
-  tailGeo.rotateX(-Math.PI / 2.5);
-  const tail = new THREE.Mesh(tailGeo, hairBlackMat);
-  tail.position.set(0, 0.05, -0.35);
-  ponytailMesh.add(tail);
+  // Tapered short cut nape at back of neck
+  const hairBackNape = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.20, 0.08), hairBlackMat);
+  hairBackNape.position.set(0, -0.16, -0.26);
+  hairBackNape.castShadow = true;
+  shortHairGroup.add(hairBackNape);
 
-  characterHead.add(ponytailMesh);
+  // Left side short locks
+  const hairSideL = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.44, 0.54), hairBlackMat);
+  hairSideL.position.set(-0.33, 0.04, 0.01);
+  hairSideL.castShadow = true;
+  shortHairGroup.add(hairSideL);
+
+  // Right side short locks
+  const hairSideR = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.44, 0.54), hairBlackMat);
+  hairSideR.position.set(0.33, 0.04, 0.01);
+  hairSideR.castShadow = true;
+  shortHairGroup.add(hairSideR);
+
+  // Angled sideburn points framing face
+  const sideburnL = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.22, 4), hairBlackMat);
+  sideburnL.position.set(-0.33, -0.20, 0.12);
+  sideburnL.rotation.z = 0.15;
+  shortHairGroup.add(sideburnL);
+
+  const sideburnR = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.22, 4), hairBlackMat);
+  sideburnR.position.set(0.33, -0.20, 0.12);
+  sideburnR.rotation.z = -0.15;
+  shortHairGroup.add(sideburnR);
+
+  // Front bangs / fringe over forehead
+  const hairBangsCenter = new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.16, 0.08), hairBlackMat);
+  hairBangsCenter.position.set(0, 0.23, 0.29);
+  hairBangsCenter.castShadow = true;
+  shortHairGroup.add(hairBangsCenter);
+
+  // Slightly longer side fringe layers
+  const fringeL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.22, 0.07), hairBlackMat);
+  fringeL.position.set(-0.24, 0.15, 0.30);
+  shortHairGroup.add(fringeL);
+
+  const fringeR = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.18, 0.07), hairBlackMat);
+  fringeR.position.set(0.24, 0.17, 0.30);
+  shortHairGroup.add(fringeR);
+
+  characterHead.add(shortHairGroup);
+  ponytailMesh = null; // Removed ponytail
 
   // Eyebrows & Eyes
   const browL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.035, 0.02), eyeBrowMat);
