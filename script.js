@@ -1423,63 +1423,73 @@ function buildFoliageAndRocks() {
     // Prominent, Attention-Catching Rooftop Billboard Banner
     const logoTexture = createLogoBadgeBannerTexture(proj);
 
+    // Create a dedicated billboard sub-group rotated to face the road/camera directly
+    const billboardGroup = new THREE.Group();
+    billboardGroup.position.set(0, bannerMountY, 0);
+
+    // Angle billboard towards the central road axis (x=0) for maximum direct visibility
+    const angleToRoad = Math.atan2(0 - proj.pos.x, (proj.pos.z + 10) - proj.pos.z);
+    billboardGroup.rotation.y = angleToRoad - proj.rot;
+
     // Twin sturdy steel mounting pylons/trusses
     const trussMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.6, metalness: 0.3 });
-    const pylonL = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 2.2, 8), trussMat);
-    pylonL.position.set(-1.6, bannerMountY + 1.1, 0);
-    pGroup.add(pylonL);
+    const pylonL = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, 2.4, 8), trussMat);
+    pylonL.position.set(-1.6, 1.2, 0);
+    billboardGroup.add(pylonL);
 
-    const pylonR = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 2.2, 8), trussMat);
-    pylonR.position.set(1.6, bannerMountY + 1.1, 0);
-    pGroup.add(pylonR);
+    const pylonR = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.14, 2.4, 8), trussMat);
+    pylonR.position.set(1.6, 1.2, 0);
+    billboardGroup.add(pylonR);
 
     // Cross brace between pylons
-    const xBrace = new THREE.Mesh(new THREE.BoxGeometry(3.3, 0.08, 0.08), trussMat);
-    xBrace.position.set(0, bannerMountY + 0.9, 0);
-    pGroup.add(xBrace);
+    const xBrace = new THREE.Mesh(new THREE.BoxGeometry(3.3, 0.1, 0.1), trussMat);
+    xBrace.position.set(0, 1.0, 0);
+    billboardGroup.add(xBrace);
 
-    // Large outer dark billboard bezel frame (4.9m wide x 3.7m tall)
+    // Large outer dark billboard bezel frame (5.0m wide x 3.8m tall)
     const billboardW = 4.8;
     const billboardH = 3.6;
     const frameMesh = new THREE.Mesh(
-      new THREE.BoxGeometry(billboardW + 0.22, billboardH + 0.22, 0.22),
+      new THREE.BoxGeometry(billboardW + 0.24, billboardH + 0.24, 0.24),
       new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.45, metalness: 0.2 })
     );
-    frameMesh.position.set(0, bannerMountY + 2.4, 0);
+    frameMesh.position.set(0, 2.5, 0);
     frameMesh.castShadow = true;
-    pGroup.add(frameMesh);
+    billboardGroup.add(frameMesh);
 
     // Top banner spotlight fixture
-    const spotFixture = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.15, 0.3), trussMat);
-    spotFixture.position.set(0, bannerMountY + 2.4 + (billboardH / 2) + 0.1, 0.2);
-    pGroup.add(spotFixture);
+    const spotFixture = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.18, 0.35), trussMat);
+    spotFixture.position.set(0, 2.5 + (billboardH / 2) + 0.12, 0.22);
+    billboardGroup.add(spotFixture);
 
     // Front high-res big banner plane (Wide 4:3 billboard)
     const bannerBoard = new THREE.Mesh(
       new THREE.PlaneGeometry(billboardW, billboardH),
       new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.2, metalness: 0.05 })
     );
-    bannerBoard.position.set(0, bannerMountY + 2.4, 0.12);
+    bannerBoard.position.set(0, 2.5, 0.14);
     bannerBoard.userData = {
       isProjectTownBanner: true,
       projectId: proj.id,
       parentBuilding: pGroup
     };
-    pGroup.add(bannerBoard);
+    billboardGroup.add(bannerBoard);
 
     // Back banner plane so it is fully visible and legible from every angle
     const bannerBoardBack = new THREE.Mesh(
       new THREE.PlaneGeometry(billboardW, billboardH),
       new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.2, metalness: 0.05 })
     );
-    bannerBoardBack.position.set(0, bannerMountY + 2.4, -0.12);
+    bannerBoardBack.position.set(0, 2.5, -0.14);
     bannerBoardBack.rotation.y = Math.PI;
     bannerBoardBack.userData = {
       isProjectTownBanner: true,
       projectId: proj.id,
       parentBuilding: pGroup
     };
-    pGroup.add(bannerBoardBack);
+    billboardGroup.add(bannerBoardBack);
+
+    pGroup.add(billboardGroup);
 
     pGroup.userData = {
       isTownProjectBuilding: true,
