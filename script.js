@@ -889,53 +889,79 @@ function buildClayRoad() {
    Creates small square logo banners with white cards, dark borders, and icons
    -------------------------------------------------------------------------- */
 function createLogoBadgeBannerTexture(proj) {
-  // If a custom logo image path is provided, load it directly via THREE.TextureLoader
-  if (proj.logoPath) {
-    const loader = new THREE.TextureLoader();
-    const tex = loader.load(
-      proj.logoPath,
-      (t) => {
-        t.colorSpace = THREE.SRGBColorSpace;
-        t.generateMipmaps = true;
-        t.minFilter = THREE.LinearMipmapLinearFilter;
-        t.magFilter = THREE.LinearFilter;
-        t.needsUpdate = true;
-      },
-      undefined,
-      (err) => {
-        console.warn(`Could not load logo from ${proj.logoPath}, using fallback canvas`, err);
-      }
-    );
-    return tex;
-  }
-
-  // Fallback procedural canvas texture if no logoPath
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
   canvas.height = 768;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(0, 0, 1024, 768);
+  function drawCard(img) {
+    // Crisp clean billboard face
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, 1024, 768);
 
-  ctx.strokeStyle = proj.themeColor || '#2563EB';
-  ctx.lineWidth = 24;
-  ctx.strokeRect(12, 12, 1000, 744);
+    // Accent framing border matching project theme color
+    ctx.strokeStyle = proj.themeColor || '#2563EB';
+    ctx.lineWidth = 22;
+    ctx.strokeRect(11, 11, 1002, 746);
 
-  ctx.font = '220px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(proj.icon || '📦', 512, 340);
+    // Inner subtle border
+    ctx.strokeStyle = '#E2E8F0';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(30, 30, 964, 708);
 
-  ctx.fillStyle = proj.themeColor || '#0F172A';
-  ctx.fillRect(36, 590, 952, 140);
+    if (img && img.width > 0 && img.height > 0) {
+      // Draw custom project logo image prominently in center with padding
+      const maxW = 900;
+      const maxH = 550;
+      const scale = Math.min(maxW / img.width, maxH / img.height);
+      const dw = img.width * scale;
+      const dh = img.height * scale;
+      const dx = (1024 - dw) / 2;
+      const dy = 50 + (maxH - dh) / 2;
 
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '900 48px "Outfit", system-ui, sans-serif';
-  ctx.fillText(proj.badge || proj.title, 512, 660);
+      ctx.drawImage(img, dx, dy, dw, dh);
+    } else {
+      // High-visibility fallback icon
+      ctx.font = '200px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(proj.icon || '🚀', 512, 320);
+    }
+
+    // Bold title banner bar at the bottom
+    ctx.fillStyle = proj.themeColor || '#0F172A';
+    ctx.fillRect(36, 610, 952, 120);
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '900 44px "Outfit", system-ui, sans-serif';
+    ctx.fillText(proj.badge || proj.title, 512, 670);
+  }
+
+  // Draw initial canvas immediately so billboard is never blank or black
+  drawCard(null);
 
   const texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
   texture.needsUpdate = true;
+
+  // Load custom logo image asynchronously and update canvas
+  if (proj.logoPath) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      drawCard(img);
+      texture.needsUpdate = true;
+    };
+    img.onerror = () => {
+      console.warn(`Failed to load logo image: ${proj.logoPath}, keeping procedural card`);
+    };
+    img.src = proj.logoPath;
+  }
+
   return texture;
 }
 
@@ -1435,9 +1461,18 @@ function buildFoliageAndRocks() {
     billboardGroup.add(spotFixture);
 
     // Front high-res big banner plane (Wide 4:3 billboard)
+    // MeshLambertMaterial with slight emissive self-illumination guarantees vivid brightness from every angle
+    const bannerMat = new THREE.MeshLambertMaterial({
+      map: logoTexture,
+      emissive: 0xFFFFFF,
+      emissiveMap: logoTexture,
+      emissiveIntensity: 0.35,
+      side: THREE.FrontSide
+    });
+
     const bannerBoard = new THREE.Mesh(
       new THREE.PlaneGeometry(billboardW, billboardH),
-      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.2, metalness: 0.05 })
+      bannerMat
     );
     bannerBoard.position.set(0, 2.5, 0.14);
     bannerBoard.userData = {
@@ -1450,7 +1485,7 @@ function buildFoliageAndRocks() {
     // Back banner plane so it is fully visible and legible from every angle
     const bannerBoardBack = new THREE.Mesh(
       new THREE.PlaneGeometry(billboardW, billboardH),
-      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.2, metalness: 0.05 })
+      bannerMat
     );
     bannerBoardBack.position.set(0, 2.5, -0.14);
     bannerBoardBack.rotation.y = Math.PI;
@@ -1461,24 +1496,24 @@ function buildFoliageAndRocks() {
     };
     billboardGroup.add(bannerBoardBack);
 
-    // Floating thick vibrant blue 3D indicator arrow pointing down to billboard
+    // Floating thick vibrant bright red 3D indicator arrow pointing down to billboard
     const arrowGroup = new THREE.Group();
-    const arrowBlueMat = new THREE.MeshStandardMaterial({
-      color: 0x0284C7, // Vibrant cyan-blue
-      roughness: 0.3,
-      emissive: 0x0369A1,
-      emissiveIntensity: 0.65
+    const arrowRedMat = new THREE.MeshStandardMaterial({
+      color: 0xEF4444, // Bright vivid scarlet red
+      roughness: 0.25,
+      emissive: 0xDC2626, // Bright ruby red glow
+      emissiveIntensity: 0.75
     });
 
     // Arrow stem (thick cylinder)
-    const arrowStem = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.85, 8), arrowBlueMat);
+    const arrowStem = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.9, 12), arrowRedMat);
     arrowStem.position.y = 0.85;
     arrowStem.castShadow = true;
     arrowGroup.add(arrowStem);
 
     // Arrow head (thick downward-pointing cone)
-    const arrowHead = new THREE.Mesh(new THREE.ConeGeometry(0.65, 0.9, 8), arrowBlueMat);
-    arrowHead.position.y = 0.25;
+    const arrowHead = new THREE.Mesh(new THREE.ConeGeometry(0.7, 1.0, 12), arrowRedMat);
+    arrowHead.position.y = 0.22;
     arrowHead.rotation.x = Math.PI; // Points downward directly towards the billboard
     arrowHead.castShadow = true;
     arrowGroup.add(arrowHead);
