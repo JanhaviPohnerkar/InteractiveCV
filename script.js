@@ -1121,7 +1121,7 @@ function createProceduralBuilding(group, cfg) {
 }
 
 function buildFoliageAndRocks() {
-  const rockMat = new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true });
+  const rockMat = new THREE.MeshStandardMaterial({ color: 0x78716C, roughness: 0.9, flatShading: true }); // Natural medium stone grey
   const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78553D, roughness: 0.85 }); // Warm chocolate mahogany trunk
 
   // Lush nature foliage palette (deep vibrant lush greens, emerald, warm muddy terracotta pink, and warm earthy heather purple)
@@ -1792,9 +1792,9 @@ function buildEasternPondsAndLakes() {
   });
 
   const rockMats = [
-    new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true }), // Chalk white river boulder
-    new THREE.MeshStandardMaterial({ color: 0xB5A492, roughness: 0.88, flatShading: true }), // Warm clay sandstone pebble
-    new THREE.MeshStandardMaterial({ color: 0xD4C5B9, roughness: 0.88, flatShading: true })  // Warm river stone
+    new THREE.MeshStandardMaterial({ color: 0x78716C, roughness: 0.9, flatShading: true }), // Natural medium stone grey
+    new THREE.MeshStandardMaterial({ color: 0x57534E, roughness: 0.88, flatShading: true }), // Deep charcoal river rock
+    new THREE.MeshStandardMaterial({ color: 0x94908D, roughness: 0.88, flatShading: true })  // Soft river pebble grey
   ];
 
   const grassTuftMat = new THREE.MeshStandardMaterial({
