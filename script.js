@@ -208,170 +208,236 @@ let worldAnimals = [];
    -------------------------------------------------------------------------- */
 const PROJECT_BUILDINGS_DATA = [
   {
-    id: "proj_art",
-    title: "Generative Art & Creative CAD",
-    badge: "CREATIVE",
-    icon: "🎨",
-    themeColor: "#DB2777",
-    pos: { x: -28, z: -38 },
+    id: "proj_slam",
+    title: "ORB-SLAM3 on Raspberry Pi 4B + CNN Loop Closing",
+    badge: "STEREO SLAM",
+    icon: "🌐",
+    logoPath: "assets/01_orb_slam3.png",
+    themeColor: "#2563EB",
+    pos: { x: -28, z: -25 },
     rot: 0.45,
-    roofType: "pitched",
-    wallColor: 0xFEF3C7, // Cheerful warm honey butter
-    roofColor: 0xDB2777, // Cheerful warm berry pink
-    fenceType: "wooden",
+    roofType: "dome",
+    wallColor: 0xEDE9FE,
+    roofColor: 0x2563EB,
+    fenceType: "circuit",
+    skills: ["ORB-SLAM3", "Raspberry Pi 4B", "Stereo-Inertial", "ARM Optimization", "ONNX Runtime", "CNN Loop Closure"],
     details: {
-      category: "Creative Computation",
-      tagline: "Parametric 3D Design & Algorithmic Art",
-      highlight: "Procedural geometry, 3D printing and digital fabrication",
-      description: "Exploration of procedural modeling, 3D generative art, and mechanical product enclosures designed in CAD and brought to life through additive manufacturing.",
+      category: "Embedded Spatial AI & Robotics",
+      tagline: "Stereo and Stereo-Inertial SLAM with Neural Loop Closing on ARM",
+      highlight: "Real-time edge visual odometry optimized with ONNX Runtime on Cortex-A72",
+      description: "Engineered and deployed an edge stereo-inertial SLAM pipeline on Raspberry Pi 4B. Integrated CNN-based visual place recognition and loop closure verification using ONNX Runtime, delivering metric loop corrections without drifting over long trajectories.",
       achievements: [
-        "Modeled parametric components with rapid 3D printing tolerance calibration",
-        "Created digital art installations and procedural visual shaders",
-        "Built interactive creative prototypes blending aesthetics and hardware"
+        "Ported and optimized ORB-SLAM3 algorithms on Raspberry Pi 4B with ARM NEON acceleration",
+        "Implemented CNN-based deep loop-closing verification running via ONNX Runtime",
+        "Benchmarked stereo and stereo-inertial sensor pipelines under dynamic lighting constraints"
       ]
     }
   },
   {
-    id: "proj_iot",
-    title: "Smart IoT & Embedded Telemetry",
-    badge: "IOT & EDGE",
-    icon: "📡",
-    themeColor: "#2563EB",
+    id: "proj_turbulence",
+    title: "STM32 Aircraft Turbulence Detection",
+    badge: "AERO SENSING",
+    icon: "✈️",
+    logoPath: "assets/02_stm32_turbulence.png",
+    themeColor: "#0284C7",
     pos: { x: 30, z: -48 },
     rot: -0.4,
     roofType: "flat_tech",
-    wallColor: 0xEDE9FE, // Soft lavender blue
-    roofColor: 0x3B82F6, // Vibrant cornflower blue
+    wallColor: 0xE0F2FE,
+    roofColor: 0x0284C7,
     fenceType: "circuit",
+    skills: ["STM32", "MPU6050 IMU", "Interrupt Acquisition", "NanoEdge AI", "Embedded C", "Real-Time Telemetry"],
     details: {
-      category: "Embedded IoT",
-      tagline: "Low-Power Sensor Networks & Remote Telemetry",
-      highlight: "Microcontroller sensor nodes with wireless MQTT streaming",
-      description: "End-to-end edge monitoring system with multi-sensor environmental boards streaming real-time telemetry to distributed dashboard interfaces.",
+      category: "Avionics & Embedded Edge AI",
+      tagline: "Microcontroller In-Flight Turbulence Detection using NanoEdge AI",
+      highlight: "Interrupt-driven 6-DoF inertial acquisition with millisecond anomaly scoring",
+      description: "Developed an embedded avionics sensing node for aircraft turbulence characterization. Powered by an STM32 microcontroller and MPU6050 6-axis IMU with interrupt-driven telemetry and onboard NanoEdge AI anomaly classification models.",
       achievements: [
-        "Designed energy-efficient firmware for continuous sensor polling",
-        "Implemented fault-tolerant wireless packet buffering",
-        "Built web-socket telemetry dashboards with sub-second latency"
+        "Configured high-frequency interrupt-driven DMA telemetry acquisition for MPU6050",
+        "Trained and deployed NanoEdge AI machine learning models directly on microcontroller flash",
+        "Classified clear-air turbulence vs aerodynamic vibration patterns with high reliability"
       ]
     }
   },
   {
-    id: "proj_cv",
-    title: "Computer Vision & Optical Inspection",
-    badge: "VISION AI",
-    icon: "👁️",
-    themeColor: "#059669",
-    pos: { x: -32, z: -100 },
+    id: "proj_mars_dem",
+    title: "Mars DEM Generation using Shape-from-Shading",
+    badge: "MARS DEM",
+    icon: "🪐",
+    logoPath: "assets/03_mars_dem.png",
+    themeColor: "#C2410C",
+    pos: { x: -32, z: -80 },
     rot: 0.5,
     roofType: "pitched",
-    wallColor: 0xDCFCE7, // Crisp mint green
-    roofColor: 0x059669, // Deep emerald teal
+    wallColor: 0xFFEDD5,
+    roofColor: 0xC2410C,
     fenceType: "wireframe",
+    skills: ["Shape-from-Shading", "CTX / HiRISE Imagery", "Lambertian Reflectance", "Hapke Model", "Planetary Photometry", "3D Elevation Maps"],
     details: {
-      category: "Industrial Vision",
-      tagline: "Sub-Millimeter Optical Quality Assurance",
-      highlight: "High-speed camera edge inference and defect classification",
-      description: "Automated optical inspection station using morphological filters and neural segmentation to catch micro-defects in high-speed manufacturing pipelines.",
+      category: "Planetary Remote Sensing & Photometry",
+      tagline: "High-Resolution Martian Elevation Models from Monocular Satellite Imagery",
+      highlight: "Hapke photometric inversion resolving sub-meter crater topography",
+      description: "Pioneered photometric stereo and Shape-from-Shading (SfS) reconstruction algorithms for CTX and HiRISE Martian orbital datasets. Applied both Lambertian and complex Hapke photometric reflectance models to reconstruct digital elevation models (DEMs).",
       achievements: [
-        "Engineered real-time edge filtering pipeline running at >60 FPS",
-        "Achieved ~300 µm defect detection sensitivity on dynamic textures",
-        "Published findings on DIPlib acceleration for production workloads"
+        "Processed high-resolution NASA CTX and HiRISE imagery for crater basin mapping",
+        "Formulated nonlinear Hapke photometric model inversions accounting for atmospheric haze",
+        "Generated dense 3D elevation topographies exceeding traditional stereo-pair coverage"
       ]
     }
   },
   {
-    id: "proj_slam",
-    title: "Spatial SLAM & 360° Video Systems",
-    badge: "SPATIAL AI",
-    icon: "🌐",
-    themeColor: "#D97706",
-    pos: { x: 32, z: -125 },
+    id: "proj_retinopathy",
+    title: "Explainable Attention Ensemble for Diabetic Retinopathy",
+    badge: "MEDICAL AI",
+    icon: "👁️",
+    logoPath: "assets/04_diabetic_retinopathy_ai.png",
+    themeColor: "#E11D48",
+    pos: { x: 32, z: -115 },
     rot: -0.35,
-    roofType: "dome",
-    wallColor: 0xFFEDD5, // Warm apricot cream
-    roofColor: 0xD97706, // Cheerful golden amber
-    fenceType: "circuit",
-    details: {
-      category: "Spatial Robotics",
-      tagline: "Multi-Camera Stitching & Visual Odometry",
-      highlight: "Real-time 360-degree panorama stitching on edge compute",
-      description: "Research project focusing on spherical image reprojection, seam blending, and feature-based spatial tracking on resource-constrained embedded robotics hardware.",
-      achievements: [
-        "Integrated multi-sensor synchronized video capture pipeline",
-        "Benchmarked embedded ORB-SLAM3 tracking with high frame stability",
-        "Formulated dynamic seam-carving algorithms for distortion-free stitching"
-      ]
-    }
-  },
-  {
-    id: "proj_dtwin",
-    title: "Monocular 3D Digital Twins",
-    badge: "3D TWINS",
-    icon: "🧊",
-    themeColor: "#7C3AED",
-    pos: { x: -28, z: -180 },
-    rot: 0.35,
-    roofType: "wireframe_frame",
-    wallColor: 0xF3E8FF, // Soft purple haze
-    roofColor: 0x8B5CF6, // Cheerful electric violet
-    fenceType: "wireframe",
-    details: {
-      category: "Frontier 3D Research",
-      tagline: "Dense 3D Point Clouds from Single Video Streams",
-      highlight: "Neural geometric priors transforming video to spatial assets",
-      description: "Deep learning research at IIT Jodhpur reconstructing detailed metric 3D point cloud digital twins from moving phone/monocular video streams without LiDAR.",
-      achievements: [
-        "Developed neural monocular pipeline extracting dense 3D point clouds",
-        "Integrated geometric consistency constraints across multi-view video frames",
-        "Exported interactive meshes for simulation, VR, and digital twin analytics"
-      ]
-    }
-  },
-  {
-    id: "proj_green",
-    title: "Sustainable Electronics & Clean Tech",
-    badge: "ECO TECH",
-    icon: "☀️",
-    themeColor: "#15803D",
-    pos: { x: 30, z: -210 },
-    rot: -0.45,
-    roofType: "solar_cottage",
-    wallColor: 0xFEF9C3, // Cheerful sunlight cream
-    roofColor: 0x16A34A, // Rich leaf green
+    roofType: "pitched",
+    wallColor: 0xFFE4E6,
+    roofColor: 0xE11D48,
     fenceType: "wooden",
+    skills: ["Medical Imaging", "Attention Mechanisms", "Feature Fusion", "Explainable AI", "Severity Grading", "PyTorch"],
     details: {
-      category: "Sustainable Hardware",
-      tagline: "Ultra-Low Power Systems & Solar Harvesting",
-      highlight: "Energy-harvesting sensor nodes with zero standby drain",
-      description: "Exploration of eco-conscious hardware design, solar harvesting controllers, and power-gated embedded firmware for environmental preservation.",
+      category: "Healthcare AI & Computer Vision",
+      tagline: "Multi-Stage Detection & Severity Grading with Clinically Interpretable Heatmaps",
+      highlight: "Spatial attention ensemble achieving clinical-grade lesion sensitivity",
+      description: "Designed a multi-branch deep learning ensemble with explainable spatial attention mechanisms for early diabetic retinopathy detection and severity staging from fundus photography.",
       achievements: [
-        "Built MPPT solar charging circuit prototype for outdoor sensors",
-        "Optimized sleep-wake duty cycles achieving multi-month battery life",
-        "Analyzed lifecycle impact of embedded electronics assemblies"
+        "Implemented multi-scale feature fusion layers across diverse neural architectures",
+        "Achieved high diagnostic accuracy across 5 distinct clinical severity grades",
+        "Integrated Grad-CAM and self-attention saliency maps for clinical interpretability"
       ]
     }
   },
   {
-    id: "proj_robot",
-    title: "Autonomous Mobile Robotics",
-    badge: "ROBOTICS",
-    icon: "🤖",
-    themeColor: "#0284C7",
-    pos: { x: -24, z: -245 },
-    rot: 0.25,
-    roofType: "gear_lab",
-    wallColor: 0xE0F2FE, // Cheerful cyan mist
-    roofColor: 0x0284C7, // Vibrant electric cyan
+    id: "proj_textile",
+    title: "Textile / Metal-Plated Thread Defect Detection",
+    badge: "THREAD DEFECT",
+    icon: "🧵",
+    logoPath: "assets/05_textile_defect_detection.png",
+    themeColor: "#059669",
+    pos: { x: -28, z: -150 },
+    rot: 0.35,
+    roofType: "solar_cottage",
+    wallColor: 0xDCFCE7,
+    roofColor: 0x059669,
     fenceType: "circuit",
+    skills: ["CIELab / CLAHE", "Random Forest (~94%)", "Flask", "MQTT", "Edge Machine Vision", "Industrial IoT"],
     details: {
-      category: "Robotics & Controls",
-      tagline: "Path Planning, Obstacle Avoidance & Actuation",
-      highlight: "Differential drive autonomous rovers with PID control",
-      description: "Designed, wired, and programmed custom mobile robots featuring LiDAR/ultrasonic obstacle avoidance and closed-loop trajectory tracking.",
+      category: "Industrial Quality Automation",
+      tagline: "Real-Time Metal Thread Inspection System with ~94% Accuracy",
+      highlight: "Sub-millimeter flaw classification running via Flask and MQTT streams",
+      description: "Built an automated optical inspection pipeline for conductive metal-plated threads. Utilizes CIELab color space transformation and Contrast Limited Adaptive Histogram Equalization (CLAHE) feeding an optimized Random Forest classifier (~94% test accuracy).",
       achievements: [
-        "Built custom differential drive chassis with encoder feedback",
-        "Implemented PID trajectory control and A* grid navigation",
-        "Won podium placement in university autonomous navigation trials"
+        "Constructed robust color-invariant edge filters resilient to specular metallic reflections",
+        "Achieved ~94% test classification accuracy on microscopic coating discontinuities",
+        "Integrated Flask web dashboard and MQTT messaging for real-time factory floor alerts"
+      ]
+    }
+  },
+  {
+    id: "proj_bionic_arm",
+    title: "Myoelectric Bionic Prosthetic Arm",
+    badge: "BIONIC ARM",
+    icon: "🦾",
+    logoPath: "assets/06_bionic_prosthetic_arm.png",
+    themeColor: "#7C3AED",
+    pos: { x: 30, z: -180 },
+    rot: -0.45,
+    roofType: "gear_lab",
+    wallColor: 0xF3E8FF,
+    roofColor: 0x7C3AED,
+    fenceType: "circuit",
+    skills: ["MyoWare EMG", "PCA9685 PWM", "Arduino", "Raspberry Pi", "3D Printing & Biomechatronics", "Prosthetic Control"],
+    details: {
+      category: "Biomechatronics & Assistive Technology",
+      tagline: "EMG-Controlled Multi-Grip Bionic Hand with Multi-Channel Actuation",
+      highlight: "Real-time surface electromyography decoding with proportional grip actuation",
+      description: "Engineered a low-cost, high-dexterity myoelectric bionic arm prosthetic. Captures surface muscle potentials using MyoWare EMG sensors, processed in real-time through Arduino and Raspberry Pi to actuate multiple fingers via PCA9685 I2C servo drivers.",
+      achievements: [
+        "Calibrated adaptive thresholding and pattern recognition for varied user muscle profiles",
+        "Controlled multi-degree-of-freedom tendon cables with 16-channel PCA9685 PWM drivers",
+        "Designed lightweight, ergonomically articulated 3D printed mechanical finger assemblies"
+      ]
+    }
+  },
+  {
+    id: "proj_depth_3d",
+    title: "Monocular Depth Estimation & 3D Point Clouds",
+    badge: "3D POINT CLOUD",
+    icon: "🧊",
+    logoPath: "assets/07_monocular_depth_point_cloud.png",
+    themeColor: "#4F46E5",
+    pos: { x: -26, z: -215 },
+    rot: 0.25,
+    roofType: "wireframe_frame",
+    wallColor: 0xEEF2FF,
+    roofColor: 0x4F46E5,
+    fenceType: "wireframe",
+    skills: ["MiDaS", "Dense Point Clouds", "Camera Intrinsic Calibration", "Open3D", "PCL", "Depth Disparity"],
+    details: {
+      category: "Spatial AI & 3D Reconstruction",
+      tagline: "Dense Metric 3D Point Cloud Generation from Single RGB Images",
+      highlight: "Zero-shot transformer depth estimation with camera intrinsic reprojection",
+      description: "Constructed an automated 3D spatial reconstruction pipeline taking uncalibrated monocular photos and generating dense, metrically colored 3D point cloud assets using deep transformer depth networks (MiDaS) and pinhole projection matrices.",
+      achievements: [
+        "Inferred relative depth disparities and normalized metric spatial scale from single images",
+        "Formulated back-projection geometry transforming 2D pixels into dense 3D colored point clouds",
+        "Exported industry-standard PLY/PCD formats for CAD, robotics, and interactive Three.js scenes"
+      ]
+    }
+  },
+  {
+    id: "proj_sand_grain",
+    title: "Sand Grain Size Measurement & Mapping",
+    badge: "SAND GRAIN",
+    icon: "🏖️",
+    logoPath: "assets/05_textile_defect_detection.png",
+    themeColor: "#D97706",
+    pos: { x: 28, z: -250 },
+    rot: -0.35,
+    roofType: "pitched",
+    wallColor: 0xFEF3C7,
+    roofColor: 0xD97706,
+    fenceType: "wooden",
+    skills: ["QR Scale Calibration", "Granulometry", "Morphological Segmentation", "Automated Particle Mapping", "OpenCV", "Geospatial Data"],
+    details: {
+      category: "Computer Vision & Granulometry",
+      tagline: "Automated Granulometric Sizing with QR-Based Metric Scale Calibration",
+      highlight: "In-situ field particle measurement with sub-millimeter precision",
+      description: "Engineered an in-situ optical particle sizing system for geotechnical and environmental sand samples. Uses fiducial QR code scale markers to establish real-world pixel-to-millimeter ratios, paired with watershed morphological segmentation.",
+      achievements: [
+        "Implemented automatic QR code detection and perspective rectification for exact metric scale",
+        "Segmented thousands of overlapping sand grains using adaptive watershed algorithms",
+        "Generated granulometric size distribution curves (D10, D50, D90) and geospatial variance maps"
+      ]
+    }
+  },
+  {
+    id: "proj_multi_cam",
+    title: "Raspberry Pi Multi-Camera Stitching & Streaming",
+    badge: "360° STREAM",
+    icon: "📹",
+    logoPath: "assets/08_multi_camera_stitching.png",
+    themeColor: "#0891B2",
+    pos: { x: -22, z: -285 },
+    rot: 0.3,
+    roofType: "flat_tech",
+    wallColor: 0xECFEFF,
+    roofColor: 0x0891B2,
+    fenceType: "circuit",
+    skills: ["3- & 4-Camera RPi Setup", "ZMQ Messaging", "FastAPI Streaming", "Real-Time Panorama", "Hardware H.264", "Multi-Threaded Video"],
+    details: {
+      category: "Multi-Sensor Video Streaming",
+      tagline: "Synchronized 3- and 4-Camera Panoramic Stitching & Low-Latency Streaming",
+      highlight: "ZeroMQ socket distribution and FastAPI live panoramic web streaming",
+      description: "Built an embedded panoramic imaging system linking 3 and 4 synchronized Raspberry Pi camera modules. Features low-latency image acquisition, homography-based cylindrical image stitching, and ZeroMQ transport feeding high-throughput FastAPI streaming services.",
+      achievements: [
+        "Configured multi-camera hardware trigger synchronization on Raspberry Pi boards",
+        "Optimized cylindrical projection and seam blending for 360° panoramic output",
+        "Streamed ultra-low-latency stitched video over ZeroMQ pipelines to web clients via FastAPI"
       ]
     }
   }
@@ -815,43 +881,70 @@ function buildClayRoad() {
    -------------------------------------------------------------------------- */
 function createLogoBadgeBannerTexture(proj) {
   const canvas = document.createElement('canvas');
-  canvas.width = 256;
-  canvas.height = 256;
+  canvas.width = 512;
+  canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  // Clean white card background with rounded aesthetic
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fillRect(0, 0, 256, 256);
+  function renderBanner(loadedImg) {
+    // Clean, crisp card background
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, 512, 512);
 
-  // Outer dark frame (matching reference image signs)
-  ctx.strokeStyle = '#334155';
-  ctx.lineWidth = 14;
-  ctx.strokeRect(7, 7, 242, 242);
+    // Sturdy dark outer border
+    ctx.strokeStyle = '#1E293B';
+    ctx.lineWidth = 20;
+    ctx.strokeRect(10, 10, 492, 492);
 
-  // Inner subtle accent frame
-  ctx.strokeStyle = proj.themeColor || '#2563EB';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(20, 20, 216, 216);
+    // Inner vibrant theme accent border
+    ctx.strokeStyle = proj.themeColor || '#2563EB';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(30, 30, 452, 452);
 
-  // Central Icon / Logo Emoji Graphic (ready to swap with image later)
-  ctx.font = '76px sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(proj.icon || '📦', 128, 100);
+    if (loadedImg) {
+      // Draw user's custom designed logo inside centered frame
+      const imgSize = 290;
+      const ix = (512 - imgSize) / 2;
+      const iy = 50;
+      ctx.drawImage(loadedImg, ix, iy, imgSize, imgSize);
+    } else {
+      // Graphical icon fallback while image streams
+      ctx.font = '130px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(proj.icon || '📦', 256, 190);
+    }
 
-  // Clean uppercase project badge label
-  ctx.fillStyle = '#0F172A';
-  ctx.font = '900 24px "Outfit", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText(proj.badge || proj.title, 128, 185);
+    // Lower banner bar for project badge title
+    ctx.fillStyle = proj.themeColor || '#1E293B';
+    ctx.fillRect(34, 380, 444, 94);
 
-  // Subtle lower subtitle line
-  ctx.fillStyle = proj.themeColor || '#64748B';
-  ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('PROJECT', 128, 215);
+    // Bold title text
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 36px "Outfit", system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(proj.badge || proj.title, 256, 427);
+  }
+
+  renderBanner(null);
 
   const texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
   texture.needsUpdate = true;
+
+  // Asynchronously load the user's custom logo image if provided
+  if (proj.logoPath) {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      renderBanner(img);
+      texture.needsUpdate = true;
+    };
+    img.src = proj.logoPath;
+  }
+
   return texture;
 }
 
@@ -3070,10 +3163,24 @@ function openProjectDetailPanel(id) {
   document.getElementById('panel-timeline').textContent = data.period || "Project Showcase";
   document.getElementById('panel-desc').textContent = data.details?.description || data.summary;
 
-  // Placeholder slot banner label
-  const slotLabel = document.getElementById('panel-slot-label');
-  if (slotLabel) {
-    slotLabel.textContent = `${data.badge || data.bannerTitle || data.title} — Visual Showcase Slot`;
+  // Showcase slot banner: inject high-res project logo if available
+  const bannerSlot = document.getElementById('panel-banner-slot');
+  if (bannerSlot) {
+    if (data.logoPath) {
+      bannerSlot.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:center; width:100%; height:100%; padding:1.25rem; background:#FFFFFF; border-radius:1rem; border:2px solid ${data.themeColor || '#2563EB'}; box-shadow:0 10px 25px -5px rgba(0,0,0,0.08);">
+          <img src="${data.logoPath}" alt="${data.title} Logo" style="max-height:160px; max-width:100%; object-fit:contain; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.12));">
+        </div>
+      `;
+    } else {
+      bannerSlot.innerHTML = `
+        <div class="panel-image-placeholder">
+          <span class="placeholder-icon">${data.icon || '🖼️'}</span>
+          <span class="placeholder-title" id="panel-slot-label">${data.badge || data.bannerTitle || data.title} — Technical Showcase</span>
+          <span class="placeholder-hint">Interactive project module</span>
+        </div>
+      `;
+    }
   }
 
   // Achievements list
