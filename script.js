@@ -2078,6 +2078,187 @@ function buildAnimatedWildlife() {
     scene.add(deer);
     worldAnimals.push(deer);
   });
+
+  // 4. PLAYFUL CATS ROAMING TOWN SIDEWALKS, BENCHES & GARDENS
+  const catFurMats = [
+    new THREE.MeshStandardMaterial({ color: 0xF97316, roughness: 0.75, flatShading: true }), // Ginger tabby orange
+    new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.70, flatShading: true }), // Sleek midnight black
+    new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.65, flatShading: true }), // Snow white
+    new THREE.MeshStandardMaterial({ color: 0x94A3B8, roughness: 0.75, flatShading: true })  // Soft smoky grey
+  ];
+
+  const catLocations = [
+    { x: -5.0, z: 8.0,   range: 3.5, speed: 0.8 },  // Spawn town plaza
+    { x: 12.0, z: -25.0, range: 4.0, speed: 0.9 },  // Milestone 1 sidewalk
+    { x: -22.0, z: -40.0, range: 3.8, speed: 0.85 }, // Near Creative CAD studio
+    { x: 26.0, z: -70.0, range: 4.2, speed: 0.8 },  // Near Milestone 2 & IoT
+    { x: -16.0, z: -105.0, range: 4.0, speed: 0.9 }, // Near Maker Lab
+    { x: 18.0, z: -160.0, range: 3.5, speed: 0.85 }, // Lakeside / Coppercloud R&D
+    { x: -10.0, z: -260.0, range: 4.0, speed: 0.8 }  // Graduation plaza
+  ];
+
+  catLocations.forEach((cl, cIdx) => {
+    const cat = new THREE.Group();
+    const mat = catFurMats[cIdx % catFurMats.length];
+
+    // Body
+    const cBody = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.3, 0.6), mat);
+    cBody.position.y = 0.35;
+    cBody.castShadow = true;
+    cat.add(cBody);
+
+    // Head
+    const cHead = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.26, 0.28), mat);
+    cHead.position.set(0, 0.46, 0.32);
+    cHead.castShadow = true;
+    cat.add(cHead);
+
+    // Pointy Ears
+    const earL = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.14, 3), mat);
+    earL.position.set(-0.09, 0.63, 0.32);
+    cat.add(earL);
+
+    const earR = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.14, 3), mat);
+    earR.position.set(0.09, 0.63, 0.32);
+    cat.add(earR);
+
+    // Legs
+    const legGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.3, 4);
+    const legFL = new THREE.Mesh(legGeo, mat);
+    legFL.position.set(-0.11, 0.15, 0.2);
+    cat.add(legFL);
+
+    const legFR = new THREE.Mesh(legGeo, mat);
+    legFR.position.set(0.11, 0.15, 0.2);
+    cat.add(legFR);
+
+    const legBL = new THREE.Mesh(legGeo, mat);
+    legBL.position.set(-0.11, 0.15, -0.2);
+    cat.add(legBL);
+
+    const legBR = new THREE.Mesh(legGeo, mat);
+    legBR.position.set(0.11, 0.15, -0.2);
+    cat.add(legBR);
+
+    // Upright curved tail pivot
+    const tailPivot = new THREE.Group();
+    tailPivot.position.set(0, 0.45, -0.28);
+    const tailMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.42, 4), mat);
+    tailMesh.position.set(0, 0.2, -0.06);
+    tailMesh.rotation.x = -0.35;
+    tailPivot.add(tailMesh);
+    cat.add(tailPivot);
+
+    cat.position.set(cl.x, 0, cl.z);
+    cat.userData = {
+      type: "cat",
+      originX: cl.x,
+      originZ: cl.z,
+      range: cl.range,
+      speed: cl.speed,
+      walkTime: Math.random() * 8.0,
+      tailPivot: tailPivot,
+      legs: [legFL, legFR, legBL, legBR],
+      direction: Math.random() * Math.PI * 2
+    };
+
+    scene.add(cat);
+    worldAnimals.push(cat);
+  });
+
+  // 5. ENERGETIC DOGS TROTTING & WAGGING TAILS ALONG ROADS & PATHS
+  const dogFurMats = [
+    new THREE.MeshStandardMaterial({ color: 0xD97706, roughness: 0.8, flatShading: true }), // Golden retriever honey
+    new THREE.MeshStandardMaterial({ color: 0x78350F, roughness: 0.85, flatShading: true }), // Chocolate lab brown
+    new THREE.MeshStandardMaterial({ color: 0xF5F5F4, roughness: 0.7, flatShading: true }),  // Cream husky white
+    new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.8, flatShading: true })   // Dark slate terrier
+  ];
+
+  const dogLocations = [
+    { x: 6.0,  z: 6.0,   range: 5.0, speed: 1.4 },  // Spawn entrance dog
+    { x: -10.0, z: -30.0, range: 4.8, speed: 1.5 }, // Near PSBA School
+    { x: 22.0, z: -55.0, range: 5.5, speed: 1.6 },  // MITAOE campus side
+    { x: -8.0,  z: -140.0, range: 5.2, speed: 1.45 }, // SLAM AI walkway
+    { x: 12.0, z: -195.0, range: 5.0, speed: 1.5 }, // 3D Twins path
+    { x: -6.0, z: -240.0, range: 5.5, speed: 1.4 }  // Near Clean Tech / Clarity Lab
+  ];
+
+  dogLocations.forEach((dl, dIdx) => {
+    const dog = new THREE.Group();
+    const mat = dogFurMats[dIdx % dogFurMats.length];
+
+    // Torso
+    const dBody = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.42, 0.85), mat);
+    dBody.position.y = 0.48;
+    dBody.castShadow = true;
+    dog.add(dBody);
+
+    // Head
+    const dHead = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.34, 0.42), mat);
+    dHead.position.set(0, 0.65, 0.45);
+    dHead.castShadow = true;
+    dog.add(dHead);
+
+    // Snout / Muzzle
+    const snout = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.18, 0.28), mat);
+    snout.position.set(0, 0.58, 0.72);
+    dog.add(snout);
+
+    // Floppy cute ears
+    const earGeo = new THREE.BoxGeometry(0.08, 0.22, 0.12);
+    const earL = new THREE.Mesh(earGeo, mat);
+    earL.position.set(-0.2, 0.68, 0.42);
+    earL.rotation.z = -0.25;
+    dog.add(earL);
+
+    const earR = new THREE.Mesh(earGeo, mat);
+    earR.position.set(0.2, 0.68, 0.42);
+    earR.rotation.z = 0.25;
+    dog.add(earR);
+
+    // 4 Animated Trot Legs
+    const dLegGeo = new THREE.CylinderGeometry(0.06, 0.05, 0.45, 6);
+    const legFL = new THREE.Mesh(dLegGeo, mat);
+    legFL.position.set(-0.16, 0.225, 0.3);
+    dog.add(legFL);
+
+    const legFR = new THREE.Mesh(dLegGeo, mat);
+    legFR.position.set(0.16, 0.225, 0.3);
+    dog.add(legFR);
+
+    const legBL = new THREE.Mesh(dLegGeo, mat);
+    legBL.position.set(-0.16, 0.225, -0.3);
+    dog.add(legBL);
+
+    const legBR = new THREE.Mesh(dLegGeo, mat);
+    legBR.position.set(0.16, 0.225, -0.3);
+    dog.add(legBR);
+
+    // Wagging tail pivot
+    const tailPivot = new THREE.Group();
+    tailPivot.position.set(0, 0.62, -0.42);
+    const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.46, 5), mat);
+    tail.position.set(0, 0.2, -0.1);
+    tail.rotation.x = -0.6;
+    tailPivot.add(tail);
+    dog.add(tailPivot);
+
+    dog.position.set(dl.x, 0, dl.z);
+    dog.userData = {
+      type: "dog",
+      originX: dl.x,
+      originZ: dl.z,
+      range: dl.range,
+      speed: dl.speed,
+      trotTime: Math.random() * 8.0,
+      tailPivot: tailPivot,
+      legs: [legFL, legFR, legBL, legBR],
+      direction: Math.random() * Math.PI * 2
+    };
+
+    scene.add(dog);
+    worldAnimals.push(dog);
+  });
 }
 
 function updateAnimatedWildlife(delta) {
@@ -2128,6 +2309,85 @@ function updateAnimatedWildlife(delta) {
       const grazePhase = (Math.sin(ud.grazeTime) + 1) / 2; // 0 to 1
       if (ud.neckPivot) {
         ud.neckPivot.rotation.x = -0.15 - (grazePhase * 0.75); // Tilts down towards grass
+      }
+    } else if (animal.userData.type === "cat") {
+      // Strolling cat: gentle walk cycle, pauses to sit and gently sways its tail
+      const ud = animal.userData;
+      ud.walkTime += delta * 1.6;
+      const cycle = ud.walkTime % 5.0; // Walk for 2.5s, pause for 2.5s
+
+      if (cycle < 2.5) {
+        // Walking forward smoothly
+        const stepRate = ud.walkTime * 6.0;
+        animal.position.x += Math.sin(ud.direction) * ud.speed * delta;
+        animal.position.z += Math.cos(ud.direction) * ud.speed * delta;
+        animal.position.y = Math.abs(Math.sin(stepRate)) * 0.04;
+
+        // Alternating leg swing
+        if (ud.legs) {
+          ud.legs[0].rotation.x = Math.sin(stepRate) * 0.35;
+          ud.legs[1].rotation.x = -Math.sin(stepRate) * 0.35;
+          ud.legs[2].rotation.x = -Math.sin(stepRate) * 0.35;
+          ud.legs[3].rotation.x = Math.sin(stepRate) * 0.35;
+        }
+
+        // Steer back within patrol radius
+        const dist = Math.hypot(animal.position.x - ud.originX, animal.position.z - ud.originZ);
+        if (dist > ud.range) {
+          ud.direction = Math.atan2(ud.originX - animal.position.x, ud.originZ - animal.position.z);
+        }
+      } else {
+        // Paused/sitting, legs neutral
+        animal.position.y = 0;
+        if (ud.legs) ud.legs.forEach(l => l.rotation.x = 0);
+        // Occasionally pick a new heading
+        if (Math.abs(cycle - 2.55) < 0.1) {
+          ud.direction += (Math.random() - 0.5) * 1.8;
+        }
+      }
+      animal.rotation.y = ud.direction;
+      // Gentle tail sway
+      if (ud.tailPivot) {
+        ud.tailPivot.rotation.z = Math.sin(ud.walkTime * 2.5) * 0.25;
+      }
+    } else if (animal.userData.type === "dog") {
+      // Cheerful trotting dog: continuous trotting with happy wagging tail
+      const ud = animal.userData;
+      ud.trotTime += delta * 2.5;
+      const cycle = ud.trotTime % 6.0;
+
+      if (cycle < 4.2) {
+        // Trotting along
+        const trotRate = ud.trotTime * 9.0;
+        animal.position.x += Math.sin(ud.direction) * ud.speed * delta;
+        animal.position.z += Math.cos(ud.direction) * ud.speed * delta;
+        animal.position.y = Math.abs(Math.sin(trotRate)) * 0.08;
+
+        // Diagonal trot leg animation
+        if (ud.legs) {
+          ud.legs[0].rotation.x = Math.sin(trotRate) * 0.5;
+          ud.legs[1].rotation.x = -Math.sin(trotRate) * 0.5;
+          ud.legs[2].rotation.x = -Math.sin(trotRate) * 0.5;
+          ud.legs[3].rotation.x = Math.sin(trotRate) * 0.5;
+        }
+
+        // Stay within area
+        const dist = Math.hypot(animal.position.x - ud.originX, animal.position.z - ud.originZ);
+        if (dist > ud.range) {
+          ud.direction = Math.atan2(ud.originX - animal.position.x, ud.originZ - animal.position.z);
+        }
+      } else {
+        // Sniffing the ground / looking around
+        animal.position.y = 0;
+        if (ud.legs) ud.legs.forEach(l => l.rotation.x = 0);
+        if (Math.abs(cycle - 4.25) < 0.1) {
+          ud.direction += (Math.random() - 0.5) * 2.0;
+        }
+      }
+      animal.rotation.y = ud.direction;
+      // Fast happy tail wagging
+      if (ud.tailPivot) {
+        ud.tailPivot.rotation.y = Math.sin(Date.now() * 0.018) * 0.55;
       }
     }
   });
