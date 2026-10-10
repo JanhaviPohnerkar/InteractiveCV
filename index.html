@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Janhavi — 3D Interactive World</title>
+  <title>Janhavi — 3D Adventurer Odyssey</title>
   
   <!-- Google Fonts: Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,10 +27,10 @@
   <header class="hud-header">
     <div class="hud-title-badge">
       <div class="hud-title">
-        <span>🚗</span>
+        <span>🚶</span>
         <span>Janhavi</span>
       </div>
-      <div class="hud-subtitle">Drive to milestone buildings or click them for details</div>
+      <div class="hud-subtitle">Walk to milestone buildings or click them for details</div>
     </div>
   </header>
 
@@ -38,9 +38,9 @@
   <aside class="hud-controls-pill">
     <div class="control-badge">
       <span>🎮</span>
-      <span>[W, A, S, D] or Arrow Keys to Drive</span>
+      <span>[W, A, S, D] or Arrow Keys to Walk</span>
     </div>
-    <button id="reset-car-btn" class="reset-car-btn" title="Reset Car to Start">
+    <button id="reset-char-btn" class="reset-car-btn" title="Reset Adventurer to Start">
       <span>↺ Reset</span>
     </button>
   </aside>
@@ -59,24 +59,24 @@
 
   <!-- Mobile On-Screen Steering & Pedals -->
   <div class="mobile-touch-steering md:hidden">
-    <button id="touch-steer-left" class="touch-pedal-btn" aria-label="Steer Left">
+    <button id="touch-steer-left" class="touch-pedal-btn" aria-label="Turn Left">
       <span>◀</span>
       <span class="pedal-label">Left</span>
     </button>
-    <button id="touch-steer-right" class="touch-pedal-btn" aria-label="Steer Right">
+    <button id="touch-steer-right" class="touch-pedal-btn" aria-label="Turn Right">
       <span>▶</span>
       <span class="pedal-label">Right</span>
     </button>
   </div>
 
   <div class="mobile-touch-pedals md:hidden">
-    <button id="touch-pedal-drive" class="touch-pedal-btn" aria-label="Drive Forward">
+    <button id="touch-pedal-walk" class="touch-pedal-btn" aria-label="Walk Forward">
       <span>▲</span>
-      <span class="pedal-label">Drive</span>
+      <span class="pedal-label">Walk</span>
     </button>
-    <button id="touch-pedal-rev" class="touch-pedal-btn" aria-label="Drive Reverse">
+    <button id="touch-pedal-back" class="touch-pedal-btn" aria-label="Walk Backward">
       <span>▼</span>
-      <span class="pedal-label">Rev</span>
+      <span class="pedal-label">Back</span>
     </button>
   </div>
 

@@ -1,12 +1,16 @@
 /* ==========================================================================
-   Janhavi's 3D World - Bruno Simon-Inspired Minimal Clay Environment
-   Features:
-   - Warm Terracotta Clay Ground & Lighting
+   Janhavi's 3D World - Bruno Simon Minimal Clay Environment
+   Featuring:
+   - "SIMPLIFIED NEUTRAL ADVENTURER - GIRL" Character (Reference Matched)
+     * Cream sleeveless tunic over brown inner shirt
+     * Olive green shorts & green backpack with rolled sleeping mat
+     * Wooden hiking walking stick in hand
+     * Sturdy hiking boots & low-poly ponytail
+     * Procedural walking gait animation with bobbing & leg/arm swings
    - Big 3D Extruded White Sculpture: "JANHAVI"
-   - Stylized Low-Poly Car (Smooth physics, steering, spinning wheels & antenna)
-   - 7 Stylized Architectural Milestone Buildings along the road (NOT gates)
-   - Small, minimal on-screen popups when buildings are clicked
-   - Scattered low-poly faceted trees and white chalk rocks
+   - 7 Stylized Architectural Milestone Buildings along the road
+   - Small minimal on-screen popups when buildings are clicked or approached
+   - Scattered low-poly trees and white chalk rocks
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,7 +27,7 @@ const MILESTONES_DATA = [
     title: "Schooling at PSBA English School",
     location: "Aurangabad, Maharashtra",
     period: "Foundation Years",
-    summary: "Completed schooling from PSBA English School, Aurangabad with strong fundamentals in mathematics, physics, and an early passion for technology.",
+    summary: "Completed schooling from PSBA English School, Aurangabad with strong fundamentals in mathematics, physics, and an early passion for technology and robotics.",
     skills: ["Mathematics", "Physics", "Analytical Thinking"]
   },
   {
@@ -86,28 +90,25 @@ const MILESTONES_DATA = [
    2. WORLD ENGINE GLOBALS
    -------------------------------------------------------------------------- */
 let scene, camera, renderer;
-let carGroup, carBody, wheels = [], frontWheelPivots = [];
-let antennaSpring;
+let characterGroup, characterBody, characterHead, ponytailMesh;
+let leftLegPivot, rightLegPivot, leftArmPivot, rightArmPivot, walkingStickMesh;
 let buildingMeshes = [];
 let roadPoints = [];
 let activePopupId = null;
 
-// Driving Physics Variables
-const carState = {
+// Character State & Movement
+const charState = {
   x: 0,
   z: 0,
-  rotation: -Math.PI / 2, // Facing along initial road
+  rotation: -Math.PI / 2, // Facing forward along initial road
   speed: 0,
-  maxForwardSpeed: 0.42,
-  maxReverseSpeed: -0.22,
-  acceleration: 0.016,
-  reverseAccel: 0.012,
-  friction: 0.965,
-  steeringAngle: 0,
-  maxSteeringAngle: 0.58,
-  steerSpeed: 0.045,
-  steerReturnSpeed: 0.07,
-  wheelRotation: 0
+  maxWalkSpeed: 0.17,
+  maxBackSpeed: -0.09,
+  accel: 0.018,
+  friction: 0.88,
+  turnSpeed: 0.048,
+  walkCycle: 0,
+  isWalking: false
 };
 
 const input = {
@@ -131,10 +132,10 @@ function initBrunoWorld() {
   scene.background = clayColor;
   scene.fog = new THREE.FogExp2(0xFF9B68, 0.005);
 
-  // Camera: Elevated Isometric Diagonal Angle (like Bruno Simon)
+  // Camera: Elevated Isometric Diagonal Perspective
   const aspect = container.clientWidth / container.clientHeight;
   camera = new THREE.PerspectiveCamera(38, aspect, 0.5, 600);
-  camera.position.set(-20, 24, 20);
+  camera.position.set(-18, 22, 18);
 
   // Renderer with Soft Shadows
   renderer = new THREE.WebGLRenderer({
@@ -147,7 +148,7 @@ function initBrunoWorld() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // Lighting Setup (Warm directional sunlight casting soft shadows)
+  // Warm Directional Sunlight & Soft Ambient
   const ambientLight = new THREE.AmbientLight(0xFF9B68, 0.95);
   scene.add(ambientLight);
 
@@ -193,10 +194,10 @@ function initBrunoWorld() {
   // 5. Build Scattered Low-Poly Trees and White Chalk Rocks
   buildFoliageAndRocks();
 
-  // 6. Build the Cute Toy Car (Car, NOT a truck)
-  buildCuteToyCar();
+  // 6. Build the Reference-Matched Walking Adventurer Girl Character
+  buildAdventurerCharacter();
 
-  // 7. Setup Interactive Controls & Click Raycaster
+  // 7. Setup Controls & Raycasting
   setupWorldControls(container);
 
   // Window Resize
@@ -213,7 +214,7 @@ function initBrunoWorld() {
     requestAnimationFrame(animate);
     const delta = Math.min(clock.getDelta(), 0.1);
 
-    updateCarPhysics(delta);
+    updateCharacterPhysics(delta);
     updateCameraFollow();
     updatePopupScreenPosition();
 
@@ -224,11 +225,11 @@ function initBrunoWorld() {
 }
 
 /* --------------------------------------------------------------------------
-   4. BIG 3D EXTRUDED TEXT "JANHAVI" (Matching "BRUNO SIMON")
+   4. BIG 3D EXTRUDED TEXT "JANHAVI"
    -------------------------------------------------------------------------- */
 function buildBigSculpturalText() {
   const textGroup = new THREE.Group();
-  textGroup.position.set(0, 0, 7.5); // Right in front of spawn
+  textGroup.position.set(0, 0, 7.5);
 
   const letterMat = new THREE.MeshStandardMaterial({
     color: 0xFFFFFF,
@@ -236,7 +237,6 @@ function buildBigSculpturalText() {
     metalness: 0.05
   });
 
-  // Helper to create a chunky letter stroke
   function stroke(w, h, d, x, y, z) {
     const geo = new THREE.BoxGeometry(w, h, d);
     const m = new THREE.Mesh(geo, letterMat);
@@ -250,7 +250,7 @@ function buildBigSculpturalText() {
   const h = 2.4;
   const bar = 0.45;
 
-  // Letter J
+  // J
   const gJ = new THREE.Group();
   gJ.position.x = -8.2;
   gJ.add(stroke(bar, h, thick, 0.45, 0, 0));
@@ -259,7 +259,7 @@ function buildBigSculpturalText() {
   gJ.add(stroke(1.4, bar, thick, 0, h - bar, 0));
   textGroup.add(gJ);
 
-  // Letter A
+  // A
   const gA1 = new THREE.Group();
   gA1.position.x = -5.4;
   const legLeft = stroke(bar, h, thick, -0.55, 0, 0);
@@ -272,7 +272,7 @@ function buildBigSculpturalText() {
   gA1.add(stroke(1.0, bar, thick, 0, 1.0, 0));
   textGroup.add(gA1);
 
-  // Letter N
+  // N
   const gN = new THREE.Group();
   gN.position.x = -2.6;
   gN.add(stroke(bar, h, thick, -0.65, 0, 0));
@@ -282,7 +282,7 @@ function buildBigSculpturalText() {
   gN.add(diagN);
   textGroup.add(gN);
 
-  // Letter H
+  // H
   const gH = new THREE.Group();
   gH.position.x = 0.2;
   gH.add(stroke(bar, h, thick, -0.65, 0, 0));
@@ -290,7 +290,7 @@ function buildBigSculpturalText() {
   gH.add(stroke(1.2, bar, thick, 0, 1.1, 0));
   textGroup.add(gH);
 
-  // Letter A
+  // A
   const gA2 = new THREE.Group();
   gA2.position.x = 3.0;
   const legL2 = stroke(bar, h, thick, -0.55, 0, 0);
@@ -303,7 +303,7 @@ function buildBigSculpturalText() {
   gA2.add(stroke(1.0, bar, thick, 0, 1.0, 0));
   textGroup.add(gA2);
 
-  // Letter V
+  // V
   const gV = new THREE.Group();
   gV.position.x = 5.8;
   const legVL = stroke(bar, h * 1.05, thick, -0.45, 0, 0);
@@ -314,7 +314,7 @@ function buildBigSculpturalText() {
   gV.add(legVR);
   textGroup.add(gV);
 
-  // Letter I
+  // I
   const gI = new THREE.Group();
   gI.position.x = 8.2;
   gI.add(stroke(bar, h, thick, 0, 0, 0));
@@ -329,19 +329,18 @@ function buildBigSculpturalText() {
    5. ROAD PATHWAY
    -------------------------------------------------------------------------- */
 function buildClayRoad() {
-  // Road control points that wind past each of the 7 milestone buildings
   roadPoints = [
-    new THREE.Vector3(0, 0.02, 0),       // Spawn
-    new THREE.Vector3(0, 0.02, -18),     // Towards Building 1
-    new THREE.Vector3(14, 0.02, -35),    // Building 1 (School)
-    new THREE.Vector3(25, 0.02, -58),    // Towards Building 2
-    new THREE.Vector3(12, 0.02, -85),    // Building 2 (MITAOE)
-    new THREE.Vector3(-12, 0.02, -110),  // Building 3 (1st Year Lab)
-    new THREE.Vector3(-22, 0.02, -140),  // Towards Building 4
-    new THREE.Vector3(-8, 0.02, -170),   // Building 4 (Coppercloud 2nd Yr)
-    new THREE.Vector3(16, 0.02, -200),   // Building 5 (Coppercloud R&D)
-    new THREE.Vector3(20, 0.02, -235),   // Building 6 (Clarity Lab IITJ)
-    new THREE.Vector3(0, 0.02, -270)     // Building 7 (Current Research)
+    new THREE.Vector3(0, 0.02, 0),
+    new THREE.Vector3(0, 0.02, -18),
+    new THREE.Vector3(14, 0.02, -35),
+    new THREE.Vector3(25, 0.02, -58),
+    new THREE.Vector3(12, 0.02, -85),
+    new THREE.Vector3(-12, 0.02, -110),
+    new THREE.Vector3(-22, 0.02, -140),
+    new THREE.Vector3(-8, 0.02, -170),
+    new THREE.Vector3(16, 0.02, -200),
+    new THREE.Vector3(20, 0.02, -235),
+    new THREE.Vector3(0, 0.02, -270)
   ];
 
   const roadCurve = new THREE.CatmullRomCurve3(roadPoints);
@@ -362,7 +361,6 @@ function buildClayRoad() {
   };
 
   const roadGeo = new THREE.ExtrudeGeometry(roadShape, extrudeSettings);
-  // Slightly darker clay asphalt ribbon
   const roadMat = new THREE.MeshStandardMaterial({
     color: 0xE87E4C,
     roughness: 0.85,
@@ -373,7 +371,7 @@ function buildClayRoad() {
   roadMesh.receiveShadow = true;
   scene.add(roadMesh);
 
-  // Dashed white center road markings
+  // Dashed white markings
   const dashCount = 65;
   const dashGeo = new THREE.BoxGeometry(0.25, 0.04, 1.8);
   const dashMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
@@ -465,10 +463,8 @@ function buildMilestoneBuildings() {
     bGroup.position.copy(cfg.pos);
     bGroup.rotation.y = cfg.rotY;
 
-    // Base building model based on type
     createProceduralBuilding(bGroup, cfg);
 
-    // Subtle Ground Foundation Plinth
     const plinthGeo = new THREE.BoxGeometry(9, 0.25, 9);
     const plinthMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, roughness: 0.9 });
     const plinth = new THREE.Mesh(plinthGeo, plinthMat);
@@ -476,7 +472,6 @@ function buildMilestoneBuildings() {
     plinth.receiveShadow = true;
     bGroup.add(plinth);
 
-    // 3D Text Signboard in front of building
     const signPostGeo = new THREE.BoxGeometry(0.18, 1.2, 0.18);
     const signBoardGeo = new THREE.BoxGeometry(3.6, 0.8, 0.15);
     const signMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.4 });
@@ -495,7 +490,6 @@ function buildMilestoneBuildings() {
     board.castShadow = true;
     bGroup.add(board);
 
-    // Interactive Flag & Metadata
     bGroup.userData = {
       isBuilding: true,
       milestoneId: cfg.id,
@@ -514,23 +508,18 @@ function createProceduralBuilding(group, cfg) {
   const doorMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.5 });
 
   if (cfg.type === "school") {
-    // Schoolhouse with steep pitched roof and bell tower
     const body = new THREE.Mesh(new THREE.BoxGeometry(6.5, 4.0, 5.5), wallMat);
     body.position.y = 2.0;
     body.castShadow = true;
-    body.receiveShadow = true;
     group.add(body);
 
     const roof = new THREE.Mesh(new THREE.ConeGeometry(4.8, 2.4, 4), roofMat);
     roof.position.y = 5.2;
     roof.rotation.y = Math.PI / 4;
-    roof.castShadow = true;
     group.add(roof);
 
-    // Bell/Clock Tower
     const tower = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.2, 1.6), wallMat);
     tower.position.y = 6.2;
-    tower.castShadow = true;
     group.add(tower);
 
     const bellRoof = new THREE.Mesh(new THREE.ConeGeometry(1.3, 1.4, 4), roofMat);
@@ -538,20 +527,16 @@ function createProceduralBuilding(group, cfg) {
     bellRoof.rotation.y = Math.PI / 4;
     group.add(bellRoof);
 
-    // Door
     const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.0, 0.2), doorMat);
     door.position.set(0, 1.0, 2.8);
     group.add(door);
   }
   else if (cfg.type === "university") {
-    // Neoclassical Collegiate Hall with Entrance Portico & Columns
     const body = new THREE.Mesh(new THREE.BoxGeometry(7.5, 4.8, 6.0), wallMat);
     body.position.y = 2.4;
     body.castShadow = true;
-    body.receiveShadow = true;
     group.add(body);
 
-    // Portico Columns (4 white pillars)
     const pillarMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.3 });
     [-1.8, -0.6, 0.6, 1.8].forEach(x => {
       const col = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 4.2, 12), pillarMat);
@@ -566,38 +551,29 @@ function createProceduralBuilding(group, cfg) {
 
     const roof = new THREE.Mesh(new THREE.BoxGeometry(7.8, 0.8, 6.4), roofMat);
     roof.position.y = 5.2;
-    roof.castShadow = true;
     group.add(roof);
   }
   else if (cfg.type === "makerLab") {
-    // Contemporary Tech Workshop with solar array
     const body = new THREE.Mesh(new THREE.BoxGeometry(6.2, 3.6, 5.8), wallMat);
     body.position.y = 1.8;
     body.castShadow = true;
-    body.receiveShadow = true;
     group.add(body);
 
-    // Angled Solar Roof
     const solarRoof = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.3, 4.2), roofMat);
     solarRoof.position.set(0, 4.1, 0);
     solarRoof.rotation.x = -0.3;
-    solarRoof.castShadow = true;
     group.add(solarRoof);
 
-    // Tech Workshop Chimney/Vent
     const vent = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1.6, 8), roofMat);
     vent.position.set(2.0, 4.6, -1.5);
     group.add(vent);
   }
   else if (cfg.type === "corporate") {
-    // Glass & Steel Modern HQ Block
     const body = new THREE.Mesh(new THREE.BoxGeometry(6.0, 6.0, 5.2), wallMat);
     body.position.y = 3.0;
     body.castShadow = true;
-    body.receiveShadow = true;
     group.add(body);
 
-    // Glass curtain bands
     for (let f = 1; f <= 3; f++) {
       const glassBand = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.8, 0.1), windowMat);
       glassBand.position.set(0, f * 1.5, 2.65);
@@ -609,34 +585,26 @@ function createProceduralBuilding(group, cfg) {
     group.add(canopy);
   }
   else if (cfg.type === "rdLab") {
-    // Industrial Perception Lab with Sensor Dome
     const body = new THREE.Mesh(new THREE.BoxGeometry(6.5, 3.8, 6.0), wallMat);
     body.position.y = 1.9;
     body.castShadow = true;
-    body.receiveShadow = true;
     group.add(body);
 
-    // Central Perception Radar Dome
     const domeMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.2 });
     const dome = new THREE.Mesh(new THREE.SphereGeometry(1.6, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), domeMat);
     dome.position.set(0, 3.8, 0);
-    dome.castShadow = true;
     group.add(dome);
 
-    // Laser / Camera Sensor Mast
     const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.5, 8), doorMat);
     mast.position.set(2.2, 4.8, 1.5);
     group.add(mast);
   }
   else if (cfg.type === "clarityLab") {
-    // Desert Modernist IIT Jodhpur Pavilion with 360 Panorama Dome
     const body = new THREE.Mesh(new THREE.BoxGeometry(7.0, 4.2, 5.8), wallMat);
     body.position.y = 2.1;
     body.castShadow = true;
-    body.receiveShadow = true;
     group.add(body);
 
-    // 360 Glass Dome
     const glassDomeMat = new THREE.MeshPhysicalMaterial({
       color: 0xBAE6FD,
       roughness: 0.1,
@@ -645,18 +613,14 @@ function createProceduralBuilding(group, cfg) {
     });
     const panoDome = new THREE.Mesh(new THREE.SphereGeometry(1.9, 20, 20), glassDomeMat);
     panoDome.position.set(0, 4.8, 0);
-    panoDome.castShadow = true;
     group.add(panoDome);
   }
   else {
-    // Digital Twin Spatial Lab with Floating Holographic 3D Prism
     const body = new THREE.Mesh(new THREE.BoxGeometry(6.8, 4.4, 5.6), wallMat);
     body.position.y = 2.2;
     body.castShadow = true;
-    body.receiveShadow = true;
     group.add(body);
 
-    // Floating Geometric 3D Prism (Point Cloud Mascot)
     const prismMat = new THREE.MeshPhysicalMaterial({
       color: 0xFDE047,
       roughness: 0.1,
@@ -671,37 +635,20 @@ function createProceduralBuilding(group, cfg) {
 }
 
 /* --------------------------------------------------------------------------
-   7. SCATTERED FOLIAGE (TREES) & CHALK BOULDERS (ROCKS)
+   7. SCATTERED TREES & WHITE CHALK BOULDERS
    -------------------------------------------------------------------------- */
 function buildFoliageAndRocks() {
-  const rockMat = new THREE.MeshStandardMaterial({
-    color: 0xF5F5F5,
-    roughness: 0.85,
-    flatShading: true
-  });
+  const rockMat = new THREE.MeshStandardMaterial({ color: 0xF5F5F5, roughness: 0.85, flatShading: true });
+  const leafMat = new THREE.MeshStandardMaterial({ color: 0xD4DE36, roughness: 0.75, flatShading: true });
+  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8A5528, roughness: 0.9 });
 
-  const leafMat = new THREE.MeshStandardMaterial({
-    color: 0xD4DE36, // Bruno Simon style chartreuse / yellow-green
-    roughness: 0.75,
-    flatShading: true
-  });
-
-  const trunkMat = new THREE.MeshStandardMaterial({
-    color: 0x8A5528,
-    roughness: 0.9
-  });
-
-  // 1. Scattered Low-Poly White Boulders
   const rockPositions = [
-    // Around 3D text JANHAVI
     { x: -9.5, z: 9.5, s: 1.3 },
     { x: -5.8, z: 10.2, s: 0.9 },
     { x: 3.5, z: 10.0, s: 1.4 },
     { x: 9.5, z: 9.2, s: 1.1 },
     { x: -3.5, z: 3.2, s: 0.8 },
     { x: 4.5, z: 2.8, s: 1.0 },
-
-    // Along road to buildings
     { x: 10, z: -25, s: 1.5 },
     { x: -8, z: -50, s: 1.2 },
     { x: 26, z: -70, s: 1.6 },
@@ -724,14 +671,11 @@ function buildFoliageAndRocks() {
     scene.add(m);
   });
 
-  // 2. Faceted Geometric Trees (Hexagonal / Polyhedral crowns)
   const treePositions = [
     { x: -8.0, z: 12.0, h: 4.2 },
     { x: -2.5, z: 13.5, h: 4.8 },
     { x: 7.2, z: 13.0, h: 4.5 },
     { x: 12.0, z: 11.5, h: 3.8 },
-
-    // Flanking the road
     { x: -8.5, z: -15, h: 4.5 },
     { x: 8.5, z: -18, h: 4.0 },
     { x: 28.0, z: -40, h: 5.2 },
@@ -748,13 +692,11 @@ function buildFoliageAndRocks() {
     const treeGroup = new THREE.Group();
     treeGroup.position.set(tp.x, 0, tp.z);
 
-    // Trunk
     const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.25, 2.2, 6), trunkMat);
     trunk.position.y = 1.1;
     trunk.castShadow = true;
     treeGroup.add(trunk);
 
-    // Geometric Crown (Polyhedral)
     const crownGeo = new THREE.BoxGeometry(2.0, 2.8, 1.8);
     const crown = new THREE.Mesh(crownGeo, leafMat);
     crown.position.y = 2.8;
@@ -772,217 +714,360 @@ function buildFoliageAndRocks() {
 }
 
 /* --------------------------------------------------------------------------
-   8. THE CUTE TOY CAR (A CAR, NOT A TRUCK)
+   8. "SIMPLIFIED NEUTRAL ADVENTURER - GIRL" WALKING CHARACTER
+      Direct match with uploaded reference sheet palette & geometry:
+      - Tunic: Cream #FFFDD0
+      - Shorts & Backpack: Olive Green #6B8E23
+      - Inner shirt & Boots: Dark Brown #8B4513 / #4A3525
+      - Skin tone: Sandy Beige #D2B48C
+      - Hair & Ponytail: Ash Blonde / Light Brown #C5A880
+      - Sleeping mat roll on top of backpack: Khaki #E0D7C6
+      - Wooden hiking walking stick in hand
    -------------------------------------------------------------------------- */
-function buildCuteToyCar() {
-  carGroup = new THREE.Group();
-  carGroup.position.set(0, 0, 0);
+function buildAdventurerCharacter() {
+  characterGroup = new THREE.Group();
+  characterGroup.position.set(0, 0, 0);
 
-  // Materials
-  const carPaintMat = new THREE.MeshStandardMaterial({
-    color: 0xEE4B3B, // Vibrant red/coral clay
-    roughness: 0.35,
-    metalness: 0.1
+  // Exact Palette Materials from Reference Sheet
+  const skinMat = new THREE.MeshStandardMaterial({ color: 0xD2B48C, roughness: 0.65, flatShading: true });
+  const tunicCreamMat = new THREE.MeshStandardMaterial({ color: 0xFFFDD0, roughness: 0.7, flatShading: true });
+  const innerShirtMat = new THREE.MeshStandardMaterial({ color: 0x8B4513, roughness: 0.8, flatShading: true });
+  const greenGearMat = new THREE.MeshStandardMaterial({ color: 0x6B8E23, roughness: 0.75, flatShading: true });
+  const bootsMat = new THREE.MeshStandardMaterial({ color: 0x4A3525, roughness: 0.85, flatShading: true });
+  const hairMat = new THREE.MeshStandardMaterial({ color: 0xC5A880, roughness: 0.75, flatShading: true });
+  const bedrollMat = new THREE.MeshStandardMaterial({ color: 0xE0D7C6, roughness: 0.8, flatShading: true });
+  const stickMat = new THREE.MeshStandardMaterial({ color: 0x5C3A21, roughness: 0.9, flatShading: true });
+  const eyeBrowMat = new THREE.MeshBasicMaterial({ color: 0x3E2723 });
+  const buckleMat = new THREE.MeshStandardMaterial({ color: 0xCBD5E1, roughness: 0.3, metalness: 0.6 });
+
+  characterBody = new THREE.Group();
+
+  // 1. Torso: Dark brown inner shirt + Cream outer sleeveless tunic
+  const innerTorso = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.95, 0.48), innerShirtMat);
+  innerTorso.position.y = 1.35;
+  innerTorso.castShadow = true;
+  characterBody.add(innerTorso);
+
+  // Flared Cream Tunic (sleeveless over-tunic as shown in reference)
+  // Tapered cylinder / box shape extending down over the hips
+  const tunicGeo = new THREE.CylinderGeometry(0.38, 0.52, 0.9, 8);
+  const tunicMesh = new THREE.Mesh(tunicGeo, tunicCreamMat);
+  tunicMesh.position.set(0, 1.25, 0);
+  tunicMesh.castShadow = true;
+  tunicMesh.receiveShadow = true;
+  characterBody.add(tunicMesh);
+
+  // V-Neck collar cutout accent
+  const collarGeo = new THREE.BoxGeometry(0.28, 0.18, 0.05);
+  const collar = new THREE.Mesh(collarGeo, innerShirtMat);
+  collar.position.set(0, 1.62, 0.25);
+  characterBody.add(collar);
+
+  // 2. Head, Ponytail & Face Details
+  characterHead = new THREE.Group();
+  characterHead.position.set(0, 2.05, 0);
+
+  // Neck
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.3, 8), skinMat);
+  neck.position.y = -0.15;
+  characterHead.add(neck);
+
+  // Head Box (Faceted, friendly neutral face)
+  const headGeo = new THREE.BoxGeometry(0.64, 0.65, 0.58);
+  const headMesh = new THREE.Mesh(headGeo, skinMat);
+  headMesh.castShadow = true;
+  characterHead.add(headMesh);
+
+  // Hair Base (Hair swept back into ponytail)
+  const hairCapGeo = new THREE.BoxGeometry(0.68, 0.32, 0.62);
+  const hairCap = new THREE.Mesh(hairCapGeo, hairMat);
+  hairCap.position.set(0, 0.22, -0.04);
+  characterHead.add(hairCap);
+
+  // Swept-Back Ponytail / Topknot (Matching the "Head Detail" reference!)
+  ponytailMesh = new THREE.Group();
+  ponytailMesh.position.set(0, 0.22, -0.32);
+
+  const knotGeo = new THREE.CylinderGeometry(0.18, 0.22, 0.25, 8);
+  knotGeo.rotateX(Math.PI / 3);
+  const knot = new THREE.Mesh(knotGeo, hairMat);
+  ponytailMesh.add(knot);
+
+  const tailGeo = new THREE.ConeGeometry(0.24, 0.65, 7);
+  tailGeo.rotateX(-Math.PI / 2.5);
+  const tail = new THREE.Mesh(tailGeo, hairMat);
+  tail.position.set(0, 0.05, -0.35);
+  ponytailMesh.add(tail);
+
+  characterHead.add(ponytailMesh);
+
+  // Eyebrows & Eyes
+  const browL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.035, 0.02), eyeBrowMat);
+  browL.position.set(-0.16, 0.08, 0.3);
+  browL.rotation.z = -0.05;
+  characterHead.add(browL);
+
+  const browR = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.035, 0.02), eyeBrowMat);
+  browR.position.set(0.16, 0.08, 0.3);
+  browR.rotation.z = 0.05;
+  characterHead.add(browR);
+
+  const eyeGeo = new THREE.BoxGeometry(0.08, 0.08, 0.02);
+  const eyeL = new THREE.Mesh(eyeGeo, eyeBrowMat);
+  eyeL.position.set(-0.16, -0.02, 0.3);
+  characterHead.add(eyeL);
+
+  const eyeR = new THREE.Mesh(eyeGeo, eyeBrowMat);
+  eyeR.position.set(0.16, -0.02, 0.3);
+  characterHead.add(eyeR);
+
+  // Subtle cute nose
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.1, 4), skinMat);
+  nose.position.set(0, -0.07, 0.32);
+  nose.rotation.x = Math.PI / 2;
+  characterHead.add(nose);
+
+  characterBody.add(characterHead);
+
+  // 3. Hiking Backpack (Matching "Backpack Detail" callout)
+  const backpackGroup = new THREE.Group();
+  backpackGroup.position.set(0, 1.35, -0.38);
+
+  // Main olive-green pack body
+  const packMain = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.82, 0.38), greenGearMat);
+  packMain.castShadow = true;
+  backpackGroup.add(packMain);
+
+  // Front pouch / pocket flap
+  const packPouch = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.38, 0.12), greenGearMat);
+  packPouch.position.set(0, -0.15, -0.22);
+  backpackGroup.add(packPouch);
+
+  // Brown leather straps on pack
+  const strap1 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.04), innerShirtMat);
+  strap1.position.set(-0.16, -0.05, -0.25);
+  backpackGroup.add(strap1);
+
+  const strap2 = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.65, 0.04), innerShirtMat);
+  strap2.position.set(0.16, -0.05, -0.25);
+  backpackGroup.add(strap2);
+
+  // Tiny silver buckles
+  const b1 = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.05), buckleMat);
+  b1.position.set(-0.16, -0.12, -0.26);
+  backpackGroup.add(b1);
+
+  const b2 = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.05), buckleMat);
+  b2.position.set(0.16, -0.12, -0.26);
+  backpackGroup.add(b2);
+
+  // Rolled Sleeping Mat (Bedroll strapped horizontally across top)
+  const bedrollGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.88, 12);
+  bedrollGeo.rotateZ(Math.PI / 2);
+  const bedroll = new THREE.Mesh(bedrollGeo, bedrollMat);
+  bedroll.position.set(0, 0.48, -0.06);
+  bedroll.castShadow = true;
+  backpackGroup.add(bedroll);
+
+  // Bedroll holding strap rings
+  [-0.26, 0.26].forEach(xPos => {
+    const ringGeo = new THREE.TorusGeometry(0.19, 0.02, 6, 16);
+    ringGeo.rotateY(Math.PI / 2);
+    const ring = new THREE.Mesh(ringGeo, innerShirtMat);
+    ring.position.set(xPos, 0.48, -0.06);
+    backpackGroup.add(ring);
   });
 
-  const glassMat = new THREE.MeshStandardMaterial({
-    color: 0xFFFFFF,
-    roughness: 0.15
-  });
+  characterBody.add(backpackGroup);
+  characterGroup.add(characterBody);
 
-  const trimMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.8 });
-  const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.9 });
-  const rimMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.3 });
-  const headlightMat = new THREE.MeshBasicMaterial({ color: 0xFEF08A });
-  const taillightMat = new THREE.MeshBasicMaterial({ color: 0xEF4444 });
+  // 4. Arms (Left Arm & Right Arm with Walking Stick)
+  // Left Arm
+  leftArmPivot = new THREE.Group();
+  leftArmPivot.position.set(-0.48, 1.7, 0);
 
-  carBody = new THREE.Group();
+  const lSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 8), innerShirtMat);
+  lSleeve.position.y = -0.14;
+  leftArmPivot.add(lSleeve);
 
-  // 1. Sleek Car Lower Chassis
-  const lowerGeo = new THREE.BoxGeometry(1.4, 0.55, 2.5);
-  const lowerMesh = new THREE.Mesh(lowerGeo, carPaintMat);
-  lowerMesh.position.y = 0.5;
-  lowerMesh.castShadow = true;
-  lowerMesh.receiveShadow = true;
-  carBody.add(lowerMesh);
+  const lForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.55, 8), skinMat);
+  lForearm.position.y = -0.45;
+  lForearm.castShadow = true;
+  leftArmPivot.add(lForearm);
 
-  // 2. Compact Car Cabin & Windows
-  const cabinGeo = new THREE.BoxGeometry(1.2, 0.6, 1.4);
-  const cabinMesh = new THREE.Mesh(cabinGeo, glassMat);
-  cabinMesh.position.set(0, 1.05, -0.1);
-  cabinMesh.castShadow = true;
-  carBody.add(cabinMesh);
+  const lHand = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 8), skinMat);
+  lHand.position.y = -0.74;
+  leftArmPivot.add(lHand);
 
-  // Cabin Roof Cap
-  const roofGeo = new THREE.BoxGeometry(1.24, 0.1, 1.44);
-  const roofMesh = new THREE.Mesh(roofGeo, carPaintMat);
-  roofMesh.position.set(0, 1.38, -0.1);
-  carBody.add(roofMesh);
+  characterGroup.add(leftArmPivot);
 
-  // 3. Front Hood Slant & Bumpers
-  const frontBumper = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.2, 0.15), trimMat);
-  frontBumper.position.set(0, 0.35, 1.28);
-  carBody.add(frontBumper);
+  // Right Arm (Holding wooden walking stick)
+  rightArmPivot = new THREE.Group();
+  rightArmPivot.position.set(0.48, 1.7, 0);
 
-  const rearBumper = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.2, 0.15), trimMat);
-  rearBumper.position.set(0, 0.35, -1.28);
-  carBody.add(rearBumper);
+  const rSleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 8), innerShirtMat);
+  rSleeve.position.y = -0.14;
+  rightArmPivot.add(rSleeve);
 
-  // 4. Headlights & Taillights
-  const hlGeo = new THREE.SphereGeometry(0.14, 12, 12);
-  const hlL = new THREE.Mesh(hlGeo, headlightMat);
-  hlL.position.set(-0.45, 0.58, 1.25);
-  carBody.add(hlL);
+  const rForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.55, 8), skinMat);
+  rForearm.position.y = -0.45;
+  rForearm.castShadow = true;
+  rightArmPivot.add(rForearm);
 
-  const hlR = new THREE.Mesh(hlGeo, headlightMat);
-  hlR.position.set(0.45, 0.58, 1.25);
-  carBody.add(hlR);
+  const rHand = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 8), skinMat);
+  rHand.position.y = -0.74;
+  rightArmPivot.add(rHand);
 
-  const tlGeo = new THREE.BoxGeometry(0.2, 0.12, 0.06);
-  const tlL = new THREE.Mesh(tlGeo, taillightMat);
-  tlL.position.set(-0.48, 0.58, -1.26);
-  carBody.add(tlL);
+  // Wooden Walking Stick (Matching "Hand Detail" reference sheet)
+  const stickGeo = new THREE.CylinderGeometry(0.038, 0.045, 1.85, 8);
+  walkingStickMesh = new THREE.Mesh(stickGeo, stickMat);
+  walkingStickMesh.position.set(0.08, -0.45, 0.25);
+  walkingStickMesh.rotation.x = 0.18;
+  walkingStickMesh.castShadow = true;
+  rightArmPivot.add(walkingStickMesh);
 
-  const tlR = new THREE.Mesh(tlGeo, taillightMat);
-  tlR.position.set(0.48, 0.58, -1.26);
-  carBody.add(tlR);
+  // Carved top knob on walking stick
+  const stickKnob = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), stickMat);
+  stickKnob.position.set(0.08, 0.48, 0.35);
+  rightArmPivot.add(stickKnob);
 
-  // 5. Roof Antenna with Bright Red Sphere (Matching reference photo!)
-  const antPoleGeo = new THREE.CylinderGeometry(0.025, 0.025, 0.8, 6);
-  antennaSpring = new THREE.Mesh(antPoleGeo, trimMat);
-  antennaSpring.position.set(-0.45, 1.82, 0.2);
+  characterGroup.add(rightArmPivot);
 
-  const antBallGeo = new THREE.SphereGeometry(0.12, 12, 12);
-  const antBallMat = new THREE.MeshBasicMaterial({ color: 0xEE4B3B });
-  const antBall = new THREE.Mesh(antBallGeo, antBallMat);
-  antBall.position.y = 0.45;
-  antennaSpring.add(antBall);
+  // 5. Legs & Sturdy Hiking Boots
+  // Left Leg (Olive shorts + Knee + Sturdy brown hiking boot)
+  leftLegPivot = new THREE.Group();
+  leftLegPivot.position.set(-0.22, 0.82, 0);
 
-  carBody.add(antennaSpring);
-  carGroup.add(carBody);
+  const lShorts = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.32, 8), greenGearMat);
+  lShorts.position.y = -0.16;
+  leftLegPivot.add(lShorts);
 
-  // 6. Car Wheels (Standard compact car size, NOT a monster truck)
-  const wheelRadius = 0.32;
-  const wheelWidth = 0.24;
-  const wheelGeo = new THREE.CylinderGeometry(wheelRadius, wheelRadius, wheelWidth, 16);
-  wheelGeo.rotateZ(Math.PI / 2);
+  const lKnee = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.1, 0.28, 8), skinMat);
+  lKnee.position.y = -0.4;
+  leftLegPivot.add(lKnee);
 
-  const rimGeo = new THREE.CylinderGeometry(0.16, 0.16, wheelWidth + 0.02, 12);
-  rimGeo.rotateZ(Math.PI / 2);
+  // Hiking Boot
+  const lBoot = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.32, 0.45), bootsMat);
+  lBoot.position.set(0, -0.66, 0.06);
+  lBoot.castShadow = true;
+  leftLegPivot.add(lBoot);
 
-  const wheelPositions = [
-    { x: -0.72, y: 0.32, z: 0.72, isFront: true },  // Front Left
-    { x: 0.72, y: 0.32, z: 0.72, isFront: true },   // Front Right
-    { x: -0.72, y: 0.32, z: -0.72, isFront: false }, // Rear Left
-    { x: 0.72, y: 0.32, z: -0.72, isFront: false }  // Rear Right
-  ];
+  characterGroup.add(leftLegPivot);
 
-  wheelPositions.forEach(wp => {
-    const pivot = new THREE.Group();
-    pivot.position.set(wp.x, wp.y, wp.z);
+  // Right Leg
+  rightLegPivot = new THREE.Group();
+  rightLegPivot.position.set(0.22, 0.82, 0);
 
-    const wheelMesh = new THREE.Group();
-    const tire = new THREE.Mesh(wheelGeo, wheelMat);
-    tire.castShadow = true;
-    wheelMesh.add(tire);
+  const rShorts = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.19, 0.32, 8), greenGearMat);
+  rShorts.position.y = -0.16;
+  rightLegPivot.add(rShorts);
 
-    const rim = new THREE.Mesh(rimGeo, rimMat);
-    wheelMesh.add(rim);
+  const rKnee = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.1, 0.28, 8), skinMat);
+  rKnee.position.y = -0.4;
+  rightLegPivot.add(rKnee);
 
-    pivot.add(wheelMesh);
-    carGroup.add(pivot);
+  const rBoot = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.32, 0.45), bootsMat);
+  rBoot.position.set(0, -0.66, 0.06);
+  rBoot.castShadow = true;
+  rightLegPivot.add(rBoot);
 
-    wheels.push(wheelMesh);
-    if (wp.isFront) {
-      frontWheelPivots.push(pivot);
-    }
-  });
+  characterGroup.add(rightLegPivot);
 
-  scene.add(carGroup);
+  // Character overall scale
+  characterGroup.scale.set(1.15, 1.15, 1.15);
+  scene.add(characterGroup);
+
+  // Initialize Position & Rotation
+  charState.x = 0;
+  charState.z = 0;
+  charState.rotation = -Math.PI / 2;
+  characterGroup.position.set(charState.x, 0, charState.z);
+  characterGroup.rotation.y = charState.rotation;
 }
 
 /* --------------------------------------------------------------------------
-   9. CAR DRIVING & CONTROLS PHYSICS
+   9. WALKING PHYSICS & PROCEDURAL GAIT ANIMATION
    -------------------------------------------------------------------------- */
-function updateCarPhysics(delta) {
-  // Acceleration / Braking
+function updateCharacterPhysics(delta) {
+  // Forward / Backward walking acceleration
   if (input.forward) {
-    carState.speed += carState.acceleration;
-    if (carState.speed > carState.maxForwardSpeed) carState.speed = carState.maxForwardSpeed;
+    charState.speed += charState.accel;
+    if (charState.speed > charState.maxWalkSpeed) charState.speed = charState.maxWalkSpeed;
   } else if (input.backward) {
-    carState.speed -= carState.reverseAccel;
-    if (carState.speed < carState.maxReverseSpeed) carState.speed = carState.maxReverseSpeed;
+    charState.speed -= charState.accel;
+    if (charState.speed < charState.maxBackSpeed) charState.speed = charState.maxBackSpeed;
   } else {
-    carState.speed *= carState.friction;
-    if (Math.abs(carState.speed) < 0.001) carState.speed = 0;
+    charState.speed *= charState.friction;
+    if (Math.abs(charState.speed) < 0.002) charState.speed = 0;
   }
 
-  // Steering
+  // Steering / Turning Left & Right
   if (input.left) {
-    carState.steeringAngle += carState.steerSpeed;
-    if (carState.steeringAngle > carState.maxSteeringAngle) carState.steeringAngle = carState.maxSteeringAngle;
-  } else if (input.right) {
-    carState.steeringAngle -= carState.steerSpeed;
-    if (carState.steeringAngle < -carState.maxSteeringAngle) carState.steeringAngle = -carState.maxSteeringAngle;
-  } else {
-    // Return to center
-    if (carState.steeringAngle > 0) {
-      carState.steeringAngle = Math.max(0, carState.steeringAngle - carState.steerReturnSpeed);
-    } else if (carState.steeringAngle < 0) {
-      carState.steeringAngle = Math.min(0, carState.steeringAngle + carState.steerReturnSpeed);
+    charState.rotation += charState.turnSpeed;
+  }
+  if (input.right) {
+    charState.rotation -= charState.turnSpeed;
+  }
+
+  // Update Character World Position
+  charState.x += Math.sin(charState.rotation) * charState.speed;
+  charState.z += Math.cos(charState.rotation) * charState.speed;
+
+  characterGroup.position.set(charState.x, 0, charState.z);
+  characterGroup.rotation.y = charState.rotation;
+
+  // Walking Animation Gait
+  const isMoving = Math.abs(charState.speed) > 0.005;
+
+  if (isMoving) {
+    charState.walkCycle += delta * (charState.speed > 0 ? 11 : 8);
+
+    // Body Bobbing with walking cadence
+    const bob = Math.abs(Math.sin(charState.walkCycle * 2)) * 0.06;
+    characterBody.position.y = bob;
+
+    // Ponytail gentle bounce
+    if (ponytailMesh) {
+      ponytailMesh.rotation.x = Math.sin(charState.walkCycle * 2) * 0.15;
     }
+
+    // Legs: counter-oscillating stride
+    leftLegPivot.rotation.x = Math.sin(charState.walkCycle) * 0.65;
+    rightLegPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.65;
+
+    // Arms: counter-swinging with walking stick
+    leftArmPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.55;
+    rightArmPivot.rotation.x = Math.sin(charState.walkCycle) * 0.45;
+  } else {
+    // Return to natural idle standing posture
+    characterBody.position.y *= 0.8;
+    leftLegPivot.rotation.x *= 0.8;
+    rightLegPivot.rotation.x *= 0.8;
+    leftArmPivot.rotation.x *= 0.8;
+    rightArmPivot.rotation.x *= 0.8;
+    if (ponytailMesh) ponytailMesh.rotation.x *= 0.8;
   }
 
-  // Pivot front wheels visually
-  frontWheelPivots.forEach(p => {
-    p.rotation.y = carState.steeringAngle;
-  });
-
-  // Turn car when moving
-  if (Math.abs(carState.speed) > 0.001) {
-    const turnFactor = (carState.speed > 0 ? 1 : -1) * (carState.speed / carState.maxForwardSpeed);
-    carState.rotation += carState.steeringAngle * turnFactor * 0.065;
-  }
-
-  // Update Position
-  carState.x += Math.sin(carState.rotation) * carState.speed;
-  carState.z += Math.cos(carState.rotation) * carState.speed;
-
-  carGroup.position.set(carState.x, 0, carState.z);
-  carGroup.rotation.y = carState.rotation;
-
-  // Spin wheels
-  const spinDelta = (carState.speed / 0.32);
-  wheels.forEach(w => {
-    w.rotation.x += spinDelta;
-  });
-
-  // Antenna Wobble
-  if (antennaSpring) {
-    antennaSpring.rotation.z = Math.sin(Date.now() * 0.02) * (carState.speed * 0.8);
-    antennaSpring.rotation.x = (carState.speed * 0.5);
-  }
-
-  // Auto proximity check: check if car is right beside a building
+  // Proximity check for milestone buildings
   checkBuildingProximity();
 }
 
 function updateCameraFollow() {
-  if (!camera || !carGroup) return;
+  if (!camera || !characterGroup) return;
 
-  // Bruno Simon Isometric Diagonal Offset: look down from high front-left/rear-left
+  // Bruno Simon Isometric Diagonal Offset tracking the adventurer
   const camOffset = new THREE.Vector3(-14, 18, 14);
-  const targetCamPos = carGroup.position.clone().add(camOffset);
+  const targetCamPos = characterGroup.position.clone().add(camOffset);
 
   camera.position.lerp(targetCamPos, 0.08);
-  camera.lookAt(carGroup.position.x, carGroup.position.y + 0.8, carGroup.position.z);
+  camera.lookAt(characterGroup.position.x, characterGroup.position.y + 1.2, characterGroup.position.z);
 }
 
 /* --------------------------------------------------------------------------
-   10. INTERACTIVE CLICK POPUPS FOR BUILDINGS
+   10. INTERACTIVE CLICK POPUPS & CONTROLS
    -------------------------------------------------------------------------- */
 function setupWorldControls(container) {
-  // Keyboard Input
+  // Keyboard Input (WASD or Arrow Keys)
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
       input.forward = true;
@@ -1013,8 +1098,8 @@ function setupWorldControls(container) {
   });
 
   // Mobile / Touch Buttons
-  const pDrive = document.getElementById('touch-pedal-drive');
-  const pRev = document.getElementById('touch-pedal-rev');
+  const pWalk = document.getElementById('touch-pedal-walk');
+  const pBack = document.getElementById('touch-pedal-back');
   const pLeft = document.getElementById('touch-steer-left');
   const pRight = document.getElementById('touch-steer-right');
 
@@ -1028,29 +1113,28 @@ function setupWorldControls(container) {
     el.addEventListener('touchend', end);
   }
 
-  bindTouch(pDrive, 'forward');
-  bindTouch(pRev, 'backward');
+  bindTouch(pWalk, 'forward');
+  bindTouch(pBack, 'backward');
   bindTouch(pLeft, 'left');
   bindTouch(pRight, 'right');
 
-  // Reset Car Button
-  const resetBtn = document.getElementById('reset-car-btn');
+  // Reset Position Button
+  const resetBtn = document.getElementById('reset-char-btn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-      carState.x = 0;
-      carState.z = 0;
-      carState.rotation = -Math.PI / 2;
-      carState.speed = 0;
-      carState.steeringAngle = 0;
+      charState.x = 0;
+      charState.z = 0;
+      charState.rotation = -Math.PI / 2;
+      charState.speed = 0;
+      characterGroup.position.set(0, 0, 0);
     });
   }
 
-  // Raycasting on Click: Detect Clicks on Buildings!
+  // Raycasting on Click: Detect Clicks on Milestone Buildings
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
   container.addEventListener('pointerdown', (e) => {
-    // Only handle left click
     if (e.button !== 0) return;
 
     const rect = container.getBoundingClientRect();
@@ -1059,7 +1143,6 @@ function setupWorldControls(container) {
 
     raycaster.setFromCamera(mouse, camera);
 
-    // Collect all building meshes
     let hitTargets = [];
     buildingMeshes.forEach(bg => {
       bg.traverse(child => {
@@ -1077,12 +1160,10 @@ function setupWorldControls(container) {
         showMilestonePopup(clickedBuilding.userData.milestoneId);
       }
     } else {
-      // Clicked on ground: close popup
       closeMilestonePopup();
     }
   });
 
-  // Popup Close Button
   const closeBtn = document.getElementById('popup-close-btn');
   if (closeBtn) {
     closeBtn.addEventListener('click', closeMilestonePopup);
@@ -1091,7 +1172,7 @@ function setupWorldControls(container) {
 
 function checkBuildingProximity() {
   buildingMeshes.forEach(b => {
-    const dist = carGroup.position.distanceTo(b.position);
+    const dist = characterGroup.position.distanceTo(b.position);
     if (dist < 6.5) {
       if (activePopupId !== b.userData.milestoneId) {
         showMilestonePopup(b.userData.milestoneId);
@@ -1141,7 +1222,6 @@ function updatePopupScreenPosition() {
   const container = document.getElementById('milestone-popup-container');
   if (!container || !container.classList.contains('active')) return;
 
-  // Project 3D building anchor position to 2D screen coordinates
   const anchor = bGroup.userData.anchorPos.clone();
   anchor.project(camera);
 
