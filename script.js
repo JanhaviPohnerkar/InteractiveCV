@@ -217,7 +217,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🌐",
     logoPath: "assets/01_orb_slam3.png",
     themeColor: "#2563EB",
-    pos: { x: -30, z: -315 },
+    pos: { x: -30, z: -370 },
     rot: 0.45,
     roofType: "dome",
     wallColor: 0xEDE9FE,
@@ -243,7 +243,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "✈️",
     logoPath: "assets/02_stm32_turbulence.png",
     themeColor: "#0284C7",
-    pos: { x: -38, z: -355 },
+    pos: { x: -38, z: -410 },
     rot: 0.35,
     roofType: "flat_tech",
     wallColor: 0xE0F2FE,
@@ -269,7 +269,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🪐",
     logoPath: "assets/03_mars_dem.png",
     themeColor: "#C2410C",
-    pos: { x: 10, z: -395 },
+    pos: { x: 10, z: -450 },
     rot: -0.35,
     roofType: "pitched",
     wallColor: 0xFFEDD5,
@@ -295,7 +295,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "👁️",
     logoPath: "assets/04_diabetic_retinopathy_ai.png",
     themeColor: "#E11D48",
-    pos: { x: 34, z: -435 },
+    pos: { x: 34, z: -490 },
     rot: -0.4,
     roofType: "pitched",
     wallColor: 0xFFE4E6,
@@ -321,7 +321,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🧵",
     logoPath: "assets/05_textile_defect_detection.png",
     themeColor: "#059669",
-    pos: { x: 42, z: -475 },
+    pos: { x: 42, z: -530 },
     rot: -0.45,
     roofType: "solar_cottage",
     wallColor: 0xDCFCE7,
@@ -347,7 +347,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🦾",
     logoPath: "assets/06_bionic_prosthetic_arm.png",
     themeColor: "#7C3AED",
-    pos: { x: -32, z: -535 },
+    pos: { x: -32, z: -590 },
     rot: 0.38,
     roofType: "gear_lab",
     wallColor: 0xF3E8FF,
@@ -373,7 +373,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🧊",
     logoPath: "assets/07_monocular_depth_point_cloud.png",
     themeColor: "#4F46E5",
-    pos: { x: -36, z: -590 },
+    pos: { x: -36, z: -645 },
     rot: 0.42,
     roofType: "wireframe_frame",
     wallColor: 0xEEF2FF,
@@ -399,7 +399,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🏖️",
     logoPath: "assets/05_textile_defect_detection.png",
     themeColor: "#D97706",
-    pos: { x: 30, z: -645 },
+    pos: { x: 30, z: -700 },
     rot: -0.36,
     roofType: "pitched",
     wallColor: 0xFEF3C7,
@@ -425,7 +425,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "📹",
     logoPath: "assets/08_multi_camera_stitching.png",
     themeColor: "#0891B2",
-    pos: { x: 32, z: -695 },
+    pos: { x: 32, z: -750 },
     rot: -0.4,
     roofType: "flat_tech",
     wallColor: 0xECFEFF,
@@ -523,8 +523,8 @@ function initBrunoWorld() {
   scene.add(sunLight);
 
   // 1. Dual-Tone Terrain: Warm Terracotta Earth for Journey, Sleek Tech Indigo for Projects Boulevard
-  // 1A. Milestone Section Ground (Warm Muddy Terracotta Earth: z = +200 to -285)
-  const milestoneGroundGeo = new THREE.PlaneGeometry(1600, 500);
+  // 1A. Milestone Section Ground (Warm Muddy Terracotta Earth: z = +200 to -325)
+  const milestoneGroundGeo = new THREE.PlaneGeometry(1600, 580);
   milestoneGroundGeo.rotateX(-Math.PI / 2);
   const milestoneGroundMat = new THREE.MeshStandardMaterial({
     color: 0x9E5630, // Rich warm muddy earth terracotta / clay soil
@@ -532,12 +532,12 @@ function initBrunoWorld() {
     metalness: 0.0
   });
   const milestoneGround = new THREE.Mesh(milestoneGroundGeo, milestoneGroundMat);
-  milestoneGround.position.set(0, -0.01, -35);
+  milestoneGround.position.set(0, -0.01, -40);
   milestoneGround.receiveShadow = true;
   scene.add(milestoneGround);
 
-  // 1B. Project Showcase Boulevard Ground (Deep Tech Slate / Electric Cobalt Earth: z = -285 to -850)
-  const projectGroundGeo = new THREE.PlaneGeometry(1600, 600);
+  // 1B. Project Showcase Boulevard Ground (Deep Tech Slate / Electric Cobalt Earth: z = -325 to -950)
+  const projectGroundGeo = new THREE.PlaneGeometry(1600, 650);
   projectGroundGeo.rotateX(-Math.PI / 2);
   const projectGroundMat = new THREE.MeshStandardMaterial({
     color: 0x1E293B, // Deep tech slate / midnight navy foundation
@@ -545,18 +545,18 @@ function initBrunoWorld() {
     metalness: 0.1
   });
   const projectGround = new THREE.Mesh(projectGroundGeo, projectGroundMat);
-  projectGround.position.set(0, 0, -580);
+  projectGround.position.set(0, 0, -640);
   projectGround.receiveShadow = true;
   scene.add(projectGround);
 
-  // 1C. Tech Boulevard Transition Carpet / Apron at Archway (z = -285)
-  const apronGeo = new THREE.BoxGeometry(24, 0.04, 20);
+  // 1C. Tech Boulevard Transition Carpet / Apron at Archway (z = -325)
+  const apronGeo = new THREE.BoxGeometry(26, 0.04, 22);
   const apronMat = new THREE.MeshStandardMaterial({
     color: 0x0F172A,
     roughness: 0.7
   });
   const apron = new THREE.Mesh(apronGeo, apronMat);
-  apron.position.set(-6, 0.01, -285);
+  apron.position.set(0, 0.01, -325);
   apron.receiveShadow = true;
   scene.add(apron);
 
@@ -743,8 +743,8 @@ function buildBigSculpturalText() {
    -------------------------------------------------------------------------- */
 function buildProjectsWelcomeArchway() {
   const gateGroup = new THREE.Group();
-  gateGroup.position.set(-6, 0, -286);
-  gateGroup.rotation.y = 0.40; // Angled perpendicularly across road heading into turn 1
+  gateGroup.position.set(0, 0, -325); // Positioned in the scenic buffer boulevard between Milestone 7 and Project 1
+  gateGroup.rotation.y = 0; // Spans directly across the road heading south
 
   // Materials: Deep midnight slate pylons, electric cyan neon trims & warm golden glowing sign
   const pillarMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.4, metalness: 0.3 });
@@ -920,29 +920,33 @@ function buildClayRoad() {
     // 3D Digital Twin Lab (Last Milestone at z = -270)
     new THREE.Vector3(0, 0, -270),
 
+    // --- Spacious Scenic Transition Zone & Portal Gateway ---
+    new THREE.Vector3(0, 0, -295),
+    new THREE.Vector3(0, 0, -325), // Grand "MY PROJECTS" Welcome Archway Portal & Terrain Transition Threshold
+
     // --- Extended Curvy Project Showcase Boulevard ---
     // Turn 1: Gentle curve out towards Project 1 & 2
-    new THREE.Vector3(-16, 0, -305),
-    new THREE.Vector3(-24, 0, -345),
+    new THREE.Vector3(-16, 0, -360),
+    new THREE.Vector3(-24, 0, -400),
     // Turn 2: Sweeping eastward curve passing Projects 3 & 4
-    new THREE.Vector3(-8, 0, -385),
-    new THREE.Vector3(16, 0, -425),
-    new THREE.Vector3(26, 0, -465),
+    new THREE.Vector3(-8, 0, -440),
+    new THREE.Vector3(16, 0, -480),
+    new THREE.Vector3(26, 0, -520),
     // Turn 3: S-curve westwards passing Projects 5 & 6
-    new THREE.Vector3(10, 0, -505),
-    new THREE.Vector3(-18, 0, -545),
-    new THREE.Vector3(-22, 0, -585),
+    new THREE.Vector3(10, 0, -560),
+    new THREE.Vector3(-18, 0, -600),
+    new THREE.Vector3(-22, 0, -640),
     // Turn 4: Final graceful curve towards Grand Tech Plaza (Projects 7, 8 & 9)
-    new THREE.Vector3(-4, 0, -625),
-    new THREE.Vector3(18, 0, -665),
-    new THREE.Vector3(14, 0, -700),
-    new THREE.Vector3(0, 0, -735)
+    new THREE.Vector3(-4, 0, -680),
+    new THREE.Vector3(18, 0, -720),
+    new THREE.Vector3(14, 0, -755),
+    new THREE.Vector3(0, 0, -790)
   ];
 
   roadCurve = new THREE.CatmullRomCurve3(roadPoints);
   roadLength = roadCurve.getLength();
   const roadWidth = 5.6; // Slightly wider, spacious road
-  const segments = 450;
+  const segments = 520;
 
   // Custom flat horizontal ribbon geometry lying completely flat on XZ plane
   const vertices = [];
@@ -1794,12 +1798,14 @@ function buildFoliageAndRocks() {
     { x: 10, z: -185 }, { x: 18, z: -215 },
     { x: 12, z: -245 }, { x: -5, z: -265 },
     // Extended boulevard lampposts
-    { x: -18, z: -300 }, { x: -28, z: -340 },
-    { x: -12, z: -380 }, { x: 12, z: -420 },
-    { x: 28, z: -460 },  { x: 14, z: -500 },
-    { x: -14, z: -540 }, { x: -26, z: -580 },
-    { x: -8, z: -620 },  { x: 14, z: -660 },
-    { x: 16, z: -700 },  { x: -4, z: -730 }
+    { x: -5, z: -300 },  { x: 5, z: -300 },   // Transition buffer stretch
+    { x: -6, z: -325 },  { x: 6, z: -325 },   // Welcoming archway portals
+    { x: -20, z: -360 }, { x: -28, z: -400 }, // Projects 1 & 2
+    { x: -14, z: -440 }, { x: 14, z: -480 },  // Project 3 & 4
+    { x: 30, z: -520 },  { x: 14, z: -560 },  // Projects 4 & 5
+    { x: -14, z: -600 }, { x: -26, z: -640 }, // Projects 6 & 7
+    { x: -8, z: -680 },  { x: 16, z: -720 },  // Projects 8 & 9
+    { x: 16, z: -755 },  { x: -4, z: -785 }   // Grand Tech Plaza finale
   ];
 
   // 3. Street Lampposts along the road and town courtyards (Taller, elegant street lamps)
@@ -1897,23 +1903,26 @@ function buildFoliageAndRocks() {
     { cx: -34.0, cz: -275, count: 6, radius: 5.0, baseH: 5.3 },
     { cx: -18.0, cz: -290, count: 5, radius: 4.2, baseH: 4.9 },
     { cx: 24.0,  cz: -275, count: 6, radius: 4.8, baseH: 5.2 },
-    { cx: 16.0,  cz: -302, count: 5, radius: 4.2, baseH: 5.0 },
-    { cx: -6.0,  cz: -308, count: 5, radius: 4.0, baseH: 4.8 },
+    // Buffer Boulevard & Grand Archway Groves
+    { cx: -18.0, cz: -295, count: 5, radius: 4.2, baseH: 4.9 },
+    { cx: 18.0,  cz: -295, count: 5, radius: 4.2, baseH: 5.0 },
+    { cx: -20.0, cz: -325, count: 5, radius: 4.4, baseH: 5.2 },
+    { cx: 20.0,  cz: -325, count: 5, radius: 4.4, baseH: 5.2 },
 
     // Extended Project Boulevard Groves
-    { cx: -45.0, cz: -330, count: 6, radius: 5.2, baseH: 5.4 },
-    { cx: 12.0,  cz: -340, count: 5, radius: 4.2, baseH: 4.8 },
-    { cx: -16.0, cz: -375, count: 5, radius: 4.0, baseH: 4.9 },
-    { cx: 28.0,  cz: -400, count: 6, radius: 5.0, baseH: 5.2 },
-    { cx: -32.0, cz: -440, count: 5, radius: 4.5, baseH: 5.1 },
-    { cx: 50.0,  cz: -480, count: 6, radius: 5.2, baseH: 5.3 },
-    { cx: 16.0,  cz: -520, count: 5, radius: 4.0, baseH: 4.8 },
-    { cx: -44.0, cz: -560, count: 6, radius: 5.2, baseH: 5.4 },
-    { cx: 14.0,  cz: -600, count: 5, radius: 4.5, baseH: 5.0 },
-    { cx: -42.0, cz: -630, count: 6, radius: 5.0, baseH: 5.2 },
-    { cx: 44.0,  cz: -670, count: 6, radius: 5.2, baseH: 5.4 },
-    { cx: -18.0, cz: -710, count: 5, radius: 4.5, baseH: 5.0 },
-    { cx: 26.0,  cz: -730, count: 6, radius: 5.0, baseH: 5.2 }
+    { cx: -46.0, cz: -370, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: 14.0,  cz: -380, count: 5, radius: 4.2, baseH: 4.8 },
+    { cx: -16.0, cz: -420, count: 5, radius: 4.0, baseH: 4.9 },
+    { cx: 28.0,  cz: -450, count: 6, radius: 5.0, baseH: 5.2 },
+    { cx: -32.0, cz: -490, count: 5, radius: 4.5, baseH: 5.1 },
+    { cx: 52.0,  cz: -530, count: 6, radius: 5.2, baseH: 5.3 },
+    { cx: 16.0,  cz: -570, count: 5, radius: 4.0, baseH: 4.8 },
+    { cx: -46.0, cz: -610, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: 14.0,  cz: -650, count: 5, radius: 4.5, baseH: 5.0 },
+    { cx: -44.0, cz: -680, count: 6, radius: 5.0, baseH: 5.2 },
+    { cx: 46.0,  cz: -720, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: -18.0, cz: -760, count: 5, radius: 4.5, baseH: 5.0 },
+    { cx: 26.0,  cz: -785, count: 6, radius: 5.0, baseH: 5.2 }
   ];
 
   let treeIdx = 0;
