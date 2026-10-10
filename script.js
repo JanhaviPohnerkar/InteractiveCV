@@ -435,7 +435,7 @@ function initBrunoWorld() {
   const ambientLight = new THREE.AmbientLight(0xFFF9EE, 1.05); // Warm glowing sunlight ambient
   scene.add(ambientLight);
 
-  const hemiLight = new THREE.HemisphereLight(0x7EC8E3, 0xD97745, 0.85); // Sky blue to muted warm orange ground bounce
+  const hemiLight = new THREE.HemisphereLight(0x7EC8E3, 0x9E5630, 0.85); // Sky blue to rich warm muddy ground bounce
   scene.add(hemiLight);
 
   const sunLight = new THREE.DirectionalLight(0xFFF7E6, 1.55); // Golden sunny directional light
@@ -453,12 +453,12 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Expansive Muted Warm Orange Ground Plane (Generously envelopes the whole town and mountain horizons)
+  // 1. Expansive Warm Muddy Terracotta Ground Plane
   const groundGeo = new THREE.PlaneGeometry(1200, 1200);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
-    color: 0xD97745, // Warm muted terracotta orange clay
-    roughness: 0.86,
+    color: 0x9E5630, // Rich warm muddy earth terracotta / clay soil
+    roughness: 0.90,
     metalness: 0.0
   });
   const ground = new THREE.Mesh(groundGeo, groundMat);
@@ -705,6 +705,90 @@ function buildClayRoad() {
   const roadMesh = new THREE.Mesh(roadGeo, roadMat);
   roadMesh.receiveShadow = true;
   scene.add(roadMesh);
+
+  // Lush green grass verge ribbon lining both sides of the path
+  const grassVergeWidth = 8.6; // Extends beyond roadWidth (5.0) on both sides
+  const grassVertices = [];
+  const grassUvs = [];
+  const grassIndices = [];
+
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const pt = roadCurve.getPointAt(t);
+    const tangent = roadCurve.getTangentAt(t).normalize();
+    const side = new THREE.Vector3().crossVectors(tangent, UP).normalize();
+
+    const gLeft = pt.clone().sub(side.clone().multiplyScalar(grassVergeWidth / 2));
+    const gRight = pt.clone().add(side.clone().multiplyScalar(grassVergeWidth / 2));
+
+    gLeft.y = 0.015;
+    gRight.y = 0.015;
+
+    grassVertices.push(gLeft.x, gLeft.y, gLeft.z);
+    grassVertices.push(gRight.x, gRight.y, gRight.z);
+
+    grassUvs.push(0, t);
+    grassUvs.push(1, t);
+
+    if (i < segments) {
+      const baseIdx = i * 2;
+      grassIndices.push(baseIdx, baseIdx + 1, baseIdx + 2);
+      grassIndices.push(baseIdx + 1, baseIdx + 3, baseIdx + 2);
+    }
+  }
+
+  const grassVergeGeo = new THREE.BufferGeometry();
+  grassVergeGeo.setAttribute('position', new THREE.Float32BufferAttribute(grassVertices, 3));
+  grassVergeGeo.setAttribute('uv', new THREE.Float32BufferAttribute(grassUvs, 2));
+  grassVergeGeo.setIndex(grassIndices);
+  grassVergeGeo.computeVertexNormals();
+
+  const grassVergeMat = new THREE.MeshStandardMaterial({
+    color: 0x4ADE80, // Fresh lush emerald spring grass
+    roughness: 0.82,
+    side: THREE.DoubleSide
+  });
+
+  const grassVergeMesh = new THREE.Mesh(grassVergeGeo, grassVergeMat);
+  grassVergeMesh.receiveShadow = true;
+  scene.add(grassVergeMesh);
+
+  // 3D Lush grass tufts and wildflower blades sprouting along the path edges
+  const pathGrassMat = new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 0.75, flatShading: true });
+  const flowerSproutMat = new THREE.MeshStandardMaterial({ color: 0xF472B6, roughness: 0.6 }); // Tiny pink blossoms in the grass
+
+  for (let g = 0; g < 110; g++) {
+    const t = g / 110;
+    const pt = roadCurve.getPointAt(t);
+    const tangent = roadCurve.getTangentAt(t).normalize();
+    const side = new THREE.Vector3().crossVectors(tangent, UP).normalize();
+
+    // Alternate left and right side of road with natural random spacing
+    const sideSign = (g % 2 === 0 ? 1 : -1);
+    const distFromCenter = (roadWidth / 2) + 0.6 + ((g % 4) * 0.45);
+    const grassPos = pt.clone().add(side.clone().multiplyScalar(sideSign * distFromCenter));
+
+    const tuft = new THREE.Group();
+    tuft.position.set(grassPos.x, 0, grassPos.z);
+
+    // 3 small cone blades
+    for (let b = 0; b < 3; b++) {
+      const blade = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.65 + (b % 3) * 0.2, 4), pathGrassMat);
+      blade.position.set((b - 1) * 0.16, 0.35, 0);
+      blade.rotation.z = (b - 1) * 0.22;
+      blade.castShadow = true;
+      tuft.add(blade);
+    }
+
+    // Occasional tiny flower in the grass
+    if (g % 5 === 0) {
+      const fl = new THREE.Mesh(new THREE.DodecahedronGeometry(0.18, 0), flowerSproutMat);
+      fl.position.set(0, 0.55, 0.08);
+      tuft.add(fl);
+    }
+
+    scene.add(tuft);
+  }
 
   // Dashed white center markings lying flat on the road surface
   const dashCount = 65;
@@ -1040,14 +1124,14 @@ function buildFoliageAndRocks() {
   const rockMat = new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true });
   const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78553D, roughness: 0.85 }); // Warm chocolate mahogany trunk
 
-  // Warm sunny nature foliage palette (strictly warm greens, sunlit lime, olive & golden pear - no cold colors)
+  // Lush nature foliage palette (deep vibrant lush greens, emerald, light cherry pink, and gentle pastel purple)
   const leafMats = [
-    new THREE.MeshStandardMaterial({ color: 0x84CC16, roughness: 0.72, flatShading: true }), // Warm Sunny Lime
-    new THREE.MeshStandardMaterial({ color: 0x65A30D, roughness: 0.74, flatShading: true }), // Warm Golden Olive
-    new THREE.MeshStandardMaterial({ color: 0x4D7C0F, roughness: 0.76, flatShading: true }), // Deep Warm Forest Moss
-    new THREE.MeshStandardMaterial({ color: 0xA3E635, roughness: 0.70, flatShading: true }), // Bright Warm Chartreuse / Pear
-    new THREE.MeshStandardMaterial({ color: 0xCA8A04, roughness: 0.72, flatShading: true }), // Sunlit Golden Amber
-    new THREE.MeshStandardMaterial({ color: 0xEAB308, roughness: 0.70, flatShading: true })  // Warm Sunflower Yellow Leaf
+    new THREE.MeshStandardMaterial({ color: 0x2E7D32, roughness: 0.74, flatShading: true }), // Lush Vibrant Forest Green
+    new THREE.MeshStandardMaterial({ color: 0x15803D, roughness: 0.72, flatShading: true }), // Deep Rich Emerald
+    new THREE.MeshStandardMaterial({ color: 0x4ADE80, roughness: 0.70, flatShading: true }), // Fresh Lush Spring Meadow Green
+    new THREE.MeshStandardMaterial({ color: 0x3F6212, roughness: 0.76, flatShading: true }), // Earthy Deep Moss Green
+    new THREE.MeshStandardMaterial({ color: 0xF472B6, roughness: 0.72, flatShading: true }), // Light Blossom Pink (Cherry bloom)
+    new THREE.MeshStandardMaterial({ color: 0xC084FC, roughness: 0.72, flatShading: true })  // Dreamy Light Purple (Lavender bloom)
   ];
 
   // Town Props Materials (Gentle, low-contrast finishes)
@@ -1604,11 +1688,11 @@ function buildWesternDeepForest() {
   const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78553D, roughness: 0.85 });
   const birchTrunkMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.6 });
   const forestLeafMats = [
-    new THREE.MeshStandardMaterial({ color: 0x65A30D, roughness: 0.74, flatShading: true }), // Warm Golden Olive
-    new THREE.MeshStandardMaterial({ color: 0x4D7C0F, roughness: 0.76, flatShading: true }), // Deep Warm Forest Moss
-    new THREE.MeshStandardMaterial({ color: 0x84CC16, roughness: 0.72, flatShading: true }), // Sunny Lime
-    new THREE.MeshStandardMaterial({ color: 0x3F6212, roughness: 0.78, flatShading: true }), // Dense Woodland Moss
-    new THREE.MeshStandardMaterial({ color: 0xA3E635, roughness: 0.70, flatShading: true })  // Fresh Chartreuse
+    new THREE.MeshStandardMaterial({ color: 0x166534, roughness: 0.74, flatShading: true }), // Deep Lush Forest Green
+    new THREE.MeshStandardMaterial({ color: 0x15803D, roughness: 0.72, flatShading: true }), // Rich Emerald Canopy
+    new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 0.70, flatShading: true }), // Fresh Vibrant Green
+    new THREE.MeshStandardMaterial({ color: 0xF472B6, roughness: 0.72, flatShading: true }), // Light Blossom Pink Tree
+    new THREE.MeshStandardMaterial({ color: 0xC084FC, roughness: 0.72, flatShading: true })  // Dreamy Light Purple Tree
   ];
 
   // Deep woodland grove cluster centers along the western territory
