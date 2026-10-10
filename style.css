@@ -247,8 +247,8 @@ html, body {
   color: #475569;
 }
 
-/* On-Screen Mobile Pedals / Touch Controller */
-.mobile-touch-pedals {
+/* On-Screen Navigation Dock (Desktop & Mobile) */
+.world-nav-pedals {
   position: absolute;
   bottom: 1.5rem;
   right: 1.5rem;
@@ -260,49 +260,63 @@ html, body {
 }
 
 .touch-pedal-btn {
-  width: 4rem;
-  height: 4rem;
+  width: 4.25rem;
+  height: 4.25rem;
   border-radius: 1.25rem;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   box-shadow: 0 10px 25px -5px rgba(180, 80, 30, 0.25);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: #334155;
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.touch-pedal-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  background: #FFFFFF;
+  box-shadow: 0 14px 28px -5px rgba(180, 80, 30, 0.3);
 }
 
 .touch-pedal-btn:active, .touch-pedal-btn.active {
   transform: scale(0.92);
-  background: #FFFFFF;
+  background: #FFF7ED;
+  color: #EE4B3B;
   box-shadow: 0 4px 10px rgba(180, 80, 30, 0.15);
 }
 
+.touch-pedal-btn.auto-walking {
+  background: #EE4B3B;
+  color: #FFFFFF;
+  border-color: #EE4B3B;
+  box-shadow: 0 0 0 4px rgba(238, 75, 59, 0.25), 0 10px 25px rgba(238, 75, 59, 0.35);
+  animation: pulseGlow 1.8s infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pedal-icon {
+  line-height: 1;
+}
+
 .pedal-label {
-  font-size: 0.6rem;
+  font-size: 0.62rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 0.1rem;
-}
-
-/* Steering Buttons for Mobile */
-.mobile-touch-steering {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  z-index: 20;
-  display: flex;
-  gap: 0.75rem;
-  pointer-events: auto;
+  margin-top: 0.2rem;
 }
 
 /* Building 3D Interactive Hover Cursor */

@@ -96,18 +96,24 @@ let characterGroup, characterBody, characterHead, ponytailMesh;
 let leftLegPivot, rightLegPivot, leftArmPivot, rightArmPivot, walkingStickMesh;
 let buildingMeshes = [];
 let roadPoints = [];
+let roadCurve = null;
+let roadLength = 0;
 let activePopupId = null;
+let milestoneThresholds = [];
+const milestoneVisited = new Set();
 
-// Character State & Movement (Increased speed & snappy responsiveness!)
+// Character State & Movement (Automatic Path Following!)
 const charState = {
+  progress: 0,            // 0.0 to 1.0 along the road path
+  lateralOffset: 0,       // -1.8 to +1.8 across road lane
   x: 0,
   z: 0,
-  rotation: -Math.PI / 2, // Facing forward along initial road
+  rotation: Math.PI,      // Automatically driven by road tangent
   speed: 0,
-  maxWalkSpeed: 0.36,     // Increased speed as requested (snappy & brisk!)
-  maxBackSpeed: -0.18,
-  accel: 0.038,
-  friction: 0.88,
+  maxWalkSpeed: 14.0,     // Snappy, brisk walking speed (world units / sec)
+  maxBackSpeed: -8.0,     // Reverse speed
+  accel: 28.0,            // Fast response acceleration
+  friction: 0.85,
   turnSpeed: 0.072,
   walkCycle: 0,
   isWalking: false
@@ -202,6 +208,16 @@ function initBrunoWorld() {
   // 7. Setup Controls & Raycasting
   setupWorldControls(container);
 
+  // 8. OrbitControls — enabled when character is idle for free camera panning
+  if (typeof THREE.OrbitControls !== 'undefined') {
+    window.orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+    window.orbitControls.enableDamping = true;
+    window.orbitControls.dampingFactor = 0.08;
+    window.orbitControls.enableZoom = true;
+    window.orbitControls.enablePan = true;
+    window.orbitControls.enabled = true; // start enabled (character is idle)
+  }
+
   // Window Resize
   window.addEventListener('resize', () => {
     camera.aspect = container.clientWidth / container.clientHeight;
@@ -219,6 +235,8 @@ function initBrunoWorld() {
     updateCharacterPhysics(delta);
     updateCameraFollow();
     updatePopupScreenPosition();
+
+    if (window.orbitControls) window.orbitControls.update();
 
     renderer.render(scene, camera);
   }
@@ -345,7 +363,8 @@ function buildClayRoad() {
     new THREE.Vector3(0, 0, -270)
   ];
 
-  const roadCurve = new THREE.CatmullRomCurve3(roadPoints);
+  roadCurve = new THREE.CatmullRomCurve3(roadPoints);
+  roadLength = roadCurve.getLength();
   const roadWidth = 5.0;
   const segments = 240;
 
@@ -530,6 +549,23 @@ function buildMilestoneBuildings() {
     scene.add(bGroup);
     buildingMeshes.push(bGroup);
   });
+
+  // Compute progress thresholds for each building along the road curve
+  if (roadCurve) {
+    const samplePoints = roadCurve.getPoints(300);
+    milestoneThresholds = buildingConfigs.map(cfg => {
+      let nearestT = 0;
+      let minDist = Infinity;
+      samplePoints.forEach((p, i) => {
+        const d = p.distanceTo(cfg.pos);
+        if (d < minDist) {
+          minDist = d;
+          nearestT = i / (samplePoints.length - 1);
+        }
+      });
+      return nearestT;
+    });
+  }
 }
 
 function createProceduralBuilding(group, cfg) {
@@ -1056,19 +1092,29 @@ function buildAdventurerCharacter() {
    9. WALKING PHYSICS & PROCEDURAL GAIT ANIMATION (FAST & RESPONSIVE)
    -------------------------------------------------------------------------- */
 function updateCharacterPhysics(delta) {
-  // Snappy walking acceleration
+  // ----- INPUT‑DRIVEN WALKING -----
   if (input.forward) {
-    charState.speed += charState.accel;
+    charState.speed += charState.accel * delta;
     if (charState.speed > charState.maxWalkSpeed) charState.speed = charState.maxWalkSpeed;
   } else if (input.backward) {
-    charState.speed -= charState.accel;
+    charState.speed -= charState.accel * delta;
     if (charState.speed < charState.maxBackSpeed) charState.speed = charState.maxBackSpeed;
   } else {
-    charState.speed *= charState.friction;
-    if (Math.abs(charState.speed) < 0.003) charState.speed = 0;
+    // No forward/backward input: apply friction
+    charState.speed *= Math.pow(charState.friction, delta * 60);
+    if (Math.abs(charState.speed) < 0.05) charState.speed = 0;
   }
 
-  // Snappy steering
+  // Toggle OrbitControls: disable while walking, enable while idle
+  if (window.orbitControls) {
+    if (Math.abs(charState.speed) > 0.05) {
+      window.orbitControls.enabled = false;
+    } else {
+      window.orbitControls.enabled = true;
+    }
+  }
+
+  // ----- STEERING -----
   if (input.left) {
     charState.rotation += charState.turnSpeed;
   }
@@ -1076,37 +1122,57 @@ function updateCharacterPhysics(delta) {
     charState.rotation -= charState.turnSpeed;
   }
 
-  // Update World Position
-  charState.x += Math.sin(charState.rotation) * charState.speed;
-  charState.z += Math.cos(charState.rotation) * charState.speed;
+  // ----- POSITION ALONG ROAD (frame‑rate independent) -----
+  if (roadCurve) {
+    const deltaProgress = (charState.speed * delta) / roadLength; // units per second
+    charState.progress = THREE.MathUtils.clamp(charState.progress + deltaProgress, 0, 1);
+    const point = roadCurve.getPointAt(charState.progress);
+    const tangent = roadCurve.getTangentAt(charState.progress).normalize();
+    characterGroup.position.set(point.x, 0, point.z);
+    charState.rotation = Math.atan2(tangent.x, tangent.z);
+    characterGroup.rotation.y = charState.rotation;
 
-  characterGroup.position.set(charState.x, 0, charState.z);
-  characterGroup.rotation.y = charState.rotation;
+    // ----- MILESTONE STOP LOGIC -----
+    if (typeof milestoneThresholds !== 'undefined' && milestoneThresholds.length) {
+      for (let i = 0; i < milestoneThresholds.length; i++) {
+        const th = milestoneThresholds[i];
+        if (charState.progress >= th && !milestoneVisited.has(i)) {
+          // Stop walking when a milestone is reached
+          input.forward = false;
+          charState.speed = 0;
+          milestoneVisited.add(i);
+          // UI popup is triggered elsewhere via proximity check
+          break;
+        }
+      }
+    }
+  } else {
+    // Fallback simple motion if roadCurve is not ready
+    charState.x += Math.sin(charState.rotation) * charState.speed * delta;
+    charState.z += Math.cos(charState.rotation) * charState.speed * delta;
+    characterGroup.position.set(charState.x, 0, charState.z);
+    characterGroup.rotation.y = charState.rotation;
+  }
 
-  // Walking Animation Gait (scales with increased speed)
-  const isMoving = Math.abs(charState.speed) > 0.005;
-
+  // ----- ANIMATION (scaled with speed) -----
+  const isMoving = Math.abs(charState.speed) > 0.05;
   if (isMoving) {
-    charState.walkCycle += delta * (charState.speed > 0 ? 14 : 10);
-
-    // Body Bobbing
+    const gaitSpeed = Math.abs(charState.speed) * 0.75;
+    charState.walkCycle += delta * gaitSpeed;
     const bob = Math.abs(Math.sin(charState.walkCycle * 2)) * 0.07;
     characterBody.position.y = bob;
-
-    // Ponytail bounce
+    // Ponytail bounce (if any)
     if (ponytailMesh) {
       ponytailMesh.rotation.x = Math.sin(charState.walkCycle * 2) * 0.2;
     }
-
     // Legs stride
-    leftLegPivot.rotation.x = Math.sin(charState.walkCycle) * 0.7;
-    rightLegPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.7;
-
-    // Arms counter-swing
-    leftArmPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.6;
-    rightArmPivot.rotation.x = Math.sin(charState.walkCycle) * 0.5;
+    leftLegPivot.rotation.x = Math.sin(charState.walkCycle) * 0.75;
+    rightLegPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.75;
+    // Arms counter‑swing
+    leftArmPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.65;
+    rightArmPivot.rotation.x = Math.sin(charState.walkCycle) * 0.55;
   } else {
-    // Return smoothly to idle stance
+    // Return smoothly to idle pose
     characterBody.position.y *= 0.8;
     leftLegPivot.rotation.x *= 0.8;
     rightLegPivot.rotation.x *= 0.8;
@@ -1115,18 +1181,25 @@ function updateCharacterPhysics(delta) {
     if (ponytailMesh) ponytailMesh.rotation.x *= 0.8;
   }
 
-  // Proximity check for milestone buildings
+  // ----- PROXIMITY CHECK FOR BUILDINGS -----
   checkBuildingProximity();
 }
 
 function updateCameraFollow() {
   if (!camera || !characterGroup) return;
+  // Skip camera follow when OrbitControls is active (user panning)
+  if (window.orbitControls && window.orbitControls.enabled) return;
 
   const camOffset = new THREE.Vector3(-14, 18, 14);
   const targetCamPos = characterGroup.position.clone().add(camOffset);
 
   camera.position.lerp(targetCamPos, 0.09);
   camera.lookAt(characterGroup.position.x, characterGroup.position.y + 1.2, characterGroup.position.z);
+
+  // Update OrbitControls target to character position when walking
+  if (window.orbitControls) {
+    window.orbitControls.target.copy(characterGroup.position);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1177,21 +1250,11 @@ function setupWorldControls(container) {
     el.addEventListener('touchend', end);
   }
 
+  // Bind Walk and Back buttons as press-and-hold (same as keyboard)
   bindTouch(pWalk, 'forward');
   bindTouch(pBack, 'backward');
   bindTouch(pLeft, 'left');
   bindTouch(pRight, 'right');
-
-  const resetBtn = document.getElementById('reset-char-btn');
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      charState.x = 0;
-      charState.z = 0;
-      charState.rotation = -Math.PI / 2;
-      charState.speed = 0;
-      characterGroup.position.set(0, 0, 0);
-    });
-  }
 
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
