@@ -755,7 +755,7 @@ function buildClayRoad() {
 
   // 3D Lush grass tufts and wildflower blades sprouting along the path edges
   const pathGrassMat = new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 0.75, flatShading: true });
-  const flowerSproutMat = new THREE.MeshStandardMaterial({ color: 0xF472B6, roughness: 0.6 }); // Tiny pink blossoms in the grass
+  const flowerSproutMat = new THREE.MeshStandardMaterial({ color: 0xD9776E, roughness: 0.7 }); // Warm muddy terracotta rose blossoms
 
   for (let g = 0; g < 110; g++) {
     const t = g / 110;
@@ -1124,14 +1124,14 @@ function buildFoliageAndRocks() {
   const rockMat = new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true });
   const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78553D, roughness: 0.85 }); // Warm chocolate mahogany trunk
 
-  // Lush nature foliage palette (deep vibrant lush greens, emerald, light cherry pink, and gentle pastel purple)
+  // Lush nature foliage palette (deep vibrant lush greens, emerald, warm muddy terracotta pink, and warm earthy heather purple)
   const leafMats = [
     new THREE.MeshStandardMaterial({ color: 0x2E7D32, roughness: 0.74, flatShading: true }), // Lush Vibrant Forest Green
     new THREE.MeshStandardMaterial({ color: 0x15803D, roughness: 0.72, flatShading: true }), // Deep Rich Emerald
     new THREE.MeshStandardMaterial({ color: 0x4ADE80, roughness: 0.70, flatShading: true }), // Fresh Lush Spring Meadow Green
     new THREE.MeshStandardMaterial({ color: 0x3F6212, roughness: 0.76, flatShading: true }), // Earthy Deep Moss Green
-    new THREE.MeshStandardMaterial({ color: 0xF472B6, roughness: 0.72, flatShading: true }), // Light Blossom Pink (Cherry bloom)
-    new THREE.MeshStandardMaterial({ color: 0xC084FC, roughness: 0.72, flatShading: true })  // Dreamy Light Purple (Lavender bloom)
+    new THREE.MeshStandardMaterial({ color: 0xD9776E, roughness: 0.74, flatShading: true }), // Warm Muddy Terracotta Pink (Warm dusty rose clay)
+    new THREE.MeshStandardMaterial({ color: 0xA06B82, roughness: 0.74, flatShading: true })  // Warm Earthy Plum Heather (Warm muddy mauve)
   ];
 
   // Town Props Materials (Gentle, low-contrast finishes)
@@ -1526,8 +1526,8 @@ function buildFoliageAndRocks() {
     }
   });
 
-  // 5. Flower bushes along the sidewalk edges (Soft pastel garden accents)
-  const bushColors = [0x97B08B, 0xAEC4A4, 0xE2D4B7, 0xD4B8B8, 0xC4B5D4];
+  // 5. Flower bushes along the sidewalk edges (Warm muddy botanical accents)
+  const bushColors = [0x789262, 0x93A277, 0xD4A373, 0xC47B6E, 0x9E6B7A];
   for (let b = 0; b < 40; b++) {
     const bColor = bushColors[b % bushColors.length];
     const bMat = new THREE.MeshStandardMaterial({ color: bColor, roughness: 0.85, flatShading: true });
@@ -1691,8 +1691,8 @@ function buildWesternDeepForest() {
     new THREE.MeshStandardMaterial({ color: 0x166534, roughness: 0.74, flatShading: true }), // Deep Lush Forest Green
     new THREE.MeshStandardMaterial({ color: 0x15803D, roughness: 0.72, flatShading: true }), // Rich Emerald Canopy
     new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 0.70, flatShading: true }), // Fresh Vibrant Green
-    new THREE.MeshStandardMaterial({ color: 0xF472B6, roughness: 0.72, flatShading: true }), // Light Blossom Pink Tree
-    new THREE.MeshStandardMaterial({ color: 0xC084FC, roughness: 0.72, flatShading: true })  // Dreamy Light Purple Tree
+    new THREE.MeshStandardMaterial({ color: 0xD9776E, roughness: 0.74, flatShading: true }), // Warm Muddy Terracotta Pink Tree
+    new THREE.MeshStandardMaterial({ color: 0xA06B82, roughness: 0.74, flatShading: true })  // Warm Earthy Plum Heather Tree
   ];
 
   // Deep woodland grove cluster centers along the western territory
@@ -1793,8 +1793,8 @@ function buildEasternPondsAndLakes() {
 
   const rockMats = [
     new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true }), // Chalk white river boulder
-    new THREE.MeshStandardMaterial({ color: 0x94A3B8, roughness: 0.85, flatShading: true }), // Slate blue water pebble
-    new THREE.MeshStandardMaterial({ color: 0xCBD5E1, roughness: 0.88, flatShading: true })  // Cool stone
+    new THREE.MeshStandardMaterial({ color: 0xB5A492, roughness: 0.88, flatShading: true }), // Warm clay sandstone pebble
+    new THREE.MeshStandardMaterial({ color: 0xD4C5B9, roughness: 0.88, flatShading: true })  // Warm river stone
   ];
 
   const grassTuftMat = new THREE.MeshStandardMaterial({
@@ -1810,8 +1810,8 @@ function buildEasternPondsAndLakes() {
   });
 
   const flowerMat = new THREE.MeshStandardMaterial({
-    color: 0xFB7185, // Pink lotus bloom
-    roughness: 0.5
+    color: 0xD9776E, // Warm dusty terracotta rose lotus bloom
+    roughness: 0.65
   });
 
   const dockWoodMat = new THREE.MeshStandardMaterial({
