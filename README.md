@@ -1,91 +1,80 @@
-# Janhavi — Personal Engineering Portfolio Website ☀️
+# Janhavi — 3D Interactive Journey & Engineering Portfolio 🚗☀️
 
-A stunning, uniquely colorful, and cheerful personal portfolio website showcasing perception systems, visual SLAM, embedded firmware, edge AI, and robotics.
+An immersive, uniquely colorful, and cheerful 3D interactive portfolio website built with **Three.js**, **Tailwind CSS**, and modern JavaScript. Users can drive a cute 3D car along a winding road through Janhavi's academic, internship, and research milestones!
 
-![Theme](https://img.shields.io/badge/Vibe-Vibrant%20%26%20Cheerful-orange?style=for-the-badge)
-![Tech Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20TailwindCSS%20%7C%20Three.js-yellow?style=for-the-badge)
+![Theme](https://img.shields.io/badge/Theme-3D%20Interactive%20Journey-orange?style=for-the-badge)
+![Tech Stack](https://img.shields.io/badge/Tech-HTML5%20%7C%20Three.js%20%7C%20TailwindCSS-yellow?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)
 
 ---
 
-## 🌟 Key Highlights & Design Features
+## 🚗 The 3D Interactive World & Gameplay
 
-- **Vibrant & Cheerful Aesthetic**: Warm sunshine yellows, vibrant corals, friendly pastel mints, and soft lavender gradients over a clean, crisp off-white canvas.
-- **Interactive 3D Hero Canvas**: Built with lightweight Three.js, featuring floating pastel toruses, spheres, and an interactive perception sensor node reacting smoothly to mouse parallax and click physics.
-- **Playful Micro-Interactions**: Celebratory pastel confetti explosions (`canvas-confetti`), 3D perspective hover cards, and bouncy spring easing.
-- **Complete Project Deep-Dives**: 12 detailed engineering projects including ORB-SLAM3 on Raspberry Pi 4B, US industrial textile defect detection (~300 µm precision), STM32 turbulence detection, EMG bionic prosthetic arm (97% accuracy), and Mars shape-from-shading.
-- **Deep-Dive Modals & Interactive Filters**: Filter by domain (`SLAM & Robotics`, `Computer Vision`, `Embedded & Edge AI`, `Medical & Science`, `Deployed Systems`) with detailed modal views.
-- **Production-Ready & Fully Responsive**: Optimized for smooth 60fps performance on mobile, tablet, and desktop with zero build step required.
+1. **Stylized 3D Environment**: A winding road stretching through gentle rolling green hills, stylized low-poly trees, distant mountains in soft peach and lavender hues, and floating clouds under a warm sunny sky.
+2. **The Vehicle**: A cute low-poly car equipped with rotating wheels, glowing headlights, cabin windows, and smooth driving physics.
+3. **Controls**:
+   - **Mouse**: Click & hold anywhere in the 3D scene (or click the on-screen **▲ Hold to Drive** pedal) to accelerate forward.
+   - **Keyboard**: Press and hold the **Up Arrow** (`↑`) or **`W`** key to accelerate forward; use **Down Arrow** (`↓`) or **`S`** to reverse.
+   - **On-Screen HUD**: Quick-jump milestone stepper bar with real-time speed, completion percentage, and reverse pedal.
 
 ---
 
-## 📂 File Structure
+## 🏁 Milestones & Checkpoints along the Road
+
+As the car cruises along the road, it reaches interactive 3D arches that trigger detailed expandable milestone cards (complete with **photo placeholder slots** for future image uploads):
+
+1. **Schooling**: Completed schooling from PSBA English School, Aurangabad.
+2. **Engineering**: Engineering at MITAOE (MIT Academy of Engineering), Pune (CGPA: 8.41/10).
+3. **1st Year**: Explored 3D design, Arduino, Raspberry Pi, competitions, and extracurriculars.
+4. **Second Year**: Summer internship at Coppercloud — VLSI, embedded systems, and computer vision.
+5. **Third Year**: R&D Intern at Coppercloud — zari textile defect detection (~300 µm precision), QR recognition on thermocol, and published research on DIPlib.
+6. **Fourth Year**: Summer intern at Clarity Lab, IIT Jodhpur — 360-degree panorama stitching and visual SLAM on edge. Explored Jodhpur.
+7. **Current / Next Milestone**: Research intern at IIT Jodhpur — point cloud digital twins from monocular video streams.
+
+---
+
+## 📁 File Structure
 
 ```text
 portfolio/
-├── index.html           # Main markup & structured sections
-├── style.css            # Cheerful color variables, 3D tilt styles, bouncy animations
-├── script.js            # Three.js 3D canvas, confetti engine, filters, modals & toast
+├── index.html           # 3D Journey Canvas stage, HUD, milestones & portfolio sections
+├── style.css            # Soft cheerful palette, 3D viewport, pedals & milestone modals
+├── script.js            # Three.js 3D world engine, road spline, car physics & modals
 ├── resume.pdf           # Downloadable curriculum vitae
-├── .gitignore           # Standard git ignore definitions
 ├── README.md            # Documentation & deployment guide
+├── .gitignore           # Standard git ignore definitions
 └── assets/
-    └── profile.png      # Profile avatar
+    └── profile.png      # Avatar image
 ```
+
+---
+
+## 📸 How to Add Photos to Your Milestone Cards
+
+In `assets/`, place your milestone photos (e.g. `school.jpg`, `mitaoe.jpg`, `coppercloud.jpg`, `iitj.jpg`). Then, in `script.js` inside `MILESTONES_DATA`, you can simply add `image: "assets/your-photo.jpg"` or replace the placeholder in `index.html`.
 
 ---
 
 ## 🚀 How to Run Locally
 
-Because this is built with vanilla HTML5, modern CSS3, and vanilla JavaScript, no compilation or npm build is required!
+Because this project is built with vanilla web technologies, no build step or node package manager is required.
 
-### Option 1: Direct Browser Launch
-Double click `index.html` to open it in your default web browser.
-
-### Option 2: Local HTTP Server (Recommended)
-You can serve the folder using any lightweight local server:
-
-**Using Python:**
-```bash
+### Quick Local Server:
+```powershell
 python -m http.server 8000
 ```
-Then visit `http://localhost:8000` in your browser.
-
-**Using VS Code Live Server:**
-Right click `index.html` and click **"Open with Live Server"**.
+Then open `http://localhost:8000` in your web browser.
 
 ---
 
-## 🐙 How to Push to GitHub & Make Live (GitHub Pages)
+## 🐙 How to Push to GitHub & Deploy to GitHub Pages
 
-### Step 1: Create a New GitHub Repository
-1. Go to [GitHub](https://github.com) and sign in.
-2. Click **New Repository** (or visit https://github.com/new).
-3. Name your repository (e.g., `portfolio` or `<your-username>.github.io`).
-4. Set it to **Public** and **do NOT** initialize with README or .gitignore (we already have those).
-5. Click **Create repository**.
-
-### Step 2: Push Local Commits to GitHub
-In PowerShell or your terminal inside this folder (`F:\portfolio`):
-
-```powershell
-git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/<REPO_NAME>.git
-git branch -M main
-git push -u origin main
-```
-
-### Step 3: Enable Free GitHub Pages Hosting
-1. In your GitHub repository, click on **Settings** (top navigation tab).
-2. In the left sidebar, click **Pages**.
-3. Under **Build and deployment > Source**, select **Deploy from a branch**.
-4. Set the branch to `main` and folder to `/ (root)`, then click **Save**.
-5. Within 1–2 minutes, your website will be live at:
-   `https://<YOUR_GITHUB_USERNAME>.github.io/<REPO_NAME>/`
-
----
-
-## 📧 Contact & Links
-
-- **Email**: `janhavi.pohnerkar@gmail.com`
-- **Location**: Pune, Maharashtra, India
-- **Status**: Open to internships and R&D roles in industrial perception, edge AI, and robotics.
+1. **Create a new repository** on [GitHub](https://github.com/new) named `portfolio` (keep it Public, uncheck all template files).
+2. In your terminal inside `F:\portfolio`, run:
+   ```powershell
+   git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/<YOUR_REPO_NAME>.git
+   git branch -M main
+   git push -u origin main
+   ```
+3. In your GitHub repository **Settings > Pages**, choose **Deploy from a branch**, select `main` branch, and click **Save**.
+4. Your 3D journey website will be live in 1-2 minutes!

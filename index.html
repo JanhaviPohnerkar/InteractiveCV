@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Janhavi — Computer Vision, SLAM & Embedded AI Engineer</title>
+  <title>Janhavi — 3D Interactive Journey & Engineering Portfolio</title>
   
   <!-- SEO & Social Meta Tags -->
-  <meta name="description" content="Portfolio of Janhavi, an Electronics & Telecommunication engineering student building computer vision, visual SLAM, embedded firmware, and edge-AI perception systems.">
-  <meta name="keywords" content="computer vision, SLAM, ORB-SLAM3, edge AI, embedded systems, STM32, Raspberry Pi, Jetson Orin Nano, industrial inspection, 3D vision, robotics">
+  <meta name="description" content="Immersive 3D interactive portfolio of Janhavi: drive through milestones from school to MITAOE, Coppercloud, and 3D computer vision research at IIT Jodhpur.">
+  <meta name="keywords" content="computer vision, SLAM, ORB-SLAM3, edge AI, embedded systems, STM32, Raspberry Pi, Three.js, 3D interactive, robotics">
   <meta name="author" content="Janhavi">
   
   <!-- Google Fonts: Outfit (Headings) & Plus Jakarta Sans (Body) -->
@@ -31,33 +31,24 @@
               100: '#FEF3C7',
               200: '#FDE68A',
               300: '#FCD34D',
-              400: '#FBBF24',
-              500: '#F59E0B',
-              600: '#D97706',
+              400: '#F59E0B',
+              500: '#D97706',
             },
-            coral: {
-              50: '#FFF1F2',
-              100: '#FFE4E6',
-              200: '#FECDD3',
-              400: '#FB7185',
-              500: '#FF6B6B',
-              600: '#E11D48',
+            softgreen: {
+              50: '#F7FEE7',
+              100: '#ECFCCB',
+              200: '#D9F99D',
+              300: '#BEF264',
+              400: '#84CC16',
+              500: '#65A30D',
             },
-            mint: {
-              50: '#ECFDF5',
-              100: '#D1FAE5',
-              200: '#A7F3D0',
-              400: '#34D399',
-              500: '#10B981',
-              600: '#059669',
-            },
-            lavender: {
-              50: '#F5F3FF',
-              100: '#EDE9FE',
-              200: '#DDD6FE',
-              400: '#A78BFA',
-              500: '#8B5CF6',
-              600: '#7C3AED',
+            peach: {
+              50: '#FFF7ED',
+              100: '#FFEDD5',
+              200: '#FED7AA',
+              300: '#FDBA74',
+              400: '#FB923C',
+              500: '#EA580C',
             },
             cream: {
               50: '#FFFDF9',
@@ -69,7 +60,7 @@
     }
   </script>
   
-  <!-- Custom Vibrant Stylesheet -->
+  <!-- Custom Soft Cheerful Stylesheet -->
   <link rel="stylesheet" href="style.css">
 
   <!-- Three.js CDN for 3D Interactive Graphics -->
@@ -82,12 +73,12 @@
   <!-- ========================================================================
        Navigation Bar
        ======================================================================== -->
-  <header class="fixed top-0 left-0 right-0 z-50 nav-glass transition-all duration-300">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-amber-100/80 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
       <!-- Logo & Avatar -->
-      <a href="#hero" class="flex items-center gap-3 group">
-        <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-400 via-rose-400 to-violet-400 p-0.5 shadow-md group-hover:scale-105 transition-transform duration-200">
+      <a href="#journey-stage" class="flex items-center gap-3 group">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-300 via-orange-300 to-lime-300 p-0.5 shadow-md group-hover:scale-105 transition-transform duration-200">
           <img src="assets/profile.png" alt="Janhavi" class="w-full h-full object-cover rounded-full bg-white" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Janhavi&backgroundColor=fef08a';">
         </div>
         <div>
@@ -100,24 +91,21 @@
       </a>
 
       <!-- Desktop Nav Links -->
-      <nav class="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-600">
-        <a href="#about" class="desktop-nav-link hover:text-amber-600 transition-colors">About</a>
-        <a href="#metrics" class="desktop-nav-link hover:text-amber-600 transition-colors">Impact</a>
-        <a href="#skills" class="desktop-nav-link hover:text-amber-600 transition-colors">Skills</a>
-        <a href="#projects" class="desktop-nav-link hover:text-amber-600 transition-colors">Projects</a>
-        <a href="#experience" class="desktop-nav-link hover:text-amber-600 transition-colors">Journey</a>
-        <a href="#publications" class="desktop-nav-link hover:text-amber-600 transition-colors">Research</a>
-        <a href="#contact" class="desktop-nav-link hover:text-amber-600 transition-colors">Contact</a>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="#journey-stage" class="hover:text-amber-600 transition-colors flex items-center gap-1">
+          <span>🚗 3D Journey</span>
+        </a>
+        <a href="#about" class="hover:text-amber-600 transition-colors">About</a>
+        <a href="#metrics" class="hover:text-amber-600 transition-colors">Impact</a>
+        <a href="#skills" class="hover:text-amber-600 transition-colors">Skills</a>
+        <a href="#projects" class="hover:text-amber-600 transition-colors">Projects</a>
+        <a href="#publications" class="hover:text-amber-600 transition-colors">Research</a>
+        <a href="#contact" class="hover:text-amber-600 transition-colors">Contact</a>
       </nav>
 
       <!-- Action Buttons -->
       <div class="hidden sm:flex items-center gap-3">
-        <!-- Confetti Cheer Button -->
-        <button class="trigger-confetti p-2.5 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-800 transition-transform active:scale-95" title="Toss Cheerful Confetti!">
-          🎉
-        </button>
-        <!-- Download Resume -->
-        <a href="resume.pdf" download="Janhavi_Resume.pdf" class="btn-bubbly btn-sunshine text-sm px-5 py-2.5 trigger-confetti">
+        <a href="resume.pdf" download="Janhavi_Resume.pdf" class="btn-bubbly btn-sunshine text-sm px-5 py-2.5">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
           </svg>
@@ -136,122 +124,167 @@
 
     <!-- Mobile Nav Menu -->
     <div id="mobile-nav-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md border-b border-amber-100 px-6 py-6 shadow-xl space-y-4">
-      <a href="#about" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">About</a>
+      <a href="#journey-stage" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">🚗 3D Journey</a>
+      <a href="#about" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">About Me</a>
       <a href="#metrics" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">Impact Metrics</a>
       <a href="#skills" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">Technical Skills</a>
       <a href="#projects" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">Featured Projects</a>
-      <a href="#experience" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">Experience & Education</a>
       <a href="#publications" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">Research & Papers</a>
       <a href="#contact" class="mobile-link block font-medium text-slate-700 hover:text-amber-600">Contact</a>
-      <div class="pt-2 flex items-center gap-3">
+      <div class="pt-2">
         <a href="resume.pdf" download="Janhavi_Resume.pdf" class="btn-bubbly btn-sunshine w-full text-sm py-2.5 text-center">
           📄 Download Resume
         </a>
-        <button class="trigger-confetti px-4 py-2.5 bg-amber-100 rounded-full text-base">🎉</button>
       </div>
     </div>
   </header>
 
   <!-- ========================================================================
-       1. Hero Section (With Interactive 3D Canvas)
+       1. IMMERSIVE 3D INTERACTIVE JOURNEY (MAIN EXPERIENCE)
        ======================================================================== -->
-  <section id="hero" class="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
-    
-    <!-- Decorative Ambient Background Blobs -->
-    <div class="absolute top-16 left-1/4 w-96 h-96 bg-amber-200/40 rounded-full blur-3xl -z-10 animate-float-slow"></div>
-    <div class="absolute top-48 right-10 w-96 h-96 bg-rose-200/40 rounded-full blur-3xl -z-10 animate-float-reverse"></div>
-    <div class="absolute bottom-10 left-10 w-80 h-80 bg-teal-200/35 rounded-full blur-3xl -z-10 animate-pulse-glow"></div>
-
+  <section id="journey-stage" class="relative pt-28 pb-12 sm:pt-32 sm:pb-16 overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        
-        <!-- Left Hero Text Content -->
-        <div class="lg:col-span-7 space-y-6 text-center lg:text-left z-10">
-          
-          <!-- Cheerful Welcome Pill -->
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100/90 border border-amber-300 shadow-sm text-amber-900 text-xs sm:text-sm font-semibold animate-bounceMicro">
-            <span class="text-base">👋</span>
-            <span>Hi, I'm Janhavi — Welcome to my digital lab!</span>
-          </div>
+      
+      <!-- Cheerful Stage Heading -->
+      <div class="text-center max-w-3xl mx-auto mb-8 space-y-3">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-wider">
+          <span>🌟 Interactive 3D Journey</span>
+          <span>•</span>
+          <span>Drive Through My Milestones</span>
+        </div>
 
-          <!-- Dynamic Role Title -->
-          <div class="min-h-[32px] flex items-center justify-center lg:justify-start">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm font-semibold">
-              <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-              <span id="hero-dynamic-role" class="tracking-wide">Computer Vision & 3D Perception Engineer</span>
+        <h1 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          Cruising through my <span class="gradient-warm-journey">Engineering Odyssey</span>.
+        </h1>
+
+        <p class="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+          Drive the cute car along the winding road to discover each milestone: from schooling in Aurangabad to MITAOE, Coppercloud, and 3D computer vision research at IIT Jodhpur!
+        </p>
+      </div>
+
+      <!-- 3D Interactive Viewport Container -->
+      <div id="journey-viewport-container" class="relative">
+        
+        <!-- Three.js Canvas -->
+        <canvas id="journey-canvas"></canvas>
+
+        <!-- Top HUD: Milestone Stepper Tracker -->
+        <div class="journey-hud journey-hud-top">
+          <div class="hud-interactive flex items-center justify-between gap-3">
+            <div id="milestone-stepper-container" class="milestone-stepper flex-1">
+              <!-- Dynamically populated step buttons (1 to 7) -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom HUD: Driving Controls & Telemetry -->
+        <div class="journey-hud journey-hud-bottom">
+          
+          <!-- Speedometer & Progress -->
+          <div class="hud-interactive flex items-center gap-2">
+            <div class="speedometer-badge">
+              <span>⚡</span>
+              <span id="hud-speed-val">0 km/h</span>
+            </div>
+            <div class="speedometer-badge hidden sm:inline-flex">
+              <span>🏁</span>
+              <span id="hud-progress-pct">1% Complete</span>
             </div>
           </div>
 
-          <!-- Main Bold Headline with Colorful Gradient -->
-          <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.12]">
-            Building perception systems that run on <span class="gradient-sun-coral">real hardware</span>.
-          </h1>
+          <!-- Desktop Driving Hint -->
+          <div class="hidden lg:flex px-4 py-2 rounded-full bg-white/90 backdrop-blur-md border border-amber-200 text-xs font-bold text-slate-700 shadow-sm items-center gap-2">
+            <span>🖱️ Click & Hold anywhere OR use <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px]">↑</kbd> <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-300 rounded text-[10px]">↓</kbd> Arrow Keys to Drive</span>
+          </div>
 
-          <!-- Academic Subline -->
-          <p class="text-xs sm:text-sm font-semibold tracking-wider uppercase text-slate-700 flex items-center justify-center lg:justify-start gap-2">
-            <span>🎓 B.Tech Electronics & Telecommunication</span>
-            <span>•</span>
-            <span>MIT AOE, Pune (2027)</span>
-          </p>
-
-          <!-- Core Bio Tagline -->
-          <p class="text-base sm:text-lg text-slate-800 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-            From <span class="font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">ORB-SLAM3 on a Raspberry Pi</span> to <span class="font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md">industrial defect detection</span> on the factory floor — I bridge software perception with microcontrollers, IMUs, and edge silicon.
-          </p>
-
-          <!-- Cheerful CTA Buttons -->
-          <div class="pt-3 flex flex-wrap items-center justify-center lg:justify-start gap-4">
-            <a href="#projects" class="btn-bubbly btn-sunshine text-base px-7 py-3.5 shadow-lg trigger-confetti">
-              <span>Explore Projects 🚀</span>
-            </a>
-            <a href="#contact" class="btn-bubbly btn-coral text-base px-6 py-3.5 shadow-lg">
-              <span>Get in Touch 💌</span>
-            </a>
-            <button class="copy-email-btn btn-bubbly btn-outline-playful text-sm px-5 py-3">
-              <span>📋 Copy Email</span>
+          <!-- Touch / Mouse Drive Pedals -->
+          <div class="hud-interactive flex items-center gap-2.5">
+            <button id="pedal-reverse-btn" class="drive-control-btn btn-drive-reverse text-xs sm:text-sm px-4 sm:px-5 py-2.5 sm:py-3" title="Drive Reverse (or Down Arrow)">
+              <span>▼</span>
+              <span class="hidden sm:inline">Reverse</span>
+            </button>
+            <button id="pedal-drive-btn" class="drive-control-btn btn-drive-accelerate text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3" title="Drive Forward (or Up Arrow)">
+              <span>▲</span>
+              <span>Hold to Drive</span>
             </button>
           </div>
 
-          <!-- Quick Highlight Pills -->
-          <div class="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
-            <span class="badge-pill badge-yellow">✨ ARM NEON Optimized</span>
-            <span class="badge-pill badge-mint">🤖 97% EMG Gesture Acc</span>
-            <span class="badge-pill badge-coral">🎯 ~300 µm Vision Metric</span>
-            <span class="badge-pill badge-lavender">🔬 IIT Jodhpur 3D CV Intern</span>
-          </div>
-
-        </div>
-
-        <!-- Right Interactive 3D Canvas -->
-        <div class="lg:col-span-5 relative flex items-center justify-center">
-          <div id="three-hero-container" class="relative w-full h-[400px] sm:h-[480px] lg:h-[520px] rounded-3xl bg-gradient-to-b from-amber-50/70 via-rose-50/40 to-violet-50/50 border-2 border-amber-200/80 shadow-2xl overflow-hidden cursor-grab active:cursor-grabbing">
-            
-            <!-- 3D Three.js WebGL Canvas -->
-            <canvas id="three-hero-canvas"></canvas>
-
-            <!-- Floating Overlay Badge -->
-            <div class="absolute bottom-4 left-4 right-4 z-10 flex items-center justify-between pointer-events-none">
-              <div class="px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-amber-200 text-[11px] font-semibold text-slate-600 shadow-sm">
-                🖱️ Move mouse to orbit • Click to bounce!
-              </div>
-              <button class="trigger-confetti pointer-events-auto p-2 bg-white/90 rounded-full shadow border border-amber-200 text-sm hover:scale-110 transition-transform" title="Blast Confetti!">
-                🎉
-              </button>
-            </div>
-
-            <!-- Playful Corner Stickers -->
-            <div class="absolute top-4 right-4 z-10 pointer-events-none">
-              <div class="px-3 py-1 rounded-full bg-amber-400 text-slate-900 text-[11px] font-bold shadow-md transform rotate-3">
-                3D Sensor Node ⚡
-              </div>
-            </div>
-
-          </div>
         </div>
 
       </div>
+
+      <!-- Quick Scroll Anchor to Full Details -->
+      <div class="text-center mt-6">
+        <a href="#about" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-5 py-2.5 rounded-full shadow-sm transition-all">
+          <span>Explore Detailed Bio & Full Projects Below</span>
+          <span>↓</span>
+        </a>
+      </div>
+
     </div>
   </section>
+
+  <!-- ========================================================================
+       EXPANDABLE MILESTONE MODAL (TRIGGERED AT CHECKPOINTS)
+       ======================================================================== -->
+  <div id="milestone-modal-overlay" class="milestone-modal-overlay">
+    <div class="milestone-modal-card p-6 sm:p-8">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-4 mb-4 pb-4 border-b border-amber-100">
+        <div>
+          <span id="milestone-modal-badge" class="badge-pill badge-green text-xs mb-2">Milestone</span>
+          <h2 id="milestone-modal-title" class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 leading-snug">
+            Milestone Title
+          </h2>
+          <p id="milestone-modal-period" class="text-xs sm:text-sm font-semibold text-amber-700 mt-1">Period & Location</p>
+        </div>
+        <button id="close-milestone-modal-btn" class="p-2.5 rounded-full hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors" aria-label="Close milestone modal">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Photo Placeholder Slot -->
+      <div class="mb-6">
+        <div class="milestone-photo-placeholder">
+          <span class="text-3xl mb-1.5">📸</span>
+          <span class="font-bold text-sm text-slate-800" id="milestone-photo-label">Milestone Photo Slot</span>
+          <span class="text-xs text-slate-500 mt-1 max-w-sm">Place an image in <code>assets/</code> to display your actual photos here!</span>
+        </div>
+      </div>
+
+      <!-- Milestone Summary & Narrative -->
+      <div class="space-y-5">
+        <div>
+          <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-amber-800 mb-1.5">Overview</h3>
+          <p id="milestone-modal-summary" class="text-sm text-slate-700 leading-relaxed font-medium"></p>
+        </div>
+
+        <div>
+          <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-slate-700 mb-2">Domains & Core Skills</h3>
+          <div id="milestone-modal-skills" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div>
+          <h3 class="font-heading font-bold text-xs uppercase tracking-wider text-emerald-800 mb-2">Key Highlights & Accomplishments</h3>
+          <ul id="milestone-modal-details" class="space-y-2.5"></ul>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="mt-8 pt-6 border-t border-amber-100 flex flex-wrap items-center justify-between gap-3">
+        <button id="milestone-continue-drive-btn" class="btn-bubbly btn-sunshine text-xs sm:text-sm px-6 py-3">
+          <span>Continue Driving 🚗</span>
+        </button>
+        <button id="milestone-modal-next-btn" class="btn-bubbly btn-green text-xs sm:text-sm px-5 py-3">
+          <span>Next Milestone ▶</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ========================================================================
        2. Impact & Achievements Metric Strip (Headline Numbers)
@@ -262,7 +295,7 @@
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
         
         <!-- Metric 1: 300 um -->
-        <div class="card-playful p-5 text-center tilt-card border-amber-200 hover:border-amber-400">
+        <div class="card-playful p-5 text-center border-amber-200">
           <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl">
             📐
           </div>
@@ -275,12 +308,12 @@
         </div>
 
         <!-- Metric 2: 93.97% Accuracy -->
-        <div class="card-playful p-5 text-center tilt-card border-rose-200 hover:border-rose-400">
-          <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl">
+        <div class="card-playful p-5 text-center border-orange-200">
+          <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-orange-100 text-orange-700 flex items-center justify-center text-xl">
             🎯
           </div>
           <div class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
-            93.97<span class="text-rose-500 font-bold text-xl">%</span>
+            93.97<span class="text-orange-500 font-bold text-xl">%</span>
           </div>
           <p class="text-xs font-semibold text-slate-500 mt-1">
             Industrial defect classification test accuracy
@@ -288,12 +321,12 @@
         </div>
 
         <!-- Metric 3: 97% Gesture -->
-        <div class="card-playful p-5 text-center tilt-card border-emerald-200 hover:border-emerald-400">
-          <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl">
+        <div class="card-playful p-5 text-center border-lime-200">
+          <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-lime-100 text-lime-800 flex items-center justify-center text-xl">
             🦾
           </div>
           <div class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
-            97<span class="text-emerald-500 font-bold text-xl">%</span>
+            97<span class="text-lime-600 font-bold text-xl">%</span>
           </div>
           <p class="text-xs font-semibold text-slate-500 mt-1">
             EMG gesture recognition accuracy (7 classes)
@@ -301,12 +334,12 @@
         </div>
 
         <!-- Metric 4: 8.41 CGPA -->
-        <div class="card-playful p-5 text-center tilt-card border-violet-200 hover:border-violet-400">
-          <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-violet-100 text-violet-700 flex items-center justify-center text-xl">
+        <div class="card-playful p-5 text-center border-purple-200">
+          <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl">
             ⭐
           </div>
           <div class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
-            8.41 <span class="text-violet-500 font-bold text-sm">/ 10</span>
+            8.41 <span class="text-purple-500 font-bold text-sm">/ 10</span>
           </div>
           <p class="text-xs font-semibold text-slate-500 mt-1">
             B.Tech Electronics & Telecomm CGPA
@@ -314,7 +347,7 @@
         </div>
 
         <!-- Metric 5: 14 Months -->
-        <div class="card-playful p-5 text-center tilt-card border-sky-200 hover:border-sky-400 col-span-2 md:col-span-1">
+        <div class="card-playful p-5 text-center border-sky-200 col-span-2 md:col-span-1">
           <div class="w-10 h-10 mx-auto mb-2 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center text-xl">
             🏢
           </div>
@@ -337,13 +370,12 @@
   <section id="about" class="py-20 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <!-- Section Header -->
       <div class="text-center max-w-3xl mx-auto mb-16">
         <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider mb-3">
           <span>🌟 About Me</span>
         </div>
         <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Taking ideas all the way from <span class="gradient-sun-coral">sensor to deployed system</span>.
+          Taking ideas all the way from <span class="gradient-warm-journey">sensor to deployed system</span>.
         </h2>
       </div>
 
@@ -352,13 +384,9 @@
         <!-- Profile Persona Card -->
         <div class="lg:col-span-4 flex flex-col">
           <div class="card-playful p-7 flex-1 flex flex-col justify-between border-amber-200 text-center relative overflow-hidden">
-            
-            <!-- Sunny background glow -->
-            <div class="absolute -top-16 -right-16 w-40 h-40 bg-amber-300/30 rounded-full blur-2xl pointer-events-none"></div>
-
             <div>
               <div class="relative w-36 h-36 mx-auto mb-6">
-                <div class="absolute inset-0 bg-gradient-to-tr from-amber-400 to-rose-400 rounded-3xl rotate-6 transition-transform group-hover:rotate-12"></div>
+                <div class="absolute inset-0 bg-gradient-to-tr from-amber-300 to-lime-300 rounded-3xl rotate-6"></div>
                 <img src="assets/profile.png" alt="Janhavi" class="relative w-full h-full object-cover rounded-3xl bg-white border-2 border-white shadow-md" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/bottts/svg?seed=Janhavi&backgroundColor=fef08a';">
                 <span class="absolute -bottom-2 -right-2 px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[11px] font-bold shadow-md">
                   Active
@@ -388,18 +416,15 @@
               </div>
             </div>
 
-            <!-- Cheerful status badge -->
             <div class="mt-6 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 text-center font-medium">
               💡 <em>"I'm most comfortable where software pipelines meet real hardware: cameras, IMUs, microcontrollers & SBCs."</em>
             </div>
-
           </div>
         </div>
 
         <!-- Detailed Bio & Engineering Focus -->
         <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
-          
-          <div class="card-playful p-8 border-rose-100 flex-1">
+          <div class="card-playful p-8 border-orange-100 flex-1">
             <h3 class="font-heading font-extrabold text-xl sm:text-2xl text-slate-900 mb-4 flex items-center gap-2.5">
               <span>🚀 The Engineering Story</span>
             </h3>
@@ -412,7 +437,7 @@
               I've built and deployed an industrial defect-detection system for a US-based manufacturer, run ORB-SLAM3 on a Raspberry Pi 4B and Jetson Orin Nano with ARM-level optimizations, built a working EMG-controlled bionic prosthetic arm, and conducted research-style work in shape-from-shading and medical imaging.
             </p>
 
-            <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-rose-50 to-violet-50 border border-amber-200 flex items-start gap-3">
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-orange-50 to-lime-50 border border-amber-200 flex items-start gap-3">
               <span class="text-2xl mt-0.5">🔬</span>
               <div>
                 <h4 class="font-heading font-bold text-sm text-slate-900">Current Focus at IIT Jodhpur (May 2026 – Present)</h4>
@@ -425,8 +450,7 @@
 
           <!-- 4 Pillars of Hardware + Software Intersections -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            
-            <div class="card-playful p-5 border-amber-200 hover:border-amber-400">
+            <div class="card-playful p-5 border-amber-200">
               <div class="flex items-center gap-3 mb-2">
                 <span class="text-2xl">📷</span>
                 <h4 class="font-heading font-bold text-slate-900 text-sm">Perception & Cameras</h4>
@@ -436,7 +460,7 @@
               </p>
             </div>
 
-            <div class="card-playful p-5 border-rose-200 hover:border-rose-400">
+            <div class="card-playful p-5 border-orange-200">
               <div class="flex items-center gap-3 mb-2">
                 <span class="text-2xl">⚡</span>
                 <h4 class="font-heading font-bold text-slate-900 text-sm">Microcontrollers & IMUs</h4>
@@ -446,7 +470,7 @@
               </p>
             </div>
 
-            <div class="card-playful p-5 border-emerald-200 hover:border-emerald-400">
+            <div class="card-playful p-5 border-lime-200">
               <div class="flex items-center gap-3 mb-2">
                 <span class="text-2xl">🧠</span>
                 <h4 class="font-heading font-bold text-slate-900 text-sm">Edge AI & ARM SIMD</h4>
@@ -456,7 +480,7 @@
               </p>
             </div>
 
-            <div class="card-playful p-5 border-violet-200 hover:border-violet-400">
+            <div class="card-playful p-5 border-purple-200">
               <div class="flex items-center gap-3 mb-2">
                 <span class="text-2xl">🪐</span>
                 <h4 class="font-heading font-bold text-slate-900 text-sm">Planetary & Medical AI</h4>
@@ -465,7 +489,6 @@
                 Mars 3D elevation via shape-from-shading (NASA CTX/HiRISE) and attention-based explainable diabetic retinopathy.
               </p>
             </div>
-
           </div>
 
         </div>
@@ -482,21 +505,18 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-900 text-xs font-bold uppercase tracking-wider mb-3">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lime-100 text-lime-900 text-xs font-bold uppercase tracking-wider mb-3">
           <span>🛠️ Toolkit</span>
         </div>
         <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Technical Skills & <span class="gradient-mint-sky">Hardware Stack</span>
+          Technical Skills & <span class="gradient-warm-journey">Hardware Stack</span>
         </h2>
-        <p class="text-slate-600 mt-2 text-sm sm:text-base">
-          From low-level C register access to research-grade visual SLAM and deep learning.
-        </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        <!-- Skill Pod 1: Computer Vision & 3D -->
-        <div class="card-playful p-6 border-amber-200 hover:border-amber-400 flex flex-col justify-between">
+        <!-- Skill Pod 1 -->
+        <div class="card-playful p-6 border-amber-200 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2.5">
@@ -505,9 +525,6 @@
               </div>
               <span class="badge-pill badge-yellow text-[11px]">Core</span>
             </div>
-            <p class="text-xs text-slate-500 mb-4">
-              Stereo geometry, camera calibrations, feature matching, and photometric reconstruction.
-            </p>
             <div class="flex flex-wrap gap-2">
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">OpenCV</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">DIPlib</span>
@@ -517,56 +534,47 @@
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">MiDaS Depth</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Point Clouds</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Shape-from-Shading</span>
-              <span class="badge-pill bg-white border border-slate-200 text-slate-700">Lab Color / CLAHE</span>
             </div>
           </div>
         </div>
 
-        <!-- Skill Pod 2: SLAM & Robotics -->
-        <div class="card-playful p-6 border-rose-200 hover:border-rose-400 flex flex-col justify-between">
+        <!-- Skill Pod 2 -->
+        <div class="card-playful p-6 border-orange-200 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2.5">
-                <span class="text-2xl p-2 rounded-xl bg-rose-100 text-rose-700">🗺️</span>
+                <span class="text-2xl p-2 rounded-xl bg-orange-100 text-orange-700">🗺️</span>
                 <h3 class="font-heading font-bold text-lg text-slate-900">SLAM & Robotics</h3>
               </div>
-              <span class="badge-pill badge-coral text-[11px]">Specialization</span>
+              <span class="badge-pill badge-peach text-[11px]">Specialization</span>
             </div>
-            <p class="text-xs text-slate-500 mb-4">
-              Visual odometry, graph optimization, loop closure, and trajectory benchmarking.
-            </p>
             <div class="flex flex-wrap gap-2">
-              <span class="badge-pill bg-white border border-slate-200 text-slate-700">ORB-SLAM3 (Stereo & Inertial)</span>
+              <span class="badge-pill bg-white border border-slate-200 text-slate-700">ORB-SLAM3</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Pangolin</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">DBoW2</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">g2o</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Sophus</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">ATE Trajectory Eval</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">EuRoC Benchmarking</span>
-              <span class="badge-pill bg-white border border-slate-200 text-slate-700">ROS2 (in progress)</span>
-              <span class="badge-pill bg-white border border-slate-200 text-slate-700">Gazebo / Nav2</span>
+              <span class="badge-pill bg-white border border-slate-200 text-slate-700">ROS2 / Gazebo</span>
             </div>
           </div>
         </div>
 
-        <!-- Skill Pod 3: Machine Learning & Deep Learning -->
-        <div class="card-playful p-6 border-violet-200 hover:border-violet-400 flex flex-col justify-between">
+        <!-- Skill Pod 3 -->
+        <div class="card-playful p-6 border-purple-200 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2.5">
-                <span class="text-2xl p-2 rounded-xl bg-violet-100 text-violet-700">🧠</span>
+                <span class="text-2xl p-2 rounded-xl bg-purple-100 text-purple-700">🧠</span>
                 <h3 class="font-heading font-bold text-lg text-slate-900">ML & Deep Learning</h3>
               </div>
               <span class="badge-pill badge-lavender text-[11px]">Applied</span>
             </div>
-            <p class="text-xs text-slate-500 mb-4">
-              CNN workflows, transfer learning, attention mechanisms, and explainable AI.
-            </p>
             <div class="flex flex-wrap gap-2">
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">PyTorch</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">ONNX Runtime</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Attention Mechanisms</span>
-              <span class="badge-pill bg-white border border-slate-200 text-slate-700">Ensemble Learning</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Explainable AI (Grad-CAM)</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Random Forest</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">XGBoost / SVM</span>
@@ -575,45 +583,39 @@
           </div>
         </div>
 
-        <!-- Skill Pod 4: Embedded & Edge Systems -->
-        <div class="card-playful p-6 border-emerald-200 hover:border-emerald-400 flex flex-col justify-between">
+        <!-- Skill Pod 4 -->
+        <div class="card-playful p-6 border-lime-200 flex flex-col justify-between">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2.5">
-                <span class="text-2xl p-2 rounded-xl bg-emerald-100 text-emerald-700">⚡</span>
+                <span class="text-2xl p-2 rounded-xl bg-lime-100 text-lime-800">⚡</span>
                 <h3 class="font-heading font-bold text-lg text-slate-900">Embedded & Edge Hardware</h3>
               </div>
-              <span class="badge-pill badge-mint text-[11px]">Hardware</span>
+              <span class="badge-pill badge-green text-[11px]">Hardware</span>
             </div>
-            <p class="text-xs text-slate-500 mb-4">
-              ARM microcontrollers, single-board computers, sensors, and firmware optimizations.
-            </p>
             <div class="flex flex-wrap gap-2">
-              <span class="badge-pill bg-white border border-slate-200 text-slate-700">STM32 (F411RE: ADC/UART/Timers)</span>
+              <span class="badge-pill bg-white border border-slate-200 text-slate-700">STM32 (F411RE)</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Raspberry Pi 4B</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">Jetson Orin Nano</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">ESP32 & Arduino</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">MPU6050 IMU</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">MyoWare EMG</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-700">PCA9685 / Servos</span>
-              <span class="badge-pill bg-white border border-slate-200 text-slate-700">ARM NEON / SIMD / OpenMP</span>
+              <span class="badge-pill bg-white border border-slate-200 text-slate-700">ARM NEON / SIMD</span>
             </div>
           </div>
         </div>
 
-        <!-- Skill Pod 5: Languages & System Tools -->
-        <div class="card-playful p-6 border-sky-200 hover:border-sky-400 flex flex-col justify-between lg:col-span-2">
+        <!-- Skill Pod 5 -->
+        <div class="card-playful p-6 border-sky-200 flex flex-col justify-between lg:col-span-2">
           <div>
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2.5">
                 <span class="text-2xl p-2 rounded-xl bg-sky-100 text-sky-700">💻</span>
                 <h3 class="font-heading font-bold text-lg text-slate-900">Languages & Systems Architecture</h3>
               </div>
-              <span class="badge-pill badge-sky text-[11px]">Infrastructure</span>
+              <span class="badge-pill bg-sky-50 text-sky-800 border border-sky-200 text-[11px]">Infrastructure</span>
             </div>
-            <p class="text-xs text-slate-500 mb-4">
-              High-performance system programming, IPC protocols, and microservice backends.
-            </p>
             <div class="flex flex-wrap gap-2.5">
               <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">C</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">C++ (11/14/17)</span>
@@ -624,7 +626,7 @@
               <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">FastAPI & Uvicorn</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">Flask</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">WebSockets</span>
-              <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">ZeroMQ (ZMQ)</span>
+              <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">ZeroMQ</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">MQTT</span>
               <span class="badge-pill bg-white border border-slate-200 text-slate-800 font-semibold">Plotly 3D</span>
             </div>
@@ -642,525 +644,231 @@
   <section id="projects" class="py-20 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <!-- Section Header -->
       <div class="text-center max-w-3xl mx-auto mb-12">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-100 text-rose-900 text-xs font-bold uppercase tracking-wider mb-3">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-100 text-orange-900 text-xs font-bold uppercase tracking-wider mb-3">
           <span>🚀 Portfolio Showcase</span>
         </div>
         <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Featured Projects & <span class="gradient-sun-coral">Deployed Systems</span>
+          Featured Projects & <span class="gradient-warm-journey">Deployed Systems</span>
         </h2>
         <p class="text-slate-600 mt-2 text-sm sm:text-base">
-          A collection of perception systems, low-level embedded pipelines, and visual SLAM implementations.
+          From low-level ARM vectorization to industrial shop-floor computer vision systems.
         </p>
 
-        <!-- Interactive Domain Filter Chips -->
+        <!-- Filter Chips -->
         <div class="mt-8 flex flex-wrap items-center justify-center gap-2.5">
-          <button class="filter-chip active" data-filter="all">All Projects (12)</button>
-          <button class="filter-chip" data-filter="slam">SLAM & Robotics</button>
-          <button class="filter-chip" data-filter="cv">Computer Vision</button>
-          <button class="filter-chip" data-filter="embedded">Embedded & Edge AI</button>
-          <button class="filter-chip" data-filter="medical">Medical & Science</button>
-          <button class="filter-chip" data-filter="deployed">Deployed</button>
+          <button class="filter-chip active px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-amber-200 text-amber-900 border border-amber-300" data-filter="all">All Projects (12)</button>
+          <button class="filter-chip px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200" data-filter="slam">SLAM & Robotics</button>
+          <button class="filter-chip px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200" data-filter="cv">Computer Vision</button>
+          <button class="filter-chip px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200" data-filter="embedded">Embedded & Edge AI</button>
+          <button class="filter-chip px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200" data-filter="medical">Medical & Science</button>
+          <button class="filter-chip px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200" data-filter="deployed">Deployed</button>
         </div>
       </div>
 
       <!-- Projects Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-        <!-- ================= PROJECT 1: ORB-SLAM3 ================= -->
-        <div class="project-item tilt-card" data-category="slam embedded cv">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-amber-200 hover:border-amber-400">
+        <!-- 1. ORB-SLAM3 -->
+        <div class="project-item" data-category="slam embedded cv">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-amber-200">
             <div>
-              <!-- Visual Illustration Header -->
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-amber-100 via-amber-50 to-orange-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-amber-200">
-                <svg class="w-24 h-24 text-amber-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-yellow text-[11px] font-bold">SLAM / Robotics</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-amber-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  ARM NEON • EuRoC ATE
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-amber-50 mb-4 flex items-center justify-center border border-amber-200">
+                <span class="text-5xl">🗺️</span>
               </div>
-
-              <!-- Title & Tags -->
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                ORB-SLAM3 Optimization on Raspberry Pi 4B + CNN Loop Closing
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">C++</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">ARM SIMD</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">ONNX Runtime</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Stereo-Inertial</span>
-              </div>
-
-              <!-- Summary -->
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Deployed and benchmarked ORB-SLAM3 on resource-constrained ARM hardware, optimizing through NEON vectorization and investigating CNN place-recognition for loop closure.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">ORB-SLAM3 Optimization on Raspberry Pi 4B</h3>
+              <p class="text-xs text-slate-600 mb-4">Deployed and benchmarked ORB-SLAM3 on ARM hardware with NEON/SIMD vectorization and CNN-based place recognition loop closure.</p>
             </div>
-
-            <!-- Card Footer & Modal Action -->
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-amber-600">Raspberry Pi & Jetson</span>
-              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="orb_slam3">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-amber-700">ARM NEON • EuRoC</span>
+              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="orb_slam3">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 2: INDUSTRIAL DEFECT ================= -->
-        <div class="project-item tilt-card" data-category="cv deployed">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-rose-200 hover:border-rose-400">
+        <!-- 2. Industrial Defect -->
+        <div class="project-item" data-category="cv deployed">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-orange-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-rose-100 via-rose-50 to-pink-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-rose-200">
-                <svg class="w-24 h-24 text-rose-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-coral text-[11px] font-bold">Industrial Deployed</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-rose-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  ~300 µm • 93.97% Acc
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-orange-50 mb-4 flex items-center justify-center border border-orange-200">
+                <span class="text-5xl">🧵</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Industrial Defect Detection — Metal-Plated Thread Inspection
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Lab / CLAHE</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Random Forest</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Flask UI</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">MQTT Debounce</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Deployed for a US-based manufacturer: high-speed camera acquisition, sub-pixel feature extraction, and real-time factory floor debounce signalling.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Industrial Defect Detection — Metal-Plated Thread</h3>
+              <p class="text-xs text-slate-600 mb-4">Deployed inspection system for a US manufacturer: ~300 µm accuracy, Random Forest (93.97% test accuracy), and factory-floor debounce signalling.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-rose-600">US Client Deployed</span>
-              <button class="view-project-detail btn-bubbly btn-coral text-xs px-4 py-2" data-project="defect_detection">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-orange-700">Deployed US Client</span>
+              <button class="view-project-detail btn-bubbly btn-peach text-xs px-4 py-2" data-project="defect_detection">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 3: STM32 TURBULENCE ================= -->
-        <div class="project-item tilt-card" data-category="embedded">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-emerald-200 hover:border-emerald-400">
+        <!-- 3. STM32 Turbulence -->
+        <div class="project-item" data-category="embedded">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-lime-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-emerald-100 via-teal-50 to-green-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-emerald-200">
-                <svg class="w-24 h-24 text-emerald-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-mint text-[11px] font-bold">Embedded TinyML</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-emerald-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  STM32F411RE • 8 Classes
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-lime-50 mb-4 flex items-center justify-center border border-lime-200">
+                <span class="text-5xl">✈️</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                STM32 Aircraft Turbulence & Abnormal-Motion Detection
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">STM32 HAL</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">MPU6050 IMU</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Interrupts</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">NanoEdge AI</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Interrupt-driven telemetry logging and tinyML motion anomaly inference across flight phases (taxi, takeoff, cruise, landing) on ARM Cortex-M4.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">STM32 Aircraft Turbulence & Motion Detection</h3>
+              <p class="text-xs text-slate-600 mb-4">Interrupt-driven IMU data logging and tinyML motion anomaly inference across 8 flight phases on an STM32F411RE ARM Cortex-M4.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-emerald-600">On-Device Inference</span>
-              <button class="view-project-detail btn-bubbly btn-mint text-xs px-4 py-2" data-project="stm32_turbulence">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-lime-700">On-Device TinyML</span>
+              <button class="view-project-detail btn-bubbly btn-green text-xs px-4 py-2" data-project="stm32_turbulence">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 4: BIONIC PROSTHETIC ARM ================= -->
-        <div class="project-item tilt-card" data-category="embedded slam medical">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-violet-200 hover:border-violet-400">
+        <!-- 4. Bionic Prosthetic -->
+        <div class="project-item" data-category="embedded slam medical">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-purple-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-violet-100 via-purple-50 to-indigo-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-violet-200">
-                <svg class="w-24 h-24 text-violet-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.67 2.67 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.231a4.5 4.5 0 00-6.364-6.364l-4.5 4.5m10.864 1.864l-4.5-4.5" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-lavender text-[11px] font-bold">Biomedical Robotics</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-violet-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  97% Accuracy • 7 Gestures
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-purple-50 mb-4 flex items-center justify-center border border-purple-200">
+                <span class="text-5xl">🦾</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Myoelectric Bionic Prosthetic Arm Prototype
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">MyoWare 2.0 EMG</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">PCA9685 I2C</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">MG996R Servos</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Signal Processing</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Bionic prosthetic hand translating forearm surface EMG muscle activations into multi-servo finger kinematic gestures with 97% recognition accuracy.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Myoelectric Bionic Prosthetic Arm</h3>
+              <p class="text-xs text-slate-600 mb-4">Functional prosthetic hand actuated by muscle activity: MyoWare 2.0 EMG, 7-class gesture recognition (97% accuracy), and PCA9685 servos.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-violet-600">Working Hardware</span>
-              <button class="view-project-detail btn-bubbly btn-lavender text-xs px-4 py-2" data-project="bionic_prosthetic">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-purple-700">97% Gesture Acc</span>
+              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="bionic_prosthetic">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 5: DIABETIC RETINOPATHY ================= -->
-        <div class="project-item tilt-card" data-category="medical cv">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-rose-200 hover:border-rose-400">
+        <!-- 5. Diabetic Retinopathy -->
+        <div class="project-item" data-category="medical cv">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-orange-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-pink-100 via-rose-50 to-red-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-rose-200">
-                <svg class="w-24 h-24 text-rose-500 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-coral text-[11px] font-bold">Medical AI</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-rose-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  Attention • Grad-CAM
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-orange-50 mb-4 flex items-center justify-center border border-orange-200">
+                <span class="text-5xl">👁️</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Explainable Attention-Based Ensemble for Diabetic Retinopathy
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">PyTorch</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Feature Fusion</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Grad-CAM</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">APTOS 2019</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Automated detection & clinical severity grading from retinal fundus images with attention maps and 103 hand-crafted feature baselines.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Explainable Attention-Based Diabetic Retinopathy</h3>
+              <p class="text-xs text-slate-600 mb-4">Deep learning feature fusion ensemble for detection and 5-tier clinical severity grading from retinal fundus images with Grad-CAM explainability.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-rose-600">Clinical Explainability</span>
-              <button class="view-project-detail btn-bubbly btn-coral text-xs px-4 py-2" data-project="diabetic_retinopathy">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-orange-700">Clinical Explainability</span>
+              <button class="view-project-detail btn-bubbly btn-peach text-xs px-4 py-2" data-project="diabetic_retinopathy">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 6: MARS DEM VIA SFS ================= -->
-        <div class="project-item tilt-card" data-category="cv medical">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-amber-200 hover:border-amber-400">
+        <!-- 6. Mars DEM SfS -->
+        <div class="project-item" data-category="cv medical">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-amber-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-amber-200">
-                <svg class="w-24 h-24 text-amber-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.143 2.143L15 7.5l3 3" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-yellow text-[11px] font-bold">Planetary Science</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-amber-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  NASA CTX/HiRISE • Hapke
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-amber-50 mb-4 flex items-center justify-center border border-amber-200">
+                <span class="text-5xl">🪐</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Mars DEM Generation Using Shape-from-Shading
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Photometric SfS</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Hapke Reflectance</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Plotly 3D</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Scientific PDEs</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Extracting continuous digital elevation models from single Martian satellite images using photometric slope integration and iterative refinement.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Mars DEM Generation via Shape-from-Shading</h3>
+              <p class="text-xs text-slate-600 mb-4">3D Martian elevation reconstruction from NASA CTX/HiRISE single satellite images using Lambertian & Hapke photometric reflectance models.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-amber-600">NASA Orbital Imagery</span>
-              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="mars_sfs">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-amber-700">NASA CTX/HiRISE</span>
+              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="mars_sfs">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 7: 4-CAMERA PANORAMA ================= -->
-        <div class="project-item tilt-card" data-category="embedded cv">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-teal-200 hover:border-teal-400">
+        <!-- 7. Four-Camera Panorama -->
+        <div class="project-item" data-category="embedded cv">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-lime-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-teal-100 via-mint-50 to-cyan-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-teal-200">
-                <svg class="w-24 h-24 text-teal-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-mint text-[11px] font-bold">Multi-Camera Edge</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-teal-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  3 USB + 1 CSI • ZMQ
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-lime-50 mb-4 flex items-center justify-center border border-lime-200">
+                <span class="text-5xl">📷</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Four-Camera Real-Time Panoramic Stitching on Raspberry Pi
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">FastAPI</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">ZeroMQ PUB</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">SIFT Remap</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">MiDaS Depth</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Headless multi-camera video stitching streaming stitched feeds over ZeroMQ and WebSockets into downstream depth estimation pipelines.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">4-Camera Real-Time Panorama on Raspberry Pi</h3>
+              <p class="text-xs text-slate-600 mb-4">Headless multi-camera video stitching (3 USB + 1 CSI) with ZeroMQ streaming, FastAPI UI, and downstream MiDaS depth estimation.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-teal-600">Raspberry Pi 4B</span>
-              <button class="view-project-detail btn-bubbly btn-mint text-xs px-4 py-2" data-project="panoramic_stitching">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-lime-700">ZeroMQ • FastAPI</span>
+              <button class="view-project-detail btn-bubbly btn-green text-xs px-4 py-2" data-project="panoramic_stitching">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 8: STEREO DEPTH ================= -->
-        <div class="project-item tilt-card" data-category="cv">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-sky-200 hover:border-sky-400">
+        <!-- 8. Stereo Depth -->
+        <div class="project-item" data-category="cv">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-sky-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-sky-200">
-                <svg class="w-24 h-24 text-sky-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-sky text-[11px] font-bold">Stereo Vision</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-sky-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  StereoSGBM • WLS
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-sky-50 mb-4 flex items-center justify-center border border-sky-200">
+                <span class="text-5xl">📊</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Stereo Depth Mapping Pipeline
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">OpenCV</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">StereoSGBM</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">WLS Filter</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Calibration</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Stereo-camera depth estimation utilizing StereoSGBM with Weighted Least Squares (WLS) filtering for clean, colorized metric disparity maps.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Stereo Depth Mapping Pipeline</h3>
+              <p class="text-xs text-slate-600 mb-4">Stereo camera depth estimation utilizing StereoSGBM with Weighted Least Squares (WLS) filtering for metric disparity maps.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-sky-600">Metric Disparity</span>
-              <button class="view-project-detail btn-bubbly btn-outline-playful text-xs px-4 py-2" data-project="stereo_depth">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-sky-700">Metric Disparity</span>
+              <button class="view-project-detail btn-bubbly btn-outline-soft text-xs px-4 py-2" data-project="stereo_depth">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 9: MONOCULAR DEPTH & POINT CLOUD ================= -->
-        <div class="project-item tilt-card" data-category="cv slam">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-violet-200 hover:border-violet-400">
+        <!-- 9. Monocular Depth & Point Clouds -->
+        <div class="project-item" data-category="cv slam">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-purple-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-violet-100 via-purple-50 to-pink-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-violet-200">
-                <svg class="w-24 h-24 text-violet-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-lavender text-[11px] font-bold">3D Vision</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-violet-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  MiDaS • VGGT • SAM
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-purple-50 mb-4 flex items-center justify-center border border-purple-200">
+                <span class="text-5xl">🌐</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Monocular Depth Estimation & Point Cloud Lifting
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">MiDaS Depth</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">VGGT (CVPR 25)</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">SAM Segmentation</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Open3D</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Recovering dense spatial depth from monocular video feeds, lifting pixels to 3D point clouds, and SAM zero-shot 3D segmentation. Ties into IIT Jodhpur digital-twin R&D.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Monocular Depth & 3D Point Cloud Lifting</h3>
+              <p class="text-xs text-slate-600 mb-4">Lifting monocular video to dense 3D point clouds with MiDaS, exploring VGGT (CVPR 2025) and SAM segmentation for digital twins at IIT Jodhpur.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-violet-600">Digital Twins R&D</span>
-              <button class="view-project-detail btn-bubbly btn-lavender text-xs px-4 py-2" data-project="monocular_depth">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-purple-700">Digital Twins R&D</span>
+              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="monocular_depth">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 10: SAND GRAIN MEASUREMENT ================= -->
-        <div class="project-item tilt-card" data-category="cv">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-amber-200 hover:border-amber-400">
+        <!-- 10. Sand Grain Metrology -->
+        <div class="project-item" data-category="cv">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-amber-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-amber-200">
-                <svg class="w-24 h-24 text-amber-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-yellow text-[11px] font-bold">Metrology</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-amber-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  QR Scaling • Micro-Metrology
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-amber-50 mb-4 flex items-center justify-center border border-amber-200">
+                <span class="text-5xl">🔬</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Sand Grain Size Measurement & Spatial Mapping
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">QR Scale Markers</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Segmentation</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Feret Diameter</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Granulometry</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Automated particle sizing using QR fiducial references to calibrate physical scale factors, extracting statistical size distributions for material analysis.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Sand Grain Size Measurement & Mapping</h3>
+              <p class="text-xs text-slate-600 mb-4">Automated optical micro-granulometry using QR fiducial references to calibrate physical scale factors and extract grain size distributions.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-amber-600">Physical Metrology</span>
-              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="sand_grain">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-amber-700">QR Scale Metrology</span>
+              <button class="view-project-detail btn-bubbly btn-sunshine text-xs px-4 py-2" data-project="sand_grain">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 11: QR AUGMENTATION ================= -->
-        <div class="project-item tilt-card" data-category="cv">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-teal-200 hover:border-teal-400">
+        <!-- 11. QR Augmentation -->
+        <div class="project-item" data-category="cv">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-lime-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-teal-100 via-emerald-50 to-green-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-teal-200">
-                <svg class="w-24 h-24 text-teal-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-mint text-[11px] font-bold">Data Engineering</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-teal-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  Synthetic Dataset • Kernel Scaling
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-lime-50 mb-4 flex items-center justify-center border border-lime-200">
+                <span class="text-5xl">🏷️</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                QR Code Naturalistic Augmentation Pipeline
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Python</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">OpenCV</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Affine Distortions</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Finder Preserving</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Python pipeline simulating realistic industrial wear, glare, and perspective shearing while mathematically preserving finder pattern decodability.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">QR Code Augmentation Pipeline</h3>
+              <p class="text-xs text-slate-600 mb-4">Simulating harsh physical degradations, blur, and perspective shears while preserving finder-pattern integrity with adaptive kernel scaling.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-teal-600">Synthetic Vision</span>
-              <button class="view-project-detail btn-bubbly btn-mint text-xs px-4 py-2" data-project="qr_augmentation">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-lime-700">Synthetic Data</span>
+              <button class="view-project-detail btn-bubbly btn-green text-xs px-4 py-2" data-project="qr_augmentation">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
 
-        <!-- ================= PROJECT 12: SUPPORTING HIGHLIGHTS ================= -->
-        <div class="project-item tilt-card" data-category="embedded">
-          <div class="card-playful p-6 h-full flex flex-col justify-between border-sky-200 hover:border-sky-400">
+        <!-- 12. Supporting Highlights -->
+        <div class="project-item" data-category="embedded">
+          <div class="card-playful p-6 h-full flex flex-col justify-between border-sky-200">
             <div>
-              <div class="w-full h-44 rounded-2xl bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 mb-5 relative overflow-hidden flex items-center justify-center p-4 border border-sky-200">
-                <svg class="w-24 h-24 text-sky-600 animate-float-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
-                </svg>
-                <div class="absolute top-3 right-3">
-                  <span class="badge-pill badge-sky text-[11px] font-bold">Systems Trio</span>
-                </div>
-                <div class="absolute bottom-2 left-3 text-[11px] font-mono text-sky-800 bg-white/80 px-2 py-0.5 rounded-md">
-                  Pure Pixel • Fast HAL • IDS
-                </div>
+              <div class="w-full h-40 rounded-2xl bg-sky-50 mb-4 flex items-center justify-center border border-sky-200">
+                <span class="text-5xl">⚡</span>
               </div>
-
-              <h3 class="font-heading font-extrabold text-xl text-slate-900 leading-snug mb-2">
-                Hardware & Embedded Systems Engineering Highlights
-              </h3>
-              
-              <div class="flex flex-wrap gap-1.5 mb-4">
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">7-Seg Pure Pixel</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">Cold-Storage IDS</span>
-                <span class="badge-pill bg-slate-100 text-slate-700 text-[11px]">STM32 HAL Guides</span>
-              </div>
-
-              <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                7-Segment OCR-free pixel analyzer, Cisco Packet Tracer warehouse intrusion simulation with FastAPI, and bare-metal STM32 HAL sensor library series.
-              </p>
+              <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-2">Hardware & Systems Engineering Trio</h3>
+              <p class="text-xs text-slate-600 mb-4">7-Segment OCR-free pixel analyzer, Cisco Packet Tracer cold-storage intrusion detection simulation, and STM32 HAL sensor library series.</p>
             </div>
-
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <span class="text-[11px] font-bold text-sky-600">Focused Solutions</span>
-              <button class="view-project-detail btn-bubbly btn-outline-playful text-xs px-4 py-2" data-project="supporting_projects">
-                Deep Dive 🔍
-              </button>
+              <span class="text-xs font-bold text-sky-700">Focused Solutions</span>
+              <button class="view-project-detail btn-bubbly btn-outline-soft text-xs px-4 py-2" data-project="supporting_projects">Deep Dive 🔍</button>
             </div>
           </div>
         </div>
@@ -1177,62 +885,53 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
       <div class="text-center max-w-3xl mx-auto mb-16">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-violet-100 text-violet-900 text-xs font-bold uppercase tracking-wider mb-3">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-100 text-purple-900 text-xs font-bold uppercase tracking-wider mb-3">
           <span>📑 Scientific Output</span>
         </div>
         <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Research & <span class="gradient-coral-lavender">Publications</span>
+          Research & <span class="gradient-warm-journey">Publications</span>
         </h2>
-        <p class="text-slate-600 mt-2 text-sm sm:text-base">
-          Rigorous methodology applied to advanced composites characterization and industrial perception.
-        </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         
-        <!-- Paper 1: DIPlib + OpenCV FRP Composites -->
-        <div class="card-playful p-8 border-violet-200 hover:border-violet-400 relative flex flex-col justify-between">
+        <!-- Paper 1 -->
+        <div class="card-playful p-8 border-purple-200 relative flex flex-col justify-between">
           <div>
             <div class="flex items-center gap-2 mb-3">
               <span class="badge-pill badge-lavender text-xs">Research Paper</span>
               <span class="badge-pill bg-slate-100 text-slate-600 text-xs">Material Science & CV</span>
             </div>
-            
             <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-3 leading-snug">
               Integrated DIPlib and OpenCV Framework for Precise Geometric Characterisation of Woven Fibre-Reinforced Polymer Composites
             </h3>
-            
             <p class="text-sm text-slate-700 leading-relaxed mb-6 font-normal">
               A specialized computational framework pairing mathematical morphology from DIPlib with high-speed OpenCV routines to perform sub-micron geometric analysis, yarn spacing, and void characterization in woven FRP composite micrographs.
             </p>
           </div>
-
           <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
             <span class="text-xs text-slate-700 font-semibold">DIPlib • OpenCV • Metrology</span>
-            <span class="text-xs font-bold text-violet-600">Research Manuscript</span>
+            <span class="text-xs font-bold text-purple-600">Research Manuscript</span>
           </div>
         </div>
 
-        <!-- In-Progress Research: Comparative Defect Study -->
-        <div class="card-playful p-8 border-rose-200 hover:border-rose-400 relative flex flex-col justify-between">
+        <!-- Paper 2 -->
+        <div class="card-playful p-8 border-orange-200 relative flex flex-col justify-between">
           <div>
             <div class="flex items-center gap-2 mb-3">
-              <span class="badge-pill badge-coral text-xs">In Progress</span>
+              <span class="badge-pill badge-peach text-xs">In Progress</span>
               <span class="badge-pill bg-slate-100 text-slate-600 text-xs">Comparative Study</span>
             </div>
-            
             <h3 class="font-heading font-extrabold text-xl text-slate-900 mb-3 leading-snug">
               Benchmarking Classical Machine Learning vs. Deep Transfer Learning for Real-Time Metal-Thread Defect Classification
             </h3>
-            
             <p class="text-sm text-slate-700 leading-relaxed mb-6 font-normal">
               An empirical investigation evaluating accuracy vs. compute latency trade-offs between engineered color-space descriptors (Lab / CLAHE / Random Forest) and lightweight deep vision backbones (MobileNetV3, EfficientNet) under industrial edge runtime constraints.
             </p>
           </div>
-
           <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
             <span class="text-xs text-slate-700 font-semibold">Copper Cloud Dataset • Edge AI</span>
-            <span class="text-xs font-bold text-rose-600">Benchmarking</span>
+            <span class="text-xs font-bold text-orange-600">Benchmarking</span>
           </div>
         </div>
 
@@ -1242,104 +941,7 @@
   </section>
 
   <!-- ========================================================================
-       7. Experience & Education Timeline
-       ======================================================================== -->
-  <section id="experience" class="py-20 relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase tracking-wider mb-3">
-          <span>🧭 Experience & Journey</span>
-        </div>
-        <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Where I've Contributed & <span class="gradient-sun-coral">Studied</span>
-        </h2>
-      </div>
-
-      <div class="max-w-4xl mx-auto space-y-8">
-        
-        <!-- Experience Item 1: IIT Jodhpur -->
-        <div class="card-playful p-8 border-amber-200 hover:border-amber-400 relative overflow-hidden">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-            <div>
-              <span class="badge-pill badge-yellow text-xs mb-2">Current Role</span>
-              <h3 class="font-heading font-extrabold text-2xl text-slate-900">R&D Intern — 3D Computer Vision</h3>
-              <p class="text-sm font-semibold text-amber-700">Indian Institute of Technology (IIT) Jodhpur</p>
-            </div>
-            <div class="text-left sm:text-right">
-              <span class="text-xs font-bold text-slate-700 bg-white px-3 py-1.5 rounded-full border border-slate-200">
-                May 2026 – Present
-              </span>
-            </div>
-          </div>
-          <ul class="space-y-2 text-sm text-slate-700 font-normal">
-            <li class="flex items-start gap-2">
-              <span class="text-amber-500 font-bold">✦</span>
-              <span>Spearheading research in 3D computer vision, dense monocular geometry estimation, and digital-twin lifting pipelines.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-amber-500 font-bold">✦</span>
-              <span>Benchmarking novel feed-forward visual geometry transformers (VGGT) against classical SLAM representations.</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Experience Item 2: Copper Cloud -->
-        <div class="card-playful p-8 border-rose-200 hover:border-rose-400 relative overflow-hidden">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-            <div>
-              <span class="badge-pill badge-coral text-xs mb-2">Industry R&D</span>
-              <h3 class="font-heading font-extrabold text-2xl text-slate-900">R&D Intern — Computer Vision & IoT</h3>
-              <p class="text-sm font-semibold text-rose-700">Copper Cloud Industry 4.0 Solutions, Pune</p>
-            </div>
-            <div class="text-left sm:text-right">
-              <span class="text-xs font-bold text-slate-700 bg-white px-3 py-1.5 rounded-full border border-slate-200">
-                ~14 Months
-              </span>
-            </div>
-          </div>
-          <ul class="space-y-2 text-sm text-slate-700 font-normal">
-            <li class="flex items-start gap-2">
-              <span class="text-rose-500 font-bold">✦</span>
-              <span>Architected and deployed an automated industrial defect-detection system with <strong>~300 µm measurement accuracy</strong> for a US-based textile manufacturer.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-rose-500 font-bold">✦</span>
-              <span>Engineered live camera inspection interfaces with Flask, MQTT status messaging, and debouncing algorithms for high-noise production lines.</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <span class="text-rose-500 font-bold">✦</span>
-              <span>Developed edge perception software across Raspberry Pi, Jetson Orin Nano, and STM32 embedded controller platforms.</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Education Item: MIT AOE -->
-        <div class="card-playful p-8 border-violet-200 hover:border-violet-400 relative overflow-hidden">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-            <div>
-              <span class="badge-pill badge-lavender text-xs mb-2">Education</span>
-              <h3 class="font-heading font-extrabold text-2xl text-slate-900">B.Tech in Electronics & Telecommunication</h3>
-              <p class="text-sm font-semibold text-violet-700">MIT Academy of Engineering, Pune</p>
-            </div>
-            <div class="text-left sm:text-right">
-              <div class="inline-block px-3 py-1.5 rounded-full bg-violet-100 text-violet-900 font-bold text-xs">
-                CGPA: 8.41 / 10 • Class of 2027
-              </div>
-            </div>
-          </div>
-          <p class="text-sm text-slate-700 leading-relaxed font-normal">
-            <strong>Key Coursework:</strong> Advanced Neural Network Architectures, Digital Signal Processing, Embedded System Design, Control Systems, Microcontrollers & Interfacing.
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================================================
-       8. Contact Section
+       7. Contact Section
        ======================================================================== -->
   <section id="contact" class="py-20 relative bg-amber-50/50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1349,7 +951,7 @@
           <span>💌 Get In Touch</span>
         </div>
         <h2 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Let's build something <span class="gradient-sun-coral">extraordinary</span> together.
+          Let's build something <span class="gradient-warm-journey">extraordinary</span> together.
         </h2>
         <p class="text-slate-600 mt-2 text-sm sm:text-base">
           Open to internships and R&D roles in industrial perception, edge AI, visual SLAM, and robotics.
@@ -1358,7 +960,7 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
         
-        <!-- Contact Information & Quick Actions -->
+        <!-- Info Column -->
         <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
           <div class="card-playful p-8 border-amber-200 flex-1 flex flex-col justify-between">
             <div>
@@ -1368,21 +970,17 @@
               </p>
 
               <div class="space-y-4">
-                <!-- Email Item -->
                 <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <span class="text-2xl">📬</span>
                     <div>
-                      <div class="text-xs text-slate-700 font-medium">Email Me</div>
+                      <div class="text-xs text-slate-700 font-medium">Email</div>
                       <div class="text-sm font-bold text-slate-900">janhavi.pohnerkar@gmail.com</div>
                     </div>
                   </div>
-                  <button class="copy-email-btn btn-bubbly btn-sunshine text-xs px-3 py-1.5">
-                    Copy
-                  </button>
+                  <button class="copy-email-btn btn-bubbly btn-sunshine text-xs px-3 py-1.5">Copy</button>
                 </div>
 
-                <!-- Location -->
                 <div class="p-4 rounded-2xl bg-white border border-slate-200 flex items-center gap-3">
                   <span class="text-2xl">📍</span>
                   <div>
@@ -1391,7 +989,6 @@
                   </div>
                 </div>
 
-                <!-- Availability Status -->
                 <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-3">
                   <span class="text-2xl">✨</span>
                   <div>
@@ -1402,31 +999,28 @@
               </div>
             </div>
 
-            <!-- Social Links & Resume -->
             <div class="pt-6 mt-6 border-t border-slate-100 flex flex-wrap items-center gap-3">
-              <a href="https://github.com/janhavi-pohnerkar" target="_blank" rel="noopener noreferrer" class="btn-bubbly btn-outline-playful text-xs px-4 py-2.5">
+              <a href="https://github.com/janhavi-pohnerkar" target="_blank" rel="noopener noreferrer" class="btn-bubbly btn-outline-soft text-xs px-4 py-2.5">
                 🐙 GitHub
               </a>
-              <a href="https://linkedin.com/in/janhavi-pohnerkar" target="_blank" rel="noopener noreferrer" class="btn-bubbly btn-outline-playful text-xs px-4 py-2.5">
+              <a href="https://linkedin.com/in/janhavi-pohnerkar" target="_blank" rel="noopener noreferrer" class="btn-bubbly btn-outline-soft text-xs px-4 py-2.5">
                 💼 LinkedIn
               </a>
-              <a href="resume.pdf" download="Janhavi_Resume.pdf" class="btn-bubbly btn-sunshine text-xs px-4 py-2.5 trigger-confetti">
-                📄 Download Resume
+              <a href="resume.pdf" download="Janhavi_Resume.pdf" class="btn-bubbly btn-sunshine text-xs px-4 py-2.5">
+                📄 Resume
               </a>
             </div>
-
           </div>
         </div>
 
-        <!-- Cheerful Contact Form -->
+        <!-- Form Column -->
         <div class="lg:col-span-7">
-          <div class="card-playful p-8 sm:p-10 border-rose-200">
+          <div class="card-playful p-8 sm:p-10 border-orange-200">
             <h3 class="font-heading font-extrabold text-2xl text-slate-900 mb-6 flex items-center gap-2">
-              <span>Send a Friendly Note</span>
+              <span>Send a Friendly Message</span>
               <span class="text-xl">✨</span>
             </h3>
 
-            <!-- Form Success Message -->
             <div id="contact-form-success" class="hidden mb-6 p-4 rounded-2xl bg-emerald-100 border border-emerald-300 text-emerald-900 text-sm font-semibold flex items-center gap-3">
               <span class="text-xl">🎉</span>
               <div>
@@ -1438,30 +1032,27 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Your Name *</label>
-                  <input type="text" name="name" required placeholder="Ada Lovelace" class="w-full px-4 py-3 rounded-2xl bg-cream-50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm transition-all">
+                  <input type="text" name="name" required placeholder="Ada Lovelace" class="w-full px-4 py-3 rounded-2xl bg-amber-50/50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm">
                 </div>
                 <div>
                   <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email Address *</label>
-                  <input type="email" name="email" required placeholder="ada@domain.com" class="w-full px-4 py-3 rounded-2xl bg-cream-50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm transition-all">
+                  <input type="email" name="email" required placeholder="ada@domain.com" class="w-full px-4 py-3 rounded-2xl bg-amber-50/50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm">
                 </div>
               </div>
 
               <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Subject</label>
-                <input type="text" name="subject" placeholder="R&D Internship / Robotics Collaboration" class="w-full px-4 py-3 rounded-2xl bg-cream-50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm transition-all">
+                <input type="text" name="subject" placeholder="R&D Internship / Collaboration" class="w-full px-4 py-3 rounded-2xl bg-amber-50/50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm">
               </div>
 
               <div>
                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Message *</label>
-                <textarea name="message" rows="4" required placeholder="Hi Janhavi, I came across your work on ORB-SLAM3 and industrial inspection..." class="w-full px-4 py-3 rounded-2xl bg-cream-50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm transition-all"></textarea>
+                <textarea name="message" rows="4" required placeholder="Hi Janhavi, I came across your work on ORB-SLAM3 and industrial inspection..." class="w-full px-4 py-3 rounded-2xl bg-amber-50/50 border border-slate-200 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200 text-sm"></textarea>
               </div>
 
-              <div class="pt-2 flex items-center justify-between">
-                <button type="submit" class="btn-bubbly btn-coral text-sm px-8 py-3.5 shadow-lg">
+              <div class="pt-2">
+                <button type="submit" class="btn-bubbly btn-sunshine text-sm px-8 py-3.5 shadow-lg">
                   Send Message 🚀
-                </button>
-                <button type="button" class="trigger-confetti text-xs font-semibold text-amber-700 hover:text-amber-800">
-                  🎉 Blast Confetti
                 </button>
               </div>
             </form>
@@ -1477,7 +1068,7 @@
   <!-- ========================================================================
        Footer
        ======================================================================== -->
-  <footer class="py-12 border-t border-slate-200/80 bg-white/60">
+  <footer class="py-12 border-t border-slate-200/80 bg-white/70">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
       
       <div class="flex items-center gap-3">
@@ -1491,11 +1082,9 @@
       </div>
 
       <div class="flex items-center gap-4 text-xs font-semibold text-slate-700">
-        <a href="#hero" class="hover:text-amber-600 transition-colors">Back to Top ↑</a>
+        <a href="#journey-stage" class="hover:text-amber-600 transition-colors">Back to 3D Journey ↑</a>
         <span>•</span>
         <a href="resume.pdf" download="Janhavi_Resume.pdf" class="hover:text-amber-600 transition-colors">Resume</a>
-        <span>•</span>
-        <button class="trigger-confetti hover:text-amber-600 transition-colors">Toss Confetti 🎉</button>
       </div>
 
       <div class="text-xs text-slate-600 text-center sm:text-right">
@@ -1506,12 +1095,11 @@
   </footer>
 
   <!-- ========================================================================
-       Project Detail Modal Overlay
+       Standard Project Detail Modal Overlay
        ======================================================================== -->
   <div id="project-modal-overlay" class="modal-overlay">
     <div class="modal-content p-6 sm:p-8">
       
-      <!-- Modal Header -->
       <div class="flex items-start justify-between gap-4 mb-4 pb-4 border-b border-slate-100">
         <div>
           <span id="modal-domain" class="badge-pill badge-yellow text-xs mb-2">Domain</span>
@@ -1524,12 +1112,9 @@
         </button>
       </div>
 
-      <!-- Modal Body -->
       <div class="space-y-6">
-        
-        <!-- Summary & Impact -->
         <div>
-          <h4 class="font-heading font-bold text-sm text-slate-900 uppercase tracking-wider mb-1.5 text-amber-700">Executive Summary</h4>
+          <h4 class="font-heading font-bold text-sm text-slate-900 uppercase tracking-wider mb-1.5 text-amber-700">Summary</h4>
           <p id="modal-summary" class="text-sm text-slate-700 leading-relaxed font-normal"></p>
         </div>
 
@@ -1538,40 +1123,32 @@
           <p id="modal-why" class="text-xs text-amber-950 leading-relaxed font-medium"></p>
         </div>
 
-        <!-- Tech Stack & Hardware Badges -->
         <div>
-          <h4 class="font-heading font-bold text-xs text-slate-700 uppercase tracking-wider mb-2">Technologies & Architecture</h4>
+          <h4 class="font-heading font-bold text-xs text-slate-700 uppercase tracking-wider mb-2">Technologies</h4>
           <div id="modal-tech-tags" class="flex flex-wrap gap-2"></div>
         </div>
 
-        <!-- Hardware & Metric -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="p-4 rounded-2xl bg-cream-50 border border-slate-200">
             <div class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">Hardware Platform</div>
             <div id="modal-hardware" class="text-xs font-bold text-slate-800 mt-1"></div>
           </div>
           <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
-            <div class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Key Achievement Metric</div>
+            <div class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Key Metric</div>
             <div id="modal-metric" class="text-xs font-bold text-emerald-950 mt-1"></div>
           </div>
         </div>
 
-        <!-- Highlights List -->
         <div>
-          <h4 class="font-heading font-bold text-sm text-slate-900 uppercase tracking-wider mb-2 text-rose-700">Technical Breakdown & What I Did</h4>
+          <h4 class="font-heading font-bold text-sm text-slate-900 uppercase tracking-wider mb-2 text-rose-700">Technical Highlights</h4>
           <ul id="modal-highlights" class="space-y-2"></ul>
         </div>
-
       </div>
 
-      <!-- Modal Footer -->
       <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
         <a id="modal-github-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-bubbly btn-sunshine text-xs px-5 py-2.5">
           <span>View on GitHub 🐙</span>
         </a>
-        <button class="trigger-confetti text-xs font-semibold text-slate-700 hover:text-amber-600">
-          Cheer Project 🎉
-        </button>
       </div>
 
     </div>
