@@ -247,6 +247,290 @@ html, body {
   color: #475569;
 }
 
+.popup-open-panel-btn {
+  width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.55rem 0.85rem;
+  background: linear-gradient(135deg, #1E293B, #0F172A);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 0.85rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+  transition: all 0.2s ease;
+}
+
+.popup-open-panel-btn:hover {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   Deep Project & Achievement Description Slide-over Panel
+   -------------------------------------------------------------------------- */
+.project-detail-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0.3s ease;
+}
+
+.project-detail-panel.active {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.panel-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.project-detail-panel.active .panel-backdrop {
+  opacity: 1;
+}
+
+.panel-drawer {
+  position: relative;
+  width: 32rem;
+  max-width: 92vw;
+  height: 100%;
+  background: #FFFFFF;
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.project-detail-panel.active .panel-drawer {
+  transform: translateX(0);
+}
+
+.panel-header {
+  padding: 1.5rem 1.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #F1F5F9;
+  background: #FFFFFF;
+}
+
+.panel-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.panel-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  background: #EFF6FF;
+  color: #2563EB;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.panel-category {
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: #64748B;
+}
+
+.panel-close-btn {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 9999px;
+  background: #F1F5F9;
+  border: none;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.panel-close-btn:hover {
+  background: #EE4B3B;
+  color: #FFFFFF;
+  transform: rotate(90deg);
+}
+
+.panel-body {
+  padding: 1.5rem 1.75rem 2.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.panel-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #0F172A;
+  line-height: 1.2;
+  margin-bottom: 0.35rem;
+}
+
+.panel-tagline {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2563EB;
+  margin-bottom: 1.25rem;
+}
+
+/* Banner / Image Placeholder Slot */
+.panel-banner-slot {
+  width: 100%;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #F8FAFC, #EDF2F7);
+  border: 2px dashed #CBD5E1;
+  position: relative;
+}
+
+.panel-image-placeholder {
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+}
+
+.placeholder-icon {
+  font-size: 2.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.placeholder-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1E293B;
+}
+
+.placeholder-hint {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748B;
+  max-width: 20rem;
+}
+
+.panel-meta-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: #F8FAFC;
+  border-radius: 1rem;
+  border: 1px solid #E2E8F0;
+  margin-bottom: 1.5rem;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.meta-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94A3B8;
+  letter-spacing: 0.05em;
+}
+
+.meta-value {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.panel-section {
+  margin-bottom: 1.5rem;
+}
+
+.panel-section-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.panel-desc {
+  font-size: 0.875rem;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.panel-achievements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.panel-achievements-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.85rem;
+  color: #1E293B;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.panel-achievements-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #10B981;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.panel-tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.panel-tech-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: #F1F5F9;
+  color: #334155;
+  border: 1px solid #E2E8F0;
+}
+
 /* On-Screen Navigation Dock (Desktop & Mobile) */
 .world-nav-pedals {
   position: absolute;

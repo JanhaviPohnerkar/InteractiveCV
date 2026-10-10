@@ -55,6 +55,66 @@
       <div id="popup-location" class="popup-location">Period • Location</div>
       <p id="popup-summary" class="popup-summary">Summary text goes here.</p>
       <div id="popup-tags" class="popup-tags"></div>
+      <button id="popup-open-panel-btn" class="popup-open-panel-btn">
+        <span>📖 View Full Project & Achievements</span>
+        <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Deep Project & Achievement Description Slide-over Panel -->
+  <div id="project-detail-panel" class="project-detail-panel" aria-hidden="true">
+    <div class="panel-backdrop" id="panel-backdrop"></div>
+    <div class="panel-drawer">
+      <div class="panel-header">
+        <div class="panel-badge-group">
+          <span id="panel-badge" class="panel-badge">PROJECT MILESTONE #1</span>
+          <span id="panel-category" class="panel-category">Robotics & Vision</span>
+        </div>
+        <button id="panel-close-btn" class="panel-close-btn" aria-label="Close Details">✕</button>
+      </div>
+
+      <div class="panel-body">
+        <h2 id="panel-title" class="panel-title">Project Title</h2>
+        <div id="panel-tagline" class="panel-tagline">Tagline subtitle goes here</div>
+
+        <!-- Banner / Image Showcase Slot (Ready for user images!) -->
+        <div class="panel-banner-slot" id="panel-banner-slot">
+          <div class="panel-image-placeholder">
+            <span class="placeholder-icon">🖼️</span>
+            <span class="placeholder-title" id="panel-slot-label">Project Visual / Architecture Diagram Slot</span>
+            <span class="placeholder-hint">You can drop project screenshots or banner images here</span>
+          </div>
+        </div>
+
+        <div class="panel-meta-bar">
+          <div class="meta-item">
+            <span class="meta-label">Location / Organization</span>
+            <span class="meta-value" id="panel-location">Organization</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Timeline</span>
+            <span class="meta-value" id="panel-timeline">Period</span>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-section-title">Overview & Engineering Challenge</h3>
+          <p id="panel-desc" class="panel-desc">Detailed project description goes here.</p>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-section-title">Key Technical Achievements</h3>
+          <ul id="panel-achievements" class="panel-achievements-list">
+            <!-- Dynamic achievements injected here -->
+          </ul>
+        </div>
+
+        <div class="panel-section">
+          <h3 class="panel-section-title">Core Technologies & Tools</h3>
+          <div id="panel-tech-tags" class="panel-tech-tags"></div>
+        </div>
+      </div>
     </div>
   </div>
 
