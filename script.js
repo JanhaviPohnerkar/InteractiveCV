@@ -200,6 +200,7 @@ let roadLength = 0;
 let activePopupId = null;
 let milestoneThresholds = [];
 const milestoneVisited = new Set();
+let cloudGroups = [];
 
 /* --------------------------------------------------------------------------
    PROJECT BUILDINGS IN THE SURROUNDING TOWN (WITH LOGO BANNERS)
@@ -407,11 +408,11 @@ function initBrunoWorld() {
   const canvas = document.getElementById('world-canvas');
   if (!container || !canvas || typeof THREE === 'undefined') return;
 
-  // Scene & Cheerful Warm Atmosphere (Vibrant yet Soft on the Eyes)
+  // Scene & Atmosphere: Cheerful Sky Blue Sky with Gentle Distance Fog
   scene = new THREE.Scene();
-  const skyColor = new THREE.Color(0xFEE2D5); // Warm cheerful sunrise peach / morning sky
+  const skyColor = new THREE.Color(0x7EC8E3); // Cheerful, vibrant yet gentle sky blue
   scene.background = skyColor;
-  scene.fog = new THREE.FogExp2(0xFEE2D5, 0.0032);
+  scene.fog = new THREE.FogExp2(0x89D2EC, 0.0028);
 
   // Camera: Elevated Isometric Diagonal Perspective
   const aspect = container.clientWidth / container.clientHeight;
@@ -429,14 +430,14 @@ function initBrunoWorld() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // Cheerful Warm Natural Sunlight & Sky/Ground Bounce
-  const ambientLight = new THREE.AmbientLight(0xFFF1E6, 1.05); // Cheerful warm fill
+  // Cheerful Natural Sunlight & Sky/Ground Bounce
+  const ambientLight = new THREE.AmbientLight(0xFFF9EE, 1.05); // Warm glowing sunlight ambient
   scene.add(ambientLight);
 
-  const hemiLight = new THREE.HemisphereLight(0xFDE68A, 0x86EFAC, 0.85); // Cheerful sun-yellow sky to fresh spring green meadow bounce
+  const hemiLight = new THREE.HemisphereLight(0x7EC8E3, 0xD97745, 0.85); // Sky blue to muted warm orange ground bounce
   scene.add(hemiLight);
 
-  const sunLight = new THREE.DirectionalLight(0xFFFBEB, 1.45); // Golden sunny directional light
+  const sunLight = new THREE.DirectionalLight(0xFFF7E6, 1.55); // Golden sunny directional light
   sunLight.position.set(-35, 55, 30);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -451,12 +452,12 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Warm Golden Sand / Ochre Clay Meadow (Matching reference town aesthetic)
+  // 1. Muted Warm Orange Meadow Ground (Earthy Terracotta Honey Ochre)
   const groundGeo = new THREE.PlaneGeometry(500, 500);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
-    color: 0xE8BD8C, // Warm golden sand / apricot clay meadow from reference
-    roughness: 0.88,
+    color: 0xD97745, // Warm muted terracotta orange clay
+    roughness: 0.86,
     metalness: 0.0
   });
   const ground = new THREE.Mesh(groundGeo, groundMat);
@@ -478,10 +479,13 @@ function initBrunoWorld() {
   // 6. Build the Adventurer Girl Character (Black hair, green & brown dress!)
   buildAdventurerCharacter();
 
-  // 7. Setup Controls & Raycasting
+  // 7. Build Fluffy Low-Poly Sky Clouds drifting peacefully overhead
+  buildSkyClouds();
+
+  // 8. Setup Controls & Raycasting
   setupWorldControls(container);
 
-  // 8. OrbitControls — enabled when character is idle for free camera panning
+  // 9. OrbitControls — enabled when character is idle for free camera panning
   if (typeof THREE.OrbitControls !== 'undefined') {
     window.orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
     window.orbitControls.enableDamping = true;
@@ -508,6 +512,7 @@ function initBrunoWorld() {
     updateCharacterPhysics(delta);
     updateCameraFollow();
     updatePopupScreenPosition();
+    updateSkyClouds(delta);
 
     if (window.orbitControls) window.orbitControls.update();
 
@@ -1026,14 +1031,14 @@ function buildFoliageAndRocks() {
   const rockMat = new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true });
   const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78553D, roughness: 0.85 }); // Warm chocolate mahogany trunk
 
-  // Cheerful, harmonious nature foliage palette (rich greens, warm golden yellows & blush)
+  // Warm sunny nature foliage palette (strictly warm greens, sunlit lime, olive & golden pear - no cold colors)
   const leafMats = [
-    new THREE.MeshStandardMaterial({ color: 0x6DAF55, roughness: 0.75, flatShading: true }), // Cheerful Spring Olive
-    new THREE.MeshStandardMaterial({ color: 0x489659, roughness: 0.75, flatShading: true }), // Crisp Emerald Grove
-    new THREE.MeshStandardMaterial({ color: 0x88C057, roughness: 0.75, flatShading: true }), // Sunny Apple Green
-    new THREE.MeshStandardMaterial({ color: 0xE5AD45, roughness: 0.75, flatShading: true }), // Warm Golden Sunlight
-    new THREE.MeshStandardMaterial({ color: 0xE89858, roughness: 0.75, flatShading: true }), // Warm Apricot Amber
-    new THREE.MeshStandardMaterial({ color: 0xF2A4B8, roughness: 0.75, flatShading: true })  // Cheerful Cherry Blossom
+    new THREE.MeshStandardMaterial({ color: 0x84CC16, roughness: 0.72, flatShading: true }), // Warm Sunny Lime
+    new THREE.MeshStandardMaterial({ color: 0x65A30D, roughness: 0.74, flatShading: true }), // Warm Golden Olive
+    new THREE.MeshStandardMaterial({ color: 0x4D7C0F, roughness: 0.76, flatShading: true }), // Deep Warm Forest Moss
+    new THREE.MeshStandardMaterial({ color: 0xA3E635, roughness: 0.70, flatShading: true }), // Bright Warm Chartreuse / Pear
+    new THREE.MeshStandardMaterial({ color: 0xCA8A04, roughness: 0.72, flatShading: true }), // Sunlit Golden Amber
+    new THREE.MeshStandardMaterial({ color: 0xEAB308, roughness: 0.70, flatShading: true })  // Warm Sunflower Yellow Leaf
   ];
 
   // Town Props Materials (Gentle, low-contrast finishes)
@@ -1294,122 +1299,138 @@ function buildFoliageAndRocks() {
     scene.add(pole);
   });
 
-  // 4. Dense Forest of Green Trees, Pines & White Birch Trunks (Inspired by Reference Image Town)
-  const birchTrunkMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.6 }); // White birch trunks from reference
+  // 4. Clustered Groves / Bunches of Warm Green Trees & White Birch Trunks (Reference Town aesthetic)
+  const birchTrunkMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.6 }); // Crisp white birch trunks
 
-  const treePositions = [
-    // Entrance park & groves
-    { x: -8.0, z: 12.0, h: 4.5, m: 0, birch: true }, { x: -2.5, z: 13.5, h: 5.0, m: 1, birch: false },
-    { x: 7.2, z: 13.0, h: 4.8, m: 0, birch: true }, { x: 12.0, z: 11.5, h: 4.0, m: 2, birch: false },
-    { x: -14.0, z: 6.0, h: 4.2, m: 1, birch: false }, { x: 15.0, z: 5.0, h: 4.8, m: 0, birch: true },
-    { x: -16.0, z: -6.0, h: 4.6, m: 2, birch: false }, { x: 17.0, z: -4.0, h: 5.2, m: 1, birch: false },
-    { x: -22.0, z: -8.0, h: 4.4, m: 0, birch: true }, { x: 24.0, z: -6.0, h: 4.8, m: 1, birch: false },
+  // Clustered grove anchor points across town greenbelts and meadows
+  const treeGroves = [
+    // Entrance park & welcome groves
+    { cx: -8.5, cz: 13.0, count: 5, radius: 3.5, baseH: 4.8 },
+    { cx: 8.0,  cz: 13.5, count: 5, radius: 3.2, baseH: 4.6 },
+    { cx: -18.0, cz: 6.0,  count: 4, radius: 4.0, baseH: 5.0 },
+    { cx: 18.0,  cz: 4.0,  count: 4, radius: 3.8, baseH: 4.8 },
+    { cx: -24.0, cz: -10,  count: 5, radius: 4.5, baseH: 5.2 },
+    { cx: 25.0,  cz: -8,   count: 5, radius: 4.5, baseH: 5.0 },
 
-    // Surrounding Project 1 (Creative CAD) & Milestone 1 (PSBA School)
-    { x: -36.0, z: -30, h: 5.4, m: 1, birch: false }, { x: -38.0, z: -45, h: 5.0, m: 0, birch: true },
-    { x: -22.0, z: -25, h: 4.2, m: 2, birch: false }, { x: -20.0, z: -48, h: 4.6, m: 1, birch: false },
-    { x: -8.5, z: -15, h: 4.5, m: 0, birch: true }, { x: 8.5, z: -18, h: 4.0, m: 1, birch: false },
-    { x: 12.0, z: -30, h: 4.8, m: 0, birch: false }, { x: 28.0, z: -25, h: 5.2, m: 1, birch: true },
-    { x: 30.0, z: -38, h: 4.6, m: 2, birch: false }, { x: 26.0, z: -45, h: 5.0, m: 0, birch: false },
+    // Surrounding Project 1 (Creative CAD) & Milestone 1 (PSBA)
+    { cx: -38.0, cz: -35,  count: 6, radius: 5.0, baseH: 5.3 },
+    { cx: -20.0, cz: -48,  count: 4, radius: 3.5, baseH: 4.6 },
+    { cx: 14.0,  cz: -28,  count: 4, radius: 3.8, baseH: 4.7 },
+    { cx: 32.0,  cz: -32,  count: 6, radius: 5.2, baseH: 5.2 },
 
-    // Surrounding Project 2 (IoT & Edge) & Milestone 2 (MITAOE Campus)
-    { x: 38.0, z: -42, h: 5.2, m: 1, birch: false }, { x: 40.0, z: -55, h: 4.8, m: 0, birch: true },
-    { x: 24.0, z: -55, h: 4.4, m: 2, birch: false }, { x: 36.0, z: -65, h: 5.4, m: 1, birch: false },
-    { x: 8.0, z: -68, h: 4.2, m: 0, birch: true }, { x: 7.0, z: -80, h: 4.6, m: 1, birch: false },
-    { x: 28.0, z: -75, h: 5.0, m: 2, birch: false }, { x: 30.0, z: -92, h: 4.8, m: 0, birch: true },
-    { x: -12.0, z: -65, h: 4.8, m: 1, birch: false }, { x: -26.0, z: -70, h: 4.5, m: 0, birch: true },
-    { x: -30.0, z: -85, h: 5.2, m: 2, birch: false }, { x: -14.0, z: -88, h: 4.4, m: 1, birch: false },
+    // Surrounding Project 2 (IoT & Edge) & Milestone 2 (MITAOE)
+    { cx: 40.0,  cz: -58,  count: 6, radius: 5.0, baseH: 5.4 },
+    { cx: 28.0,  cz: -72,  count: 5, radius: 4.0, baseH: 4.8 },
+    { cx: -14.0, cz: -68,  count: 5, radius: 4.2, baseH: 4.9 },
+    { cx: -32.0, cz: -80,  count: 6, radius: 5.0, baseH: 5.2 },
 
     // Surrounding Project 3 (Vision AI) & Milestone 3 (Maker Lab)
-    { x: -40.0, z: -95, h: 5.4, m: 0, birch: true }, { x: -42.0, z: -110, h: 5.0, m: 1, birch: false },
-    { x: -24.0, z: -95, h: 4.2, m: 2, birch: false }, { x: -24.0, z: -120, h: 4.8, m: 0, birch: true },
-    { x: -8.0, z: -118, h: 4.2, m: 1, birch: false }, { x: 6.0, z: -110, h: 4.5, m: 2, birch: false },
-    { x: 22.0, z: -115, h: 5.2, m: 0, birch: true }, { x: 24.0, z: -130, h: 4.6, m: 1, birch: false },
-    { x: 38.0, z: -118, h: 5.0, m: 2, birch: false }, { x: 40.0, z: -135, h: 5.4, m: 0, birch: true },
+    { cx: -42.0, cz: -105, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: -22.0, cz: -118, count: 5, radius: 4.0, baseH: 4.8 },
+    { cx: 24.0,  cz: -112, count: 5, radius: 4.2, baseH: 5.0 },
+    { cx: 42.0,  cz: -128, count: 6, radius: 5.2, baseH: 5.3 },
 
     // Surrounding Project 4 (Spatial SLAM) & Milestone 4 (Coppercloud HQ)
-    { x: 38.0, z: -140, h: 4.8, m: 1, birch: false }, { x: 42.0, z: -155, h: 5.2, m: 0, birch: true },
-    { x: 24.0, z: -145, h: 4.2, m: 2, birch: false }, { x: 22.0, z: -160, h: 4.6, m: 1, birch: false },
-    { x: 8.0, z: -162, h: 4.2, m: 0, birch: true }, { x: -8.0, z: -155, h: 4.5, m: 1, birch: false },
-    { x: -24.0, z: -150, h: 5.0, m: 2, birch: false }, { x: -26.0, z: -165, h: 5.2, m: 0, birch: true },
-    { x: -32.0, z: -175, h: 4.8, m: 1, birch: false }, { x: -6.0, z: -180, h: 4.0, m: 2, birch: false },
+    { cx: 42.0,  cz: -150, count: 6, radius: 5.0, baseH: 5.2 },
+    { cx: 22.0,  cz: -162, count: 4, radius: 3.8, baseH: 4.6 },
+    { cx: -22.0, cz: -152, count: 5, radius: 4.2, baseH: 4.8 },
+    { cx: -34.0, cz: -170, count: 6, radius: 5.0, baseH: 5.2 },
 
     // Surrounding Project 5 (3D Twins) & Milestone 5 (Coppercloud R&D)
-    { x: -36.0, z: -175, h: 5.2, m: 0, birch: true }, { x: -38.0, z: -190, h: 5.0, m: 1, birch: false },
-    { x: -20.0, z: -185, h: 4.4, m: 2, birch: false }, { x: -16.0, z: -200, h: 4.8, m: 0, birch: true },
-    { x: 10.0, z: -182, h: 4.5, m: 1, birch: false }, { x: 12.0, z: -200, h: 4.6, m: 2, birch: false },
-    { x: 32.0, z: -190, h: 5.0, m: 0, birch: true }, { x: 34.0, z: -205, h: 4.4, m: 1, birch: false },
-    { x: 40.0, z: -200, h: 5.4, m: 2, birch: false }, { x: 42.0, z: -215, h: 5.0, m: 0, birch: true },
+    { cx: -40.0, cz: -192, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: -18.0, cz: -198, count: 4, radius: 3.5, baseH: 4.7 },
+    { cx: 16.0,  cz: -192, count: 4, radius: 3.8, baseH: 4.8 },
+    { cx: 38.0,  cz: -202, count: 6, radius: 5.0, baseH: 5.2 },
 
-    // Surrounding Project 6 (Clean Tech) & Milestone 6 (Clarity Lab IITJ)
-    { x: 38.0, z: -225, h: 5.2, m: 1, birch: false }, { x: 40.0, z: -238, h: 4.8, m: 0, birch: true },
-    { x: 22.0, z: -225, h: 4.2, m: 2, birch: false }, { x: 18.0, z: -245, h: 4.6, m: 1, birch: false },
-    { x: 34.0, z: -240, h: 4.8, m: 0, birch: true }, { x: 36.0, z: -255, h: 5.2, m: 2, birch: false },
-    { x: -14.0, z: -235, h: 4.6, m: 1, birch: false }, { x: -26.0, z: -240, h: 5.0, m: 0, birch: true },
-    { x: -34.0, z: -245, h: 5.2, m: 2, birch: false }, { x: -36.0, z: -260, h: 5.0, m: 1, birch: false },
+    // Surrounding Project 6 (Clean Tech) & Milestone 6 (Clarity Lab)
+    { cx: 40.0,  cz: -235, count: 6, radius: 5.2, baseH: 5.3 },
+    { cx: 20.0,  cz: -242, count: 4, radius: 3.8, baseH: 4.8 },
+    { cx: -18.0, cz: -238, count: 5, radius: 4.0, baseH: 4.7 },
+    { cx: -36.0, cz: -255, count: 6, radius: 5.0, baseH: 5.2 },
 
-    // Surrounding Project 7 (Robotics) & Milestone 7 (Digital Twin Lab)
-    { x: -32.0, z: -255, h: 5.2, m: 0, birch: true }, { x: -36.0, z: -270, h: 5.0, m: 1, birch: false },
-    { x: -18.0, z: -265, h: 4.4, m: 2, birch: false }, { x: -20.0, z: -285, h: 4.8, m: 0, birch: true },
-    { x: 8.0, z: -255, h: 4.5, m: 1, birch: false }, { x: 12.0, z: -270, h: 4.6, m: 2, birch: false },
-    { x: 24.0, z: -265, h: 5.2, m: 0, birch: true }, { x: 26.0, z: -285, h: 5.0, m: 1, birch: false },
-    { x: -2.0, z: -295, h: 5.0, m: 2, birch: false }, { x: 14.0, z: -298, h: 4.8, m: 0, birch: true },
-    { x: -16.0, z: -305, h: 4.6, m: 1, birch: false }, { x: 18.0, z: -310, h: 5.2, m: 0, birch: true }
+    // Surrounding Project 7 (Robotics) & Milestone 7 (Digital Twin Lab & Graduation)
+    { cx: -34.0, cz: -275, count: 6, radius: 5.0, baseH: 5.3 },
+    { cx: -18.0, cz: -290, count: 5, radius: 4.2, baseH: 4.9 },
+    { cx: 24.0,  cz: -275, count: 6, radius: 4.8, baseH: 5.2 },
+    { cx: 16.0,  cz: -302, count: 5, radius: 4.2, baseH: 5.0 },
+    { cx: -6.0,  cz: -308, count: 5, radius: 4.0, baseH: 4.8 }
   ];
 
-  treePositions.forEach(tp => {
-    const treeGroup = new THREE.Group();
-    treeGroup.position.set(tp.x, 0, tp.z);
+  let treeIdx = 0;
+  treeGroves.forEach(grove => {
+    // Spawn tree bunch clustered tightly around the grove center
+    for (let i = 0; i < grove.count; i++) {
+      treeIdx++;
+      // Distribute naturally within cluster: center tree + surrounding ring
+      let ox = 0, oz = 0;
+      if (i > 0) {
+        const angle = (i * ((Math.PI * 2) / (grove.count - 1))) + ((treeIdx % 5) * 0.2);
+        const dist = 1.3 + (i / grove.count) * (grove.radius - 1.2);
+        ox = Math.cos(angle) * dist;
+        oz = Math.sin(angle) * dist;
+      }
 
-    const chosenLeafMat = leafMats[tp.m % leafMats.length];
-    const trunkMaterial = tp.birch ? birchTrunkMat : trunkMat;
+      const tx = grove.cx + ox;
+      const tz = grove.cz + oz;
+      const th = grove.baseH * (0.85 + ((treeIdx % 7) * 0.05));
+      const matIdx = (treeIdx * 2 + (i % 3)) % leafMats.length;
+      const isBirch = (treeIdx % 3 === 0);
 
-    // Tree trunk
-    const trunkHeight = tp.h * 0.42;
-    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, trunkHeight, 6), trunkMaterial);
-    trunk.position.y = trunkHeight / 2;
-    trunk.castShadow = true;
-    treeGroup.add(trunk);
+      const treeGroup = new THREE.Group();
+      treeGroup.position.set(tx, 0, tz);
 
-    // Varied low-poly crown shapes for cute town feel
-    if (tp.m % 3 === 0) {
-      // Round fluffy dual spheres
-      const crown1 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.5, 0), chosenLeafMat);
-      crown1.position.y = trunkHeight + 0.9;
-      crown1.castShadow = true;
-      treeGroup.add(crown1);
+      const chosenLeafMat = leafMats[matIdx];
+      const trunkMaterial = isBirch ? birchTrunkMat : trunkMat;
 
-      const crown2 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.1, 0), chosenLeafMat);
-      crown2.position.set(0.3, trunkHeight + 1.9, 0.2);
-      crown2.castShadow = true;
-      treeGroup.add(crown2);
-    } else if (tp.m % 3 === 1) {
-      // Tiered cone pine/fir tree
-      const t1 = new THREE.Mesh(new THREE.ConeGeometry(1.8, 2.0, 5), chosenLeafMat);
-      t1.position.y = trunkHeight + 0.8;
-      t1.castShadow = true;
-      treeGroup.add(t1);
+      // Tree trunk
+      const trunkHeight = th * 0.40;
+      const trunkRadius = 0.16 + (th * 0.02);
+      const trunk = new THREE.Mesh(new THREE.CylinderGeometry(trunkRadius * 0.7, trunkRadius, trunkHeight, 6), trunkMaterial);
+      trunk.position.y = trunkHeight / 2;
+      trunk.castShadow = true;
+      treeGroup.add(trunk);
 
-      const t2 = new THREE.Mesh(new THREE.ConeGeometry(1.3, 1.8, 5), chosenLeafMat);
-      t2.position.y = trunkHeight + 1.8;
-      t2.castShadow = true;
-      treeGroup.add(t2);
-    } else {
-      // Cubic stylized geometric tree
-      const box = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.4, 2.2), chosenLeafMat);
-      box.position.y = trunkHeight + 1.2;
-      box.rotation.y = Math.PI / 4;
-      box.castShadow = true;
-      treeGroup.add(box);
+      // Low-poly crown stylized shapes (Dual spheres, cone pine, and stylized block/cone)
+      const crownType = treeIdx % 3;
+      if (crownType === 0) {
+        // Round fluffy dual spheres (Warm broadleaf)
+        const crown1 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.4 * (th / 4.8), 0), chosenLeafMat);
+        crown1.position.y = trunkHeight + 0.85;
+        crown1.castShadow = true;
+        treeGroup.add(crown1);
 
-      const tip = new THREE.Mesh(new THREE.ConeGeometry(1.2, 1.4, 4), chosenLeafMat);
-      tip.position.y = trunkHeight + 2.7;
-      tip.rotation.y = Math.PI / 4;
-      tip.castShadow = true;
-      treeGroup.add(tip);
+        const crown2 = new THREE.Mesh(new THREE.DodecahedronGeometry(1.05 * (th / 4.8), 0), chosenLeafMat);
+        crown2.position.set(0.25, trunkHeight + 1.8, 0.2);
+        crown2.castShadow = true;
+        treeGroup.add(crown2);
+      } else if (crownType === 1) {
+        // Tiered warm cone pine
+        const t1 = new THREE.Mesh(new THREE.ConeGeometry(1.7 * (th / 4.8), 2.0, 5), chosenLeafMat);
+        t1.position.y = trunkHeight + 0.8;
+        t1.castShadow = true;
+        treeGroup.add(t1);
+
+        const t2 = new THREE.Mesh(new THREE.ConeGeometry(1.2 * (th / 4.8), 1.8, 5), chosenLeafMat);
+        t2.position.y = trunkHeight + 1.75;
+        t2.castShadow = true;
+        treeGroup.add(t2);
+      } else {
+        // Stylized cute cubic & pyramid canopy
+        const box = new THREE.Mesh(new THREE.BoxGeometry(2.1 * (th / 4.8), 2.3 * (th / 4.8), 2.1 * (th / 4.8)), chosenLeafMat);
+        box.position.y = trunkHeight + 1.15;
+        box.rotation.y = (treeIdx % 4) * (Math.PI / 8);
+        box.castShadow = true;
+        treeGroup.add(box);
+
+        const tip = new THREE.Mesh(new THREE.ConeGeometry(1.15 * (th / 4.8), 1.35, 4), chosenLeafMat);
+        tip.position.y = trunkHeight + 2.55;
+        tip.rotation.y = box.rotation.y;
+        tip.castShadow = true;
+        treeGroup.add(tip);
+      }
+
+      scene.add(treeGroup);
     }
-
-    scene.add(treeGroup);
   });
 
   // 5. Flower bushes along the sidewalk edges (Soft pastel garden accents)
@@ -1425,6 +1446,78 @@ function buildFoliageAndRocks() {
     bush.castShadow = true;
     scene.add(bush);
   }
+}
+
+/* --------------------------------------------------------------------------
+   7B. FLUFFY LOW-POLY SKY CLOUDS
+   -------------------------------------------------------------------------- */
+function buildSkyClouds() {
+  cloudGroups = [];
+  const cloudMat = new THREE.MeshStandardMaterial({
+    color: 0xFFFFFF,
+    roughness: 0.95,
+    metalness: 0.0,
+    flatShading: true
+  });
+
+  // 16 clouds scattered across the sky at varying altitudes and speeds
+  const cloudConfigs = [
+    { x: -50, y: 38, z: 20,   s: 1.2, speed: 1.8 },
+    { x: 30,  y: 42, z: 10,   s: 1.0, speed: 1.4 },
+    { x: -20, y: 35, z: -25,  s: 1.4, speed: 2.1 },
+    { x: 45,  y: 46, z: -40,  s: 1.1, speed: 1.6 },
+    { x: -60, y: 40, z: -70,  s: 1.5, speed: 2.0 },
+    { x: 10,  y: 44, z: -90,  s: 1.2, speed: 1.7 },
+    { x: 55,  y: 37, z: -115, s: 1.3, speed: 1.5 },
+    { x: -35, y: 45, z: -135, s: 1.6, speed: 2.2 },
+    { x: 35,  y: 41, z: -160, s: 1.2, speed: 1.8 },
+    { x: -50, y: 43, z: -185, s: 1.4, speed: 1.9 },
+    { x: 20,  y: 39, z: -210, s: 1.1, speed: 1.5 },
+    { x: -25, y: 47, z: -235, s: 1.5, speed: 2.3 },
+    { x: 48,  y: 42, z: -260, s: 1.3, speed: 1.7 },
+    { x: -10, y: 44, z: -285, s: 1.4, speed: 2.0 },
+    { x: -65, y: 36, z: -310, s: 1.2, speed: 1.6 },
+    { x: 35,  y: 45, z: -330, s: 1.5, speed: 2.1 }
+  ];
+
+  cloudConfigs.forEach(cfg => {
+    const cg = new THREE.Group();
+    cg.position.set(cfg.x, cfg.y, cfg.z);
+    cg.userData = { speed: cfg.speed, initialZ: cfg.z };
+
+    // Compound fluffy cloud composed of overlapping low-poly spheres
+    const puffGeos = [
+      { r: 2.2, ox: 0,    oy: 0,    oz: 0 },
+      { r: 1.8, ox: -1.8, oy: -0.2, oz: 0.3 },
+      { r: 1.9, ox: 1.9,  oy: -0.1, oz: -0.2 },
+      { r: 1.4, ox: -3.2, oy: -0.5, oz: 0.1 },
+      { r: 1.5, ox: 3.3,  oy: -0.4, oz: 0.2 },
+      { r: 1.6, ox: 0.8,  oy: 0.8,  oz: 0.4 },
+      { r: 1.4, ox: -0.9, oy: 0.7,  oz: -0.3 }
+    ];
+
+    puffGeos.forEach(p => {
+      const puff = new THREE.Mesh(new THREE.DodecahedronGeometry(p.r * cfg.s, 1), cloudMat);
+      puff.position.set(p.ox * cfg.s, p.oy * cfg.s, p.oz * cfg.s);
+      puff.castShadow = true; // Clouds cast subtle soft shadows on the terrain!
+      cg.add(puff);
+    });
+
+    scene.add(cg);
+    cloudGroups.push(cg);
+  });
+}
+
+function updateSkyClouds(delta) {
+  if (!cloudGroups || !cloudGroups.length) return;
+  // Slowly drift clouds across the X-axis from west to east
+  cloudGroups.forEach(cg => {
+    cg.position.x += (cg.userData.speed || 1.8) * delta;
+    // Wrap around gracefully when drifting past bounds
+    if (cg.position.x > 120) {
+      cg.position.x = -120;
+    }
+  });
 }
 
 /* --------------------------------------------------------------------------
