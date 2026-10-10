@@ -412,11 +412,11 @@ function initBrunoWorld() {
   scene = new THREE.Scene();
   const skyColor = new THREE.Color(0x7EC8E3); // Cheerful, vibrant yet gentle sky blue
   scene.background = skyColor;
-  scene.fog = new THREE.FogExp2(0x89D2EC, 0.0028);
+  scene.fog = new THREE.FogExp2(0x89D2EC, 0.0018); // Soft distant atmospheric fog
 
-  // Camera: Elevated Isometric Diagonal Perspective
+  // Camera: Elevated Isometric Diagonal Perspective (Extended far plane for expansive scenery)
   const aspect = container.clientWidth / container.clientHeight;
-  camera = new THREE.PerspectiveCamera(38, aspect, 0.5, 600);
+  camera = new THREE.PerspectiveCamera(38, aspect, 0.5, 1200);
   camera.position.set(-18, 22, 18);
 
   // Renderer with Soft Shadows
@@ -438,13 +438,13 @@ function initBrunoWorld() {
   scene.add(hemiLight);
 
   const sunLight = new THREE.DirectionalLight(0xFFF7E6, 1.55); // Golden sunny directional light
-  sunLight.position.set(-35, 55, 30);
+  sunLight.position.set(-45, 75, 40);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
   sunLight.shadow.mapSize.height = 2048;
   sunLight.shadow.camera.near = 10;
-  sunLight.shadow.camera.far = 180;
-  const shadowD = 45;
+  sunLight.shadow.camera.far = 350;
+  const shadowD = 65;
   sunLight.shadow.camera.left = -shadowD;
   sunLight.shadow.camera.right = shadowD;
   sunLight.shadow.camera.top = shadowD;
@@ -452,8 +452,8 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Muted Warm Orange Meadow Ground (Earthy Terracotta Honey Ochre)
-  const groundGeo = new THREE.PlaneGeometry(500, 500);
+  // 1. Expansive Muted Warm Orange Ground Plane (Generously envelopes the whole town and mountain horizons)
+  const groundGeo = new THREE.PlaneGeometry(1200, 1200);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
     color: 0xD97745, // Warm muted terracotta orange clay
@@ -461,6 +461,7 @@ function initBrunoWorld() {
     metalness: 0.0
   });
   const ground = new THREE.Mesh(groundGeo, groundMat);
+  ground.position.set(0, 0, -140); // Centered right along the full journey of the road and town
   ground.receiveShadow = true;
   scene.add(ground);
 
@@ -482,7 +483,10 @@ function initBrunoWorld() {
   // 7. Build Fluffy Low-Poly Sky Clouds drifting peacefully overhead
   buildSkyClouds();
 
-  // 8. Setup Controls & Raycasting
+  // 8. Build Distant Low-Poly Mountain Ranges in the Open Valleys & Horizons
+  buildLowPolyMountains();
+
+  // 9. Setup Controls & Raycasting
   setupWorldControls(container);
 
   // 9. OrbitControls — enabled when character is idle for free camera panning
@@ -1514,9 +1518,118 @@ function updateSkyClouds(delta) {
   cloudGroups.forEach(cg => {
     cg.position.x += (cg.userData.speed || 1.8) * delta;
     // Wrap around gracefully when drifting past bounds
-    if (cg.position.x > 120) {
-      cg.position.x = -120;
+    if (cg.position.x > 180) {
+      cg.position.x = -180;
     }
+  });
+}
+
+/* --------------------------------------------------------------------------
+   7C. LOW-POLY MOUNTAINS IN OPEN MEADOWS & DISTANT HORIZONS (WHERE NO BUILDINGS LIE)
+   -------------------------------------------------------------------------- */
+function buildLowPolyMountains() {
+  // Cohesive clay mountain materials (warm terracotta rock, dusty canyon ochre, and warm chalk caps)
+  const mountainMats = [
+    new THREE.MeshStandardMaterial({ color: 0xC06A42, roughness: 0.88, flatShading: true }), // Deep terracotta rock
+    new THREE.MeshStandardMaterial({ color: 0xCF7F4E, roughness: 0.86, flatShading: true }), // Warm clay canyon stone
+    new THREE.MeshStandardMaterial({ color: 0xB55C36, roughness: 0.90, flatShading: true }), // Earthy rust ridge
+    new THREE.MeshStandardMaterial({ color: 0x9F4C28, roughness: 0.92, flatShading: true })  // Rich shaded cliff
+  ];
+  const capMat = new THREE.MeshStandardMaterial({ color: 0xFDEED9, roughness: 0.85, flatShading: true }); // Soft warm chalk peak
+
+  // Mountain ridges strategically placed in valleys and distant perimeters where no buildings or roads exist
+  const mountainClusters = [
+    // 1. Far North Horizon (Behind Spawn point JANHAVI text)
+    { x: -110, z: 90, r: 42, h: 58, sides: 5, matIdx: 0, cap: true },
+    { x: -60,  z: 110, r: 50, h: 72, sides: 6, matIdx: 1, cap: true },
+    { x: 0,    z: 125, r: 56, h: 80, sides: 5, matIdx: 0, cap: true },
+    { x: 65,   z: 110, r: 48, h: 68, sides: 6, matIdx: 2, cap: true },
+    { x: 120,  z: 85,  r: 40, h: 54, sides: 5, matIdx: 1, cap: true },
+
+    // 2. Distant Far-West Mountain Range (X between -80 and -140, completely clear of west buildings)
+    { x: -105, z: 40,   r: 38, h: 52, sides: 5, matIdx: 1, cap: true },
+    { x: -120, z: -10,  r: 44, h: 62, sides: 6, matIdx: 0, cap: true },
+    { x: -95,  z: -45,  r: 34, h: 46, sides: 5, matIdx: 2, cap: false },
+    { x: -125, z: -75,  r: 46, h: 66, sides: 6, matIdx: 1, cap: true },
+    { x: -105, z: -110, r: 40, h: 56, sides: 5, matIdx: 0, cap: true },
+    { x: -130, z: -145, r: 48, h: 70, sides: 6, matIdx: 2, cap: true },
+    { x: -110, z: -180, r: 42, h: 58, sides: 5, matIdx: 1, cap: true },
+    { x: -125, z: -215, r: 46, h: 64, sides: 6, matIdx: 0, cap: true },
+    { x: -95,  z: -245, r: 36, h: 50, sides: 5, matIdx: 2, cap: false },
+    { x: -115, z: -280, r: 44, h: 62, sides: 6, matIdx: 1, cap: true },
+
+    // 3. Distant Far-East Mountain Range (X between 80 and 150, completely clear of east buildings)
+    { x: 105, z: 35,   r: 36, h: 50, sides: 5, matIdx: 0, cap: true },
+    { x: 125, z: -15,  r: 45, h: 64, sides: 6, matIdx: 1, cap: true },
+    { x: 95,  z: -50,  r: 34, h: 45, sides: 5, matIdx: 2, cap: false },
+    { x: 130, z: -80,  r: 48, h: 72, sides: 6, matIdx: 0, cap: true },
+    { x: 105, z: -115, r: 38, h: 54, sides: 5, matIdx: 1, cap: true },
+    { x: 125, z: -150, r: 46, h: 68, sides: 6, matIdx: 2, cap: true },
+    { x: 100, z: -185, r: 40, h: 56, sides: 5, matIdx: 0, cap: true },
+    { x: 135, z: -220, r: 50, h: 74, sides: 6, matIdx: 1, cap: true },
+    { x: 110, z: -255, r: 42, h: 60, sides: 5, matIdx: 2, cap: true },
+    { x: 125, z: -290, r: 46, h: 65, sides: 6, matIdx: 0, cap: true },
+
+    // 4. Distant Southern Horizon (Beyond the terminus of the road at z = -270)
+    { x: -95,  z: -340, r: 48, h: 68, sides: 6, matIdx: 1, cap: true },
+    { x: -45,  z: -360, r: 54, h: 78, sides: 5, matIdx: 0, cap: true },
+    { x: 10,   z: -375, r: 60, h: 86, sides: 6, matIdx: 2, cap: true },
+    { x: 65,   z: -360, r: 52, h: 74, sides: 5, matIdx: 1, cap: true },
+    { x: 115,  z: -335, r: 46, h: 64, sides: 6, matIdx: 0, cap: true },
+    { x: -10,  z: -330, r: 38, h: 52, sides: 5, matIdx: 1, cap: true },
+
+    // 5. Open Scenic Meadow Valleys (Deep empty gaps between milestone building clearings)
+    // Between Welcome Gateway and Milestone 1 (East meadow pocket)
+    { x: 68,  z: -10,  r: 28, h: 36, sides: 5, matIdx: 2, cap: false },
+    { x: 78,  z: 15,   r: 24, h: 30, sides: 5, matIdx: 1, cap: false },
+    // Deep West Valley behind Milestone 1
+    { x: -68, z: -55,  r: 26, h: 34, sides: 5, matIdx: 0, cap: false },
+    // Deep East Valley behind Milestone 3
+    { x: 72,  z: -95,  r: 27, h: 35, sides: 5, matIdx: 1, cap: false },
+    // Deep West Valley between Milestone 3 and Milestone 4
+    { x: -65, z: -140, r: 25, h: 32, sides: 5, matIdx: 2, cap: false },
+    // Deep East Valley between Milestone 5 and Milestone 6
+    { x: 74,  z: -215, r: 26, h: 34, sides: 5, matIdx: 0, cap: false },
+    // Deep West Valley between Milestone 6 and 7
+    { x: -62, z: -270, r: 24, h: 30, sides: 5, matIdx: 1, cap: false }
+  ];
+
+  mountainClusters.forEach(m => {
+    const mGroup = new THREE.Group();
+    mGroup.position.set(m.x, 0, m.z);
+
+    const chosenMat = mountainMats[m.matIdx % mountainMats.length];
+
+    // Primary low-poly faceted cone for stylized mountain body
+    const coneGeo = new THREE.ConeGeometry(m.r, m.h, m.sides);
+    const coneMesh = new THREE.Mesh(coneGeo, chosenMat);
+    coneMesh.position.y = m.h / 2;
+    coneMesh.rotation.y = (m.x * 0.17 + m.z * 0.11);
+    coneMesh.castShadow = true;
+    coneMesh.receiveShadow = true;
+    mGroup.add(coneMesh);
+
+    // Subsidiary ridge shoulder peak for natural organic mountain silhouette
+    const subGeo = new THREE.ConeGeometry(m.r * 0.65, m.h * 0.68, m.sides);
+    const subMesh = new THREE.Mesh(subGeo, chosenMat);
+    subMesh.position.set(m.r * 0.35, (m.h * 0.68) / 2, m.r * 0.25);
+    subMesh.rotation.y = coneMesh.rotation.y + 0.8;
+    subMesh.castShadow = true;
+    subMesh.receiveShadow = true;
+    mGroup.add(subMesh);
+
+    // Warm chalk / snow-dusted peak cap on major summits
+    if (m.cap) {
+      const capH = m.h * 0.28;
+      const capGeo = new THREE.ConeGeometry(m.r * 0.28, capH, m.sides);
+      const capMesh = new THREE.Mesh(capGeo, capMat);
+      capMesh.position.y = m.h - (capH / 2);
+      capMesh.rotation.y = coneMesh.rotation.y;
+      capMesh.castShadow = true;
+      mGroup.add(capMesh);
+    }
+
+    scene.add(mGroup);
   });
 }
 
