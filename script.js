@@ -522,18 +522,43 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Expansive Warm Muddy Terracotta Ground Plane
-  const groundGeo = new THREE.PlaneGeometry(1600, 1600);
-  groundGeo.rotateX(-Math.PI / 2);
-  const groundMat = new THREE.MeshStandardMaterial({
+  // 1. Dual-Tone Terrain: Warm Terracotta Earth for Journey, Sleek Tech Indigo for Projects Boulevard
+  // 1A. Milestone Section Ground (Warm Muddy Terracotta Earth: z = +200 to -285)
+  const milestoneGroundGeo = new THREE.PlaneGeometry(1600, 500);
+  milestoneGroundGeo.rotateX(-Math.PI / 2);
+  const milestoneGroundMat = new THREE.MeshStandardMaterial({
     color: 0x9E5630, // Rich warm muddy earth terracotta / clay soil
     roughness: 0.90,
     metalness: 0.0
   });
-  const ground = new THREE.Mesh(groundGeo, groundMat);
-  ground.position.set(0, 0, -360); // Centered across the entire journey from spawn (z=0) to boulevard end (z=-735)
-  ground.receiveShadow = true;
-  scene.add(ground);
+  const milestoneGround = new THREE.Mesh(milestoneGroundGeo, milestoneGroundMat);
+  milestoneGround.position.set(0, -0.01, -35);
+  milestoneGround.receiveShadow = true;
+  scene.add(milestoneGround);
+
+  // 1B. Project Showcase Boulevard Ground (Deep Tech Slate / Electric Cobalt Earth: z = -285 to -850)
+  const projectGroundGeo = new THREE.PlaneGeometry(1600, 600);
+  projectGroundGeo.rotateX(-Math.PI / 2);
+  const projectGroundMat = new THREE.MeshStandardMaterial({
+    color: 0x1E293B, // Deep tech slate / midnight navy foundation
+    roughness: 0.85,
+    metalness: 0.1
+  });
+  const projectGround = new THREE.Mesh(projectGroundGeo, projectGroundMat);
+  projectGround.position.set(0, 0, -580);
+  projectGround.receiveShadow = true;
+  scene.add(projectGround);
+
+  // 1C. Tech Boulevard Transition Carpet / Apron at Archway (z = -285)
+  const apronGeo = new THREE.BoxGeometry(24, 0.04, 20);
+  const apronMat = new THREE.MeshStandardMaterial({
+    color: 0x0F172A,
+    roughness: 0.7
+  });
+  const apron = new THREE.Mesh(apronGeo, apronMat);
+  apron.position.set(-6, 0.01, -285);
+  apron.receiveShadow = true;
+  scene.add(apron);
 
   // 2. Build 3D Extruded Text "JANHAVI" at Spawn
   buildBigSculpturalText();
@@ -543,6 +568,9 @@ function initBrunoWorld() {
 
   // 4. Build 7 Milestone Buildings along the Road
   buildMilestoneBuildings();
+
+  // 4B. Build Grand Gateway Archway ("MY PROJECTS" Entrance Portal at z = -286)
+  buildProjectsWelcomeArchway();
 
   // 5. Build Scattered Low-Poly Trees and White Chalk Rocks
   buildFoliageAndRocks();
@@ -707,6 +735,165 @@ function buildBigSculpturalText() {
   textGroup.add(gI);
 
   scene.add(textGroup);
+}
+
+/* --------------------------------------------------------------------------
+   4B. GRAND PROJECTS GATEWAY ARCHWAY ("JANHAVI'S PROJECTS" PORTAL)
+   An impressive architectural portal gate spanning the road at z = -286
+   -------------------------------------------------------------------------- */
+function buildProjectsWelcomeArchway() {
+  const gateGroup = new THREE.Group();
+  gateGroup.position.set(-6, 0, -286);
+  gateGroup.rotation.y = 0.40; // Angled perpendicularly across road heading into turn 1
+
+  // Materials: Deep midnight slate pylons, electric cyan neon trims & warm golden glowing sign
+  const pillarMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, roughness: 0.4, metalness: 0.3 });
+  const trimMat = new THREE.MeshStandardMaterial({ color: 0x38BDF8, emissive: 0x0284C7, emissiveIntensity: 0.7 });
+  const beamMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.35, metalness: 0.4 });
+  const goldSignMat = new THREE.MeshStandardMaterial({ color: 0xF59E0B, emissive: 0xD97706, emissiveIntensity: 0.6 });
+
+  // 1. Two Massive Gateway Support Pillars (Left & Right)
+  const pillarW = 1.4, pillarH = 9.2, pillarD = 1.6;
+  const span = 11.0; // Clear span over the 5.6m road and verges
+
+  [-span / 2, span / 2].forEach((px, idx) => {
+    // Pedestal base
+    const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.9, 2.4), pillarMat);
+    baseMesh.position.set(px, 0.45, 0);
+    baseMesh.castShadow = true;
+    gateGroup.add(baseMesh);
+
+    // Glowing cyan base rim
+    const rimMesh = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.16, 2.5), trimMat);
+    rimMesh.position.set(px, 0.92, 0);
+    gateGroup.add(rimMesh);
+
+    // Main column
+    const colMesh = new THREE.Mesh(new THREE.BoxGeometry(pillarW, pillarH, pillarD), pillarMat);
+    colMesh.position.set(px, 0.9 + pillarH / 2, 0);
+    colMesh.castShadow = true;
+    gateGroup.add(colMesh);
+
+    // Vertical glowing light strips running up each pillar
+    const stripL = new THREE.Mesh(new THREE.BoxGeometry(0.12, pillarH - 1.2, 0.1), trimMat);
+    stripL.position.set(px, 0.9 + pillarH / 2, pillarD / 2 + 0.05);
+    gateGroup.add(stripL);
+
+    // Top capital block
+    const capMesh = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.8, 2.0), pillarMat);
+    capMesh.position.set(px, 0.9 + pillarH + 0.4, 0);
+    gateGroup.add(capMesh);
+
+    // Top beacon orb
+    const beaconGeo = new THREE.SphereGeometry(0.5, 12, 12);
+    const beaconMat = new THREE.MeshStandardMaterial({ color: 0x38BDF8, emissive: 0x38BDF8, emissiveIntensity: 1.2 });
+    const beacon = new THREE.Mesh(beaconGeo, beaconMat);
+    beacon.position.set(px, 0.9 + pillarH + 1.2, 0);
+    gateGroup.add(beacon);
+  });
+
+  // 2. Heavy Overhead Span Girders
+  const topGirder = new THREE.Mesh(new THREE.BoxGeometry(span + 3.2, 1.4, 1.8), beamMat);
+  topGirder.position.set(0, 9.8, 0);
+  topGirder.castShadow = true;
+  gateGroup.add(topGirder);
+
+  const lowerGirder = new THREE.Mesh(new THREE.BoxGeometry(span + 1.0, 0.6, 1.2), beamMat);
+  lowerGirder.position.set(0, 8.6, 0);
+  gateGroup.add(lowerGirder);
+
+  // Horizontal neon accent bars running across the girders
+  const neonBarF = new THREE.Mesh(new THREE.BoxGeometry(span + 2.4, 0.14, 0.1), trimMat);
+  neonBarF.position.set(0, 9.8, 0.95);
+  gateGroup.add(neonBarF);
+
+  const neonBarB = new THREE.Mesh(new THREE.BoxGeometry(span + 2.4, 0.14, 0.1), trimMat);
+  neonBarB.position.set(0, 9.8, -0.95);
+  gateGroup.add(neonBarB);
+
+  // 3. Crisp High-Resolution Canvas Signboards ("⚡ PROJECTS SHOWCASE ⚡")
+  function createGateSignTexture(subText) {
+    const cvs = document.createElement('canvas');
+    cvs.width = 1200;
+    cvs.height = 340;
+    const ctx = cvs.getContext('2d');
+
+    // Rich Dark Sapphire Badge Background
+    ctx.fillStyle = '#0F172A';
+    ctx.fillRect(0, 0, 1200, 340);
+
+    // Glowing border
+    ctx.strokeStyle = '#38BDF8';
+    ctx.lineWidth = 14;
+    ctx.strokeRect(10, 10, 1180, 320);
+
+    // Inner gold pinstripe
+    ctx.strokeStyle = '#F59E0B';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(26, 26, 1148, 288);
+
+    // Top Sub-badge
+    ctx.fillStyle = '#38BDF8';
+    ctx.font = '800 36px "Outfit", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(subText || 'WELCOME TO', 600, 78);
+
+    // Main Big Bold Title
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = '900 84px "Outfit", sans-serif';
+    ctx.fillText('MY PROJECTS', 600, 185);
+
+    // Bottom Tagline
+    ctx.fillStyle = '#F59E0B';
+    ctx.font = '700 36px "Outfit", sans-serif';
+    ctx.fillText('ENGINEERING & AI INNOVATIONS', 600, 275);
+
+    const tex = new THREE.CanvasTexture(cvs);
+    tex.generateMipmaps = true;
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  const signFrontTex = createGateSignTexture('WELCOME TO');
+  const signBackTex = createGateSignTexture('EXPLORE');
+
+  const signMatFront = new THREE.MeshLambertMaterial({
+    map: signFrontTex,
+    emissive: 0xFFFFFF,
+    emissiveMap: signFrontTex,
+    emissiveIntensity: 0.35
+  });
+
+  const signMatBack = new THREE.MeshLambertMaterial({
+    map: signBackTex,
+    emissive: 0xFFFFFF,
+    emissiveMap: signBackTex,
+    emissiveIntensity: 0.35
+  });
+
+  const signW = 8.8, signH = 2.4;
+  const signFront = new THREE.Mesh(new THREE.PlaneGeometry(signW, signH), signMatFront);
+  signFront.position.set(0, 9.8, 0.98);
+  gateGroup.add(signFront);
+
+  const signBack = new THREE.Mesh(new THREE.PlaneGeometry(signW, signH), signMatBack);
+  signBack.position.set(0, 9.8, -0.98);
+  signBack.rotation.y = Math.PI;
+  gateGroup.add(signBack);
+
+  // 4. Twin Welcome Flag Banners on the outer columns
+  [-span / 2 - 1.8, span / 2 + 1.8].forEach(fx => {
+    const flagPole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 6.5, 6), beamMat);
+    flagPole.position.set(fx, 3.25, 0);
+    gateGroup.add(flagPole);
+
+    const bannerMat = new THREE.MeshStandardMaterial({ color: 0x2563EB, roughness: 0.5, side: THREE.DoubleSide });
+    const banner = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 3.4), bannerMat);
+    banner.position.set(fx + 0.8, 4.6, 0);
+    gateGroup.add(banner);
+  });
+
+  scene.add(gateGroup);
 }
 
 /* --------------------------------------------------------------------------
