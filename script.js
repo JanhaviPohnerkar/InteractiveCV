@@ -210,12 +210,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Generative Art & Creative CAD",
     badge: "CREATIVE",
     icon: "🎨",
-    themeColor: "#EC4899",
+    themeColor: "#C08497",
     pos: { x: -28, z: -38 },
     rot: 0.45,
     roofType: "pitched",
-    wallColor: 0xFDF2F8,
-    roofColor: 0xDB2777,
+    wallColor: 0xFAF6F0,
+    roofColor: 0xC4929E,
     fenceType: "wooden",
     details: {
       category: "Creative Computation",
@@ -234,12 +234,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Smart IoT & Embedded Telemetry",
     badge: "IOT & EDGE",
     icon: "📡",
-    themeColor: "#3B82F6",
+    themeColor: "#64748B",
     pos: { x: 30, z: -48 },
     rot: -0.4,
     roofType: "flat_tech",
-    wallColor: 0xEFF6FF,
-    roofColor: 0x2563EB,
+    wallColor: 0xF3F5F7,
+    roofColor: 0x7E99B7,
     fenceType: "circuit",
     details: {
       category: "Embedded IoT",
@@ -258,12 +258,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Computer Vision & Optical Inspection",
     badge: "VISION AI",
     icon: "👁️",
-    themeColor: "#10B981",
+    themeColor: "#5E8B7E",
     pos: { x: -32, z: -100 },
     rot: 0.5,
     roofType: "pitched",
-    wallColor: 0xECFDF5,
-    roofColor: 0x059669,
+    wallColor: 0xF2F7F4,
+    roofColor: 0x6E9A85,
     fenceType: "wireframe",
     details: {
       category: "Industrial Vision",
@@ -282,12 +282,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Spatial SLAM & 360° Video Systems",
     badge: "SPATIAL AI",
     icon: "🌐",
-    themeColor: "#F59E0B",
+    themeColor: "#C98A60",
     pos: { x: 32, z: -125 },
     rot: -0.35,
     roofType: "dome",
-    wallColor: 0xFFFBEB,
-    roofColor: 0xD97706,
+    wallColor: 0xFAF7F2,
+    roofColor: 0xCCA07A,
     fenceType: "circuit",
     details: {
       category: "Spatial Robotics",
@@ -306,12 +306,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Monocular 3D Digital Twins",
     badge: "3D TWINS",
     icon: "🧊",
-    themeColor: "#8B5CF6",
+    themeColor: "#8E7CC3",
     pos: { x: -28, z: -180 },
     rot: 0.35,
     roofType: "wireframe_frame",
-    wallColor: 0xF5F3FF,
-    roofColor: 0x7C3AED,
+    wallColor: 0xF7F5FA,
+    roofColor: 0x9D8DBE,
     fenceType: "wireframe",
     details: {
       category: "Frontier 3D Research",
@@ -330,12 +330,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Sustainable Electronics & Clean Tech",
     badge: "ECO TECH",
     icon: "☀️",
-    themeColor: "#059669",
+    themeColor: "#729B79",
     pos: { x: 30, z: -210 },
     rot: -0.45,
     roofType: "solar_cottage",
-    wallColor: 0xF0FDF4,
-    roofColor: 0x16A34A,
+    wallColor: 0xF5F9F6,
+    roofColor: 0x7EAB86,
     fenceType: "wooden",
     details: {
       category: "Sustainable Hardware",
@@ -354,12 +354,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Autonomous Mobile Robotics",
     badge: "ROBOTICS",
     icon: "🤖",
-    themeColor: "#0284C7",
+    themeColor: "#6B8E9B",
     pos: { x: -24, z: -245 },
     rot: 0.25,
     roofType: "gear_lab",
-    wallColor: 0xF0F9FF,
-    roofColor: 0x0284C7,
+    wallColor: 0xF4F8FA,
+    roofColor: 0x7CA4B5,
     fenceType: "circuit",
     details: {
       category: "Robotics & Controls",
@@ -407,11 +407,11 @@ function initBrunoWorld() {
   const canvas = document.getElementById('world-canvas');
   if (!container || !canvas || typeof THREE === 'undefined') return;
 
-  // Scene & Soft Bright Warm Atmosphere (Inspired by Reference Town)
+  // Scene & Soft Pastel Environment (Gentle, Relaxing & Easy on the Eyes)
   scene = new THREE.Scene();
-  const skyColor = new THREE.Color(0xFED7AA); // Warm pastel peach/amber horizon
+  const skyColor = new THREE.Color(0xF1EDE6); // Warm soft creamy off-white / light oat horizon
   scene.background = skyColor;
-  scene.fog = new THREE.FogExp2(0xFED7AA, 0.0035);
+  scene.fog = new THREE.FogExp2(0xF1EDE6, 0.0038);
 
   // Camera: Elevated Isometric Diagonal Perspective
   const aspect = container.clientWidth / container.clientHeight;
@@ -429,14 +429,14 @@ function initBrunoWorld() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // Warm Directional Sunlight & Soft Ambient
-  const ambientLight = new THREE.AmbientLight(0xFFF7ED, 1.1);
+  // Gentle, Non-Glare Warm Ambient & Hemisphere Lighting
+  const ambientLight = new THREE.AmbientLight(0xFDFBF7, 0.95);
   scene.add(ambientLight);
 
-  const hemiLight = new THREE.HemisphereLight(0xFFFBEB, 0x86EFAC, 0.85); // Warm sky to green ground bounce
+  const hemiLight = new THREE.HemisphereLight(0xF8F5EE, 0xC4D7B2, 0.75); // Soft cream sky to muted sage bounce
   scene.add(hemiLight);
 
-  const sunLight = new THREE.DirectionalLight(0xFFFBEB, 1.55);
+  const sunLight = new THREE.DirectionalLight(0xFFFDF7, 1.25); // Soft warm natural daylight
   sunLight.position.set(-35, 55, 30);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -451,12 +451,12 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Lush Green Town Lawn Floor (Inspired by Reference Image Town)
+  // 1. Soft Muted Sage/Olive Meadow Ground (Easy on the eyes, low eye fatigue)
   const groundGeo = new THREE.PlaneGeometry(500, 500);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
-    color: 0x86EFAC, // Soft vibrant pastel green meadow
-    roughness: 0.85,
+    color: 0xB8CDB5, // Muted pastel sage meadow
+    roughness: 0.95,
     metalness: 0.0
   });
   const ground = new THREE.Mesh(groundGeo, groundMat);
@@ -767,8 +767,8 @@ function buildMilestoneBuildings() {
       pos: new THREE.Vector3(19, 0, -35),
       rotY: -0.35,
       type: "school",
-      color: 0xEE4B3B,
-      roofColor: 0x991B1B,
+      color: 0xE8A598, // Soft terracotta blush
+      roofColor: 0xB56555,
       label: "1. PSBA School"
     },
     {
@@ -776,8 +776,8 @@ function buildMilestoneBuildings() {
       pos: new THREE.Vector3(18, 0, -85),
       rotY: -0.2,
       type: "university",
-      color: 0xF8FAFC,
-      roofColor: 0x3B82F6,
+      color: 0xF7F6F2,
+      roofColor: 0x6A8CAF, // Soft dusty slate blue
       label: "2. MITAOE Campus"
     },
     {
@@ -785,8 +785,8 @@ function buildMilestoneBuildings() {
       pos: new THREE.Vector3(-18, 0, -110),
       rotY: 0.4,
       type: "makerLab",
-      color: 0xFBBF24,
-      roofColor: 0x475569,
+      color: 0xE6C280, // Soft warm sand/ochre
+      roofColor: 0x64748B,
       label: "3. 1st Yr Maker Lab"
     },
     {
@@ -794,8 +794,8 @@ function buildMilestoneBuildings() {
       pos: new THREE.Vector3(-15, 0, -170),
       rotY: 0.25,
       type: "corporate",
-      color: 0x38BDF8,
-      roofColor: 0x0284C7,
+      color: 0x93B5C6, // Soft dusty sky
+      roofColor: 0x567D94,
       label: "4. Coppercloud HQ"
     },
     {
@@ -803,8 +803,8 @@ function buildMilestoneBuildings() {
       pos: new THREE.Vector3(22, 0, -200),
       rotY: -0.4,
       type: "rdLab",
-      color: 0x34D399,
-      roofColor: 0x059669,
+      color: 0x9BB8A2, // Soft muted sage
+      roofColor: 0x5C8065,
       label: "5. Coppercloud R&D"
     },
     {
@@ -812,8 +812,8 @@ function buildMilestoneBuildings() {
       pos: new THREE.Vector3(26, 0, -235),
       rotY: -0.25,
       type: "clarityLab",
-      color: 0xFDBA74,
-      roofColor: 0xC2410C,
+      color: 0xE5B899, // Gentle muted apricot
+      roofColor: 0xB57650,
       label: "6. Clarity Lab IITJ"
     },
     {
@@ -821,8 +821,8 @@ function buildMilestoneBuildings() {
       pos: new THREE.Vector3(-8, 0, -270),
       rotY: 0.35,
       type: "digitalTwin",
-      color: 0xA78BFA,
-      roofColor: 0x7C3AED,
+      color: 0xC5B4E3, // Gentle pastel lavender
+      roofColor: 0x8C74B2,
       label: "7. 3D Digital Twin Lab"
     }
   ];
@@ -1022,27 +1022,24 @@ function createProceduralBuilding(group, cfg) {
   }
 }
 
-/* --------------------------------------------------------------------------
-   7. SCATTERED TREES & WHITE CHALK BOULDERS
-   -------------------------------------------------------------------------- */
 function buildFoliageAndRocks() {
-  const rockMat = new THREE.MeshStandardMaterial({ color: 0xF5F5F5, roughness: 0.85, flatShading: true });
-  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8A5528, roughness: 0.9 });
+  const rockMat = new THREE.MeshStandardMaterial({ color: 0xEAE7E1, roughness: 0.9, flatShading: true });
+  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8C7866, roughness: 0.9 });
 
-  // Vibrant foliage materials for a lush cheerful town
+  // Soft, cohesive pastel foliage materials (gentle & harmonious)
   const leafMats = [
-    new THREE.MeshStandardMaterial({ color: 0x84CC16, roughness: 0.7, flatShading: true }), // Fresh Spring Lime
-    new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 0.75, flatShading: true }), // Rich Emerald
-    new THREE.MeshStandardMaterial({ color: 0x10B981, roughness: 0.8, flatShading: true }), // Cool Mint/Teal
-    new THREE.MeshStandardMaterial({ color: 0xEAB308, roughness: 0.7, flatShading: true }), // Warm Golden
-    new THREE.MeshStandardMaterial({ color: 0xF97316, roughness: 0.75, flatShading: true }), // Warm Amber
-    new THREE.MeshStandardMaterial({ color: 0xF472B6, roughness: 0.75, flatShading: true })  // Blossom Pink
+    new THREE.MeshStandardMaterial({ color: 0x8DAA82, roughness: 0.8, flatShading: true }), // Soft Forest Sage
+    new THREE.MeshStandardMaterial({ color: 0x76977A, roughness: 0.8, flatShading: true }), // Muted Eucalyptus
+    new THREE.MeshStandardMaterial({ color: 0x98AF88, roughness: 0.85, flatShading: true }), // Pale Moss Green
+    new THREE.MeshStandardMaterial({ color: 0xD4C697, roughness: 0.8, flatShading: true }), // Soft Muted Ochre
+    new THREE.MeshStandardMaterial({ color: 0xD8B28A, roughness: 0.8, flatShading: true }), // Gentle Warm Sand
+    new THREE.MeshStandardMaterial({ color: 0xE6B8B8, roughness: 0.85, flatShading: true })  // Soft Dusty Rose / Blossom
   ];
 
-  // Town Props Materials
-  const woodMat = new THREE.MeshStandardMaterial({ color: 0xB45309, roughness: 0.85 });
-  const lamppostMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.6 });
-  const lampLightMat = new THREE.MeshStandardMaterial({ color: 0xFEF08A, emissive: 0xFEF08A, emissiveIntensity: 1.0 });
+  // Town Props Materials (Gentle, low-contrast finishes)
+  const woodMat = new THREE.MeshStandardMaterial({ color: 0x8C7355, roughness: 0.85 });
+  const lamppostMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.7 });
+  const lampLightMat = new THREE.MeshStandardMaterial({ color: 0xFEF9C3, emissive: 0xFEF08A, emissiveIntensity: 0.6 });
 
   // 1. Scattered Low-Poly Boulders
   const rockPositions = [
@@ -1415,11 +1412,11 @@ function buildFoliageAndRocks() {
     scene.add(treeGroup);
   });
 
-  // 5. Flower bushes along the sidewalk edges
-  const bushColors = [0x22C55E, 0x16A34A, 0xFACC15, 0x4ADE80, 0x86EFAC];
+  // 5. Flower bushes along the sidewalk edges (Soft pastel garden accents)
+  const bushColors = [0x97B08B, 0xAEC4A4, 0xE2D4B7, 0xD4B8B8, 0xC4B5D4];
   for (let b = 0; b < 40; b++) {
     const bColor = bushColors[b % bushColors.length];
-    const bMat = new THREE.MeshStandardMaterial({ color: bColor, roughness: 0.8, flatShading: true });
+    const bMat = new THREE.MeshStandardMaterial({ color: bColor, roughness: 0.85, flatShading: true });
     const bush = new THREE.Mesh(new THREE.DodecahedronGeometry(0.55 + (b % 3) * 0.15, 0), bMat);
     const side = (b % 2 === 0 ? 1 : -1);
     const bz = -10 - (b * 7);
