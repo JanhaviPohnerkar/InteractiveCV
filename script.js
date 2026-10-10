@@ -200,6 +200,8 @@ let roadLength = 0;
 let activePopupId = null;
 let milestoneThresholds = [];
 const milestoneVisited = new Set();
+let projectThresholds = [];
+const projectVisited = new Set();
 let cloudGroups = [];
 let worldAnimals = [];
 let billboardArrows = [];
@@ -215,7 +217,7 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🌐",
     logoPath: "assets/01_orb_slam3.png",
     themeColor: "#2563EB",
-    pos: { x: -28, z: -25 },
+    pos: { x: -30, z: -315 },
     rot: 0.45,
     roofType: "dome",
     wallColor: 0xEDE9FE,
@@ -241,8 +243,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "✈️",
     logoPath: "assets/02_stm32_turbulence.png",
     themeColor: "#0284C7",
-    pos: { x: 30, z: -48 },
-    rot: -0.4,
+    pos: { x: -38, z: -355 },
+    rot: 0.35,
     roofType: "flat_tech",
     wallColor: 0xE0F2FE,
     roofColor: 0x0284C7,
@@ -267,8 +269,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🪐",
     logoPath: "assets/03_mars_dem.png",
     themeColor: "#C2410C",
-    pos: { x: -32, z: -80 },
-    rot: 0.5,
+    pos: { x: 10, z: -395 },
+    rot: -0.35,
     roofType: "pitched",
     wallColor: 0xFFEDD5,
     roofColor: 0xC2410C,
@@ -293,8 +295,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "👁️",
     logoPath: "assets/04_diabetic_retinopathy_ai.png",
     themeColor: "#E11D48",
-    pos: { x: 32, z: -115 },
-    rot: -0.35,
+    pos: { x: 34, z: -435 },
+    rot: -0.4,
     roofType: "pitched",
     wallColor: 0xFFE4E6,
     roofColor: 0xE11D48,
@@ -319,8 +321,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🧵",
     logoPath: "assets/05_textile_defect_detection.png",
     themeColor: "#059669",
-    pos: { x: -28, z: -150 },
-    rot: 0.35,
+    pos: { x: 42, z: -475 },
+    rot: -0.45,
     roofType: "solar_cottage",
     wallColor: 0xDCFCE7,
     roofColor: 0x059669,
@@ -345,8 +347,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🦾",
     logoPath: "assets/06_bionic_prosthetic_arm.png",
     themeColor: "#7C3AED",
-    pos: { x: 30, z: -180 },
-    rot: -0.45,
+    pos: { x: -32, z: -535 },
+    rot: 0.38,
     roofType: "gear_lab",
     wallColor: 0xF3E8FF,
     roofColor: 0x7C3AED,
@@ -371,8 +373,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🧊",
     logoPath: "assets/07_monocular_depth_point_cloud.png",
     themeColor: "#4F46E5",
-    pos: { x: -26, z: -215 },
-    rot: 0.25,
+    pos: { x: -36, z: -590 },
+    rot: 0.42,
     roofType: "wireframe_frame",
     wallColor: 0xEEF2FF,
     roofColor: 0x4F46E5,
@@ -397,8 +399,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "🏖️",
     logoPath: "assets/05_textile_defect_detection.png",
     themeColor: "#D97706",
-    pos: { x: 28, z: -250 },
-    rot: -0.35,
+    pos: { x: 30, z: -645 },
+    rot: -0.36,
     roofType: "pitched",
     wallColor: 0xFEF3C7,
     roofColor: 0xD97706,
@@ -423,8 +425,8 @@ const PROJECT_BUILDINGS_DATA = [
     icon: "📹",
     logoPath: "assets/08_multi_camera_stitching.png",
     themeColor: "#0891B2",
-    pos: { x: -22, z: -285 },
-    rot: 0.3,
+    pos: { x: 32, z: -695 },
+    rot: -0.4,
     roofType: "flat_tech",
     wallColor: 0xECFEFF,
     roofColor: 0x0891B2,
@@ -521,7 +523,7 @@ function initBrunoWorld() {
   scene.add(sunLight);
 
   // 1. Expansive Warm Muddy Terracotta Ground Plane
-  const groundGeo = new THREE.PlaneGeometry(1200, 1200);
+  const groundGeo = new THREE.PlaneGeometry(1600, 1600);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
     color: 0x9E5630, // Rich warm muddy earth terracotta / clay soil
@@ -529,7 +531,7 @@ function initBrunoWorld() {
     metalness: 0.0
   });
   const ground = new THREE.Mesh(groundGeo, groundMat);
-  ground.position.set(0, 0, -140); // Centered right along the full journey of the road and town
+  ground.position.set(0, 0, -360); // Centered across the entire journey from spawn (z=0) to boulevard end (z=-735)
   ground.receiveShadow = true;
   scene.add(ground);
 
@@ -712,23 +714,48 @@ function buildBigSculpturalText() {
    -------------------------------------------------------------------------- */
 function buildClayRoad() {
   roadPoints = [
+    // Entrance & PSBA School
     new THREE.Vector3(0, 0, 0),
     new THREE.Vector3(0, 0, -18),
     new THREE.Vector3(14, 0, -35),
+    // MITAOE Campus
     new THREE.Vector3(25, 0, -58),
     new THREE.Vector3(12, 0, -85),
+    // 1st Year Maker Lab
     new THREE.Vector3(-12, 0, -110),
     new THREE.Vector3(-22, 0, -140),
+    // Coppercloud HQ
     new THREE.Vector3(-8, 0, -170),
+    // Coppercloud R&D
     new THREE.Vector3(16, 0, -200),
+    // Clarity Lab IITJ
     new THREE.Vector3(20, 0, -235),
-    new THREE.Vector3(0, 0, -270)
+    // 3D Digital Twin Lab (Last Milestone at z = -270)
+    new THREE.Vector3(0, 0, -270),
+
+    // --- Extended Curvy Project Showcase Boulevard ---
+    // Turn 1: Gentle curve out towards Project 1 & 2
+    new THREE.Vector3(-16, 0, -305),
+    new THREE.Vector3(-24, 0, -345),
+    // Turn 2: Sweeping eastward curve passing Projects 3 & 4
+    new THREE.Vector3(-8, 0, -385),
+    new THREE.Vector3(16, 0, -425),
+    new THREE.Vector3(26, 0, -465),
+    // Turn 3: S-curve westwards passing Projects 5 & 6
+    new THREE.Vector3(10, 0, -505),
+    new THREE.Vector3(-18, 0, -545),
+    new THREE.Vector3(-22, 0, -585),
+    // Turn 4: Final graceful curve towards Grand Tech Plaza (Projects 7, 8 & 9)
+    new THREE.Vector3(-4, 0, -625),
+    new THREE.Vector3(18, 0, -665),
+    new THREE.Vector3(14, 0, -700),
+    new THREE.Vector3(0, 0, -735)
   ];
 
   roadCurve = new THREE.CatmullRomCurve3(roadPoints);
   roadLength = roadCurve.getLength();
-  const roadWidth = 5.0;
-  const segments = 240;
+  const roadWidth = 5.6; // Slightly wider, spacious road
+  const segments = 450;
 
   // Custom flat horizontal ribbon geometry lying completely flat on XZ plane
   const vertices = [];
@@ -832,8 +859,8 @@ function buildClayRoad() {
   const pathGrassMat = new THREE.MeshStandardMaterial({ color: 0x22C55E, roughness: 0.75, flatShading: true });
   const flowerSproutMat = new THREE.MeshStandardMaterial({ color: 0xD9776E, roughness: 0.7 }); // Warm muddy terracotta rose blossoms
 
-  for (let g = 0; g < 110; g++) {
-    const t = g / 110;
+  for (let g = 0; g < 220; g++) {
+    const t = g / 220;
     const pt = roadCurve.getPointAt(t);
     const tangent = roadCurve.getTangentAt(t).normalize();
     const side = new THREE.Vector3().crossVectors(tangent, UP).normalize();
@@ -866,7 +893,7 @@ function buildClayRoad() {
   }
 
   // Dashed white center markings lying flat on the road surface
-  const dashCount = 65;
+  const dashCount = 140;
   const dashGeo = new THREE.PlaneGeometry(0.28, 1.8);
   dashGeo.rotateX(-Math.PI / 2); // Lies flat on the ground!
   const dashMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
@@ -1425,8 +1452,22 @@ function buildFoliageAndRocks() {
     const billboardGroup = new THREE.Group();
     billboardGroup.position.set(0, bannerMountY, 0);
 
-    // Angle billboard towards the central road axis (x=0) for maximum direct visibility
-    const angleToRoad = Math.atan2(0 - proj.pos.x, (proj.pos.z + 10) - proj.pos.z);
+    // Find nearest point on roadCurve to orient the billboard facing straight towards the road
+    let nearestRoadPt = new THREE.Vector3(0, 0, proj.pos.z);
+    if (roadCurve) {
+      const samples = roadCurve.getPoints(200);
+      let minD = Infinity;
+      samples.forEach(sp => {
+        const d = sp.distanceTo(new THREE.Vector3(proj.pos.x, 0, proj.pos.z));
+        if (d < minD) {
+          minD = d;
+          nearestRoadPt = sp;
+        }
+      });
+    }
+
+    // Angle billboard towards the nearest road point
+    const angleToRoad = Math.atan2(nearestRoadPt.x - proj.pos.x, nearestRoadPt.z - proj.pos.z);
     billboardGroup.rotation.y = angleToRoad - proj.rot;
 
     // Twin sturdy steel mounting pylons/trusses
@@ -1539,14 +1580,39 @@ function buildFoliageAndRocks() {
     townBuildingMeshes.push(pGroup);
   });
 
-  // 3. Street Lampposts along the road and town courtyards
+  // Calculate project building thresholds along the road for auto-opening
+  if (roadCurve) {
+    const samplePts = roadCurve.getPoints(500);
+    projectThresholds = PROJECT_BUILDINGS_DATA.map(proj => {
+      let nearestT = 0;
+      let minD = Infinity;
+      const bPos = new THREE.Vector3(proj.pos.x, 0, proj.pos.z);
+      samplePts.forEach((p, idx) => {
+        const d = p.distanceTo(bPos);
+        if (d < minD) {
+          minD = d;
+          nearestT = idx / (samplePts.length - 1);
+        }
+      });
+      return { id: proj.id, threshold: nearestT, pos: bPos };
+    });
+  }
+
+  // 3. Street Lampposts along the road and town courtyards (Covering milestones and extended project boulevard)
   const lamppostPoints = [
     { x: -5, z: -10 }, { x: 5, z: -10 },
     { x: 16, z: -25 }, { x: 8, z: -45 },
     { x: 18, z: -70 }, { x: -8, z: -95 },
     { x: -16, z: -125 }, { x: -6, z: -150 },
     { x: 10, z: -185 }, { x: 18, z: -215 },
-    { x: 12, z: -245 }, { x: -5, z: -265 }
+    { x: 12, z: -245 }, { x: -5, z: -265 },
+    // Extended boulevard lampposts
+    { x: -18, z: -300 }, { x: -28, z: -340 },
+    { x: -12, z: -380 }, { x: 12, z: -420 },
+    { x: 28, z: -460 },  { x: 14, z: -500 },
+    { x: -14, z: -540 }, { x: -26, z: -580 },
+    { x: -8, z: -620 },  { x: 14, z: -660 },
+    { x: 16, z: -700 },  { x: -4, z: -730 }
   ];
 
   // 3. Street Lampposts along the road and town courtyards (Taller, elegant street lamps)
@@ -1645,7 +1711,22 @@ function buildFoliageAndRocks() {
     { cx: -18.0, cz: -290, count: 5, radius: 4.2, baseH: 4.9 },
     { cx: 24.0,  cz: -275, count: 6, radius: 4.8, baseH: 5.2 },
     { cx: 16.0,  cz: -302, count: 5, radius: 4.2, baseH: 5.0 },
-    { cx: -6.0,  cz: -308, count: 5, radius: 4.0, baseH: 4.8 }
+    { cx: -6.0,  cz: -308, count: 5, radius: 4.0, baseH: 4.8 },
+
+    // Extended Project Boulevard Groves
+    { cx: -45.0, cz: -330, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: 12.0,  cz: -340, count: 5, radius: 4.2, baseH: 4.8 },
+    { cx: -16.0, cz: -375, count: 5, radius: 4.0, baseH: 4.9 },
+    { cx: 28.0,  cz: -400, count: 6, radius: 5.0, baseH: 5.2 },
+    { cx: -32.0, cz: -440, count: 5, radius: 4.5, baseH: 5.1 },
+    { cx: 50.0,  cz: -480, count: 6, radius: 5.2, baseH: 5.3 },
+    { cx: 16.0,  cz: -520, count: 5, radius: 4.0, baseH: 4.8 },
+    { cx: -44.0, cz: -560, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: 14.0,  cz: -600, count: 5, radius: 4.5, baseH: 5.0 },
+    { cx: -42.0, cz: -630, count: 6, radius: 5.0, baseH: 5.2 },
+    { cx: 44.0,  cz: -670, count: 6, radius: 5.2, baseH: 5.4 },
+    { cx: -18.0, cz: -710, count: 5, radius: 4.5, baseH: 5.0 },
+    { cx: 26.0,  cz: -730, count: 6, radius: 5.0, baseH: 5.2 }
   ];
 
   let treeIdx = 0;
@@ -1727,14 +1808,25 @@ function buildFoliageAndRocks() {
 
   // 5. Flower bushes along the sidewalk edges (Warm muddy botanical accents)
   const bushColors = [0x789262, 0x93A277, 0xD4A373, 0xC47B6E, 0x9E6B7A];
-  for (let b = 0; b < 40; b++) {
+  for (let b = 0; b < 100; b++) {
     const bColor = bushColors[b % bushColors.length];
     const bMat = new THREE.MeshStandardMaterial({ color: bColor, roughness: 0.85, flatShading: true });
     const bush = new THREE.Mesh(new THREE.DodecahedronGeometry(0.55 + (b % 3) * 0.15, 0), bMat);
-    const side = (b % 2 === 0 ? 1 : -1);
-    const bz = -10 - (b * 7);
-    const bx = side * (5.5 + (b % 4) * 0.8);
-    bush.position.set(bx, 0.35, bz);
+
+    if (roadCurve) {
+      const t = Math.min(0.98, (b + 1) / 102);
+      const pt = roadCurve.getPointAt(t);
+      const tangent = roadCurve.getTangentAt(t).normalize();
+      const sideVec = new THREE.Vector3().crossVectors(tangent, new THREE.Vector3(0, 1, 0)).normalize();
+      const side = (b % 2 === 0 ? 1 : -1);
+      const offset = sideVec.multiplyScalar(side * (3.8 + (b % 3) * 0.7));
+      bush.position.set(pt.x + offset.x, 0.35, pt.z + offset.z);
+    } else {
+      const side = (b % 2 === 0 ? 1 : -1);
+      const bz = -10 - (b * 7);
+      const bx = side * (5.5 + (b % 4) * 0.8);
+      bush.position.set(bx, 0.35, bz);
+    }
     bush.castShadow = true;
     scene.add(bush);
   }
@@ -3036,7 +3128,23 @@ function updateCharacterPhysics(delta) {
           input.forward = false;
           charState.speed = 0;
           milestoneVisited.add(i);
-          // UI popup is triggered elsewhere via proximity check
+          // UI popup is triggered automatically via checkBuildingProximity
+          break;
+        }
+      }
+    }
+
+    // ----- EXTENDED PROJECT BUILDINGS STOP & AUTO-OPEN LOGIC -----
+    if (typeof projectThresholds !== 'undefined' && projectThresholds.length) {
+      for (let p = 0; p < projectThresholds.length; p++) {
+        const pt = projectThresholds[p];
+        if (charState.progress >= pt.threshold && !projectVisited.has(pt.id)) {
+          // Stop walking when reaching a project building along the extended road
+          input.forward = false;
+          charState.speed = 0;
+          projectVisited.add(pt.id);
+          // Automatically open the project showcase panel
+          openProjectDetailPanel(pt.id);
           break;
         }
       }
@@ -3218,6 +3326,28 @@ function setupWorldControls(container) {
     });
   }
 
+  // Reset Adventurer button handler
+  const resetBtn = document.getElementById('reset-char-btn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      charState.progress = 0;
+      charState.speed = 0;
+      input.forward = false;
+      input.backward = false;
+      milestoneVisited.clear();
+      projectVisited.clear();
+      closeMilestonePopup();
+      closeProjectDetailPanel();
+      if (roadCurve && characterGroup) {
+        const pt = roadCurve.getPointAt(0);
+        const tan = roadCurve.getTangentAt(0).normalize();
+        characterGroup.position.set(pt.x, 0, pt.z);
+        charState.rotation = Math.atan2(tan.x, tan.z);
+        characterGroup.rotation.y = charState.rotation;
+      }
+    });
+  }
+
   // Close project detail panel handlers
   const panelCloseBtn = document.getElementById('panel-close-btn');
   const panelBackdrop = document.getElementById('panel-backdrop');
@@ -3305,9 +3435,12 @@ function closeProjectDetailPanel() {
 }
 
 function checkBuildingProximity() {
+  if (!characterGroup) return;
+
+  // Check milestone buildings
   buildingMeshes.forEach(b => {
     const dist = characterGroup.position.distanceTo(b.position);
-    if (dist < 6.5) {
+    if (dist < 7.5) {
       if (activePopupId !== b.userData.milestoneId) {
         showMilestonePopup(b.userData.milestoneId);
       }
