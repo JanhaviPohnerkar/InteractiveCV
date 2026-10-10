@@ -484,10 +484,10 @@ function initBrunoWorld() {
   scene.background = skyColor;
   scene.fog = new THREE.FogExp2(0x89D2EC, 0.0018); // Soft distant atmospheric fog
 
-  // Camera: Elevated Isometric Diagonal Perspective (Extended far plane for expansive scenery)
+  // Camera: Isometric Cinematic Perspective (Zoomed out with lowered elevation for clear billboard visibility)
   const aspect = container.clientWidth / container.clientHeight;
-  camera = new THREE.PerspectiveCamera(38, aspect, 0.5, 1200);
-  camera.position.set(-18, 22, 18);
+  camera = new THREE.PerspectiveCamera(44, aspect, 0.5, 1400);
+  camera.position.set(-18, 13.5, 22);
 
   // Renderer with Soft Shadows
   renderer = new THREE.WebGLRenderer({
@@ -3193,15 +3193,17 @@ function updateCameraFollow() {
   // Skip camera follow when OrbitControls is active (user panning)
   if (window.orbitControls && window.orbitControls.enabled) return;
 
-  const camOffset = new THREE.Vector3(-14, 18, 14);
+  // Zoomed out slightly and lowered elevation angle so passing buildings and rooftop billboards stay in full view
+  const camOffset = new THREE.Vector3(-18, 11.5, 20);
   const targetCamPos = characterGroup.position.clone().add(camOffset);
 
-  camera.position.lerp(targetCamPos, 0.09);
-  camera.lookAt(characterGroup.position.x, characterGroup.position.y + 1.2, characterGroup.position.z);
+  camera.position.lerp(targetCamPos, 0.08);
+  // Look slightly above the character towards the building and billboard eyeline
+  camera.lookAt(characterGroup.position.x, characterGroup.position.y + 2.8, characterGroup.position.z);
 
   // Update OrbitControls target to character position when walking
   if (window.orbitControls) {
-    window.orbitControls.target.copy(characterGroup.position);
+    window.orbitControls.target.set(characterGroup.position.x, characterGroup.position.y + 2.0, characterGroup.position.z);
   }
 }
 
