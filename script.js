@@ -1372,21 +1372,43 @@ function buildFoliageAndRocks() {
     { x: 12, z: -245 }, { x: -5, z: -265 }
   ];
 
+  // 3. Street Lampposts along the road and town courtyards (Taller, elegant street lamps)
   lamppostPoints.forEach(lp => {
     const pole = new THREE.Group();
     pole.position.set(lp.x, 0, lp.z);
 
-    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 3.2, 8), lamppostMat);
-    stem.position.y = 1.6;
+    // Decorative base pedestal
+    const basePedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 0.5, 8), lamppostMat);
+    basePedestal.position.y = 0.25;
+    basePedestal.castShadow = true;
+    pole.add(basePedestal);
+
+    // Main vertical tall stem
+    const stemHeight = 5.4;
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, stemHeight, 8), lamppostMat);
+    stem.position.y = stemHeight / 2;
     stem.castShadow = true;
     pole.add(stem);
 
-    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.08, 0.08), lamppostMat);
-    arm.position.set(0.2, 3.1, 0);
+    // Curved/horizontal top bracket arm extending over the sidewalk
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.1, 0.1), lamppostMat);
+    arm.position.set(0.35, stemHeight - 0.15, 0);
     pole.add(arm);
 
-    const lantern = new THREE.Mesh(new THREE.DodecahedronGeometry(0.28, 0), lampLightMat);
-    lantern.position.set(0.45, 2.9, 0);
+    // Decorative bracket brace
+    const brace = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.08, 0.08), lamppostMat);
+    brace.position.set(0.18, stemHeight - 0.35, 0);
+    brace.rotation.z = Math.PI / 4;
+    pole.add(brace);
+
+    // Elegant lantern housing cap
+    const lanternCap = new THREE.Mesh(new THREE.ConeGeometry(0.38, 0.28, 6), lamppostMat);
+    lanternCap.position.set(0.72, stemHeight - 0.05, 0);
+    pole.add(lanternCap);
+
+    // Glowing warm lantern glass fixture
+    const lantern = new THREE.Mesh(new THREE.DodecahedronGeometry(0.32, 0), lampLightMat);
+    lantern.position.set(0.72, stemHeight - 0.35, 0);
     pole.add(lantern);
 
     scene.add(pole);
