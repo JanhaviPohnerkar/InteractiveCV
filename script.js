@@ -193,12 +193,187 @@ let scene, camera, renderer;
 let characterGroup, characterBody, characterHead, ponytailMesh;
 let leftLegPivot, rightLegPivot, leftArmPivot, rightArmPivot, walkingStickMesh;
 let buildingMeshes = [];
+let townBuildingMeshes = [];
 let roadPoints = [];
 let roadCurve = null;
 let roadLength = 0;
 let activePopupId = null;
 let milestoneThresholds = [];
 const milestoneVisited = new Set();
+
+/* --------------------------------------------------------------------------
+   PROJECT BUILDINGS IN THE SURROUNDING TOWN (WITH LOGO BANNERS)
+   -------------------------------------------------------------------------- */
+const PROJECT_BUILDINGS_DATA = [
+  {
+    id: "proj_art",
+    title: "Generative Art & Creative CAD",
+    badge: "CREATIVE",
+    icon: "🎨",
+    themeColor: "#EC4899",
+    pos: { x: -28, z: -38 },
+    rot: 0.45,
+    roofType: "pitched",
+    wallColor: 0xFDF2F8,
+    roofColor: 0xDB2777,
+    fenceType: "wooden",
+    details: {
+      category: "Creative Computation",
+      tagline: "Parametric 3D Design & Algorithmic Art",
+      highlight: "Procedural geometry, 3D printing and digital fabrication",
+      description: "Exploration of procedural modeling, 3D generative art, and mechanical product enclosures designed in CAD and brought to life through additive manufacturing.",
+      achievements: [
+        "Modeled parametric components with rapid 3D printing tolerance calibration",
+        "Created digital art installations and procedural visual shaders",
+        "Built interactive creative prototypes blending aesthetics and hardware"
+      ]
+    }
+  },
+  {
+    id: "proj_iot",
+    title: "Smart IoT & Embedded Telemetry",
+    badge: "IOT & EDGE",
+    icon: "📡",
+    themeColor: "#3B82F6",
+    pos: { x: 30, z: -48 },
+    rot: -0.4,
+    roofType: "flat_tech",
+    wallColor: 0xEFF6FF,
+    roofColor: 0x2563EB,
+    fenceType: "circuit",
+    details: {
+      category: "Embedded IoT",
+      tagline: "Low-Power Sensor Networks & Remote Telemetry",
+      highlight: "Microcontroller sensor nodes with wireless MQTT streaming",
+      description: "End-to-end edge monitoring system with multi-sensor environmental boards streaming real-time telemetry to distributed dashboard interfaces.",
+      achievements: [
+        "Designed energy-efficient firmware for continuous sensor polling",
+        "Implemented fault-tolerant wireless packet buffering",
+        "Built web-socket telemetry dashboards with sub-second latency"
+      ]
+    }
+  },
+  {
+    id: "proj_cv",
+    title: "Computer Vision & Optical Inspection",
+    badge: "VISION AI",
+    icon: "👁️",
+    themeColor: "#10B981",
+    pos: { x: -32, z: -100 },
+    rot: 0.5,
+    roofType: "pitched",
+    wallColor: 0xECFDF5,
+    roofColor: 0x059669,
+    fenceType: "wireframe",
+    details: {
+      category: "Industrial Vision",
+      tagline: "Sub-Millimeter Optical Quality Assurance",
+      highlight: "High-speed camera edge inference and defect classification",
+      description: "Automated optical inspection station using morphological filters and neural segmentation to catch micro-defects in high-speed manufacturing pipelines.",
+      achievements: [
+        "Engineered real-time edge filtering pipeline running at >60 FPS",
+        "Achieved ~300 µm defect detection sensitivity on dynamic textures",
+        "Published findings on DIPlib acceleration for production workloads"
+      ]
+    }
+  },
+  {
+    id: "proj_slam",
+    title: "Spatial SLAM & 360° Video Systems",
+    badge: "SPATIAL AI",
+    icon: "🌐",
+    themeColor: "#F59E0B",
+    pos: { x: 32, z: -125 },
+    rot: -0.35,
+    roofType: "dome",
+    wallColor: 0xFFFBEB,
+    roofColor: 0xD97706,
+    fenceType: "circuit",
+    details: {
+      category: "Spatial Robotics",
+      tagline: "Multi-Camera Stitching & Visual Odometry",
+      highlight: "Real-time 360-degree panorama stitching on edge compute",
+      description: "Research project focusing on spherical image reprojection, seam blending, and feature-based spatial tracking on resource-constrained embedded robotics hardware.",
+      achievements: [
+        "Integrated multi-sensor synchronized video capture pipeline",
+        "Benchmarked embedded ORB-SLAM3 tracking with high frame stability",
+        "Formulated dynamic seam-carving algorithms for distortion-free stitching"
+      ]
+    }
+  },
+  {
+    id: "proj_dtwin",
+    title: "Monocular 3D Digital Twins",
+    badge: "3D TWINS",
+    icon: "🧊",
+    themeColor: "#8B5CF6",
+    pos: { x: -28, z: -180 },
+    rot: 0.35,
+    roofType: "wireframe_frame",
+    wallColor: 0xF5F3FF,
+    roofColor: 0x7C3AED,
+    fenceType: "wireframe",
+    details: {
+      category: "Frontier 3D Research",
+      tagline: "Dense 3D Point Clouds from Single Video Streams",
+      highlight: "Neural geometric priors transforming video to spatial assets",
+      description: "Deep learning research at IIT Jodhpur reconstructing detailed metric 3D point cloud digital twins from moving phone/monocular video streams without LiDAR.",
+      achievements: [
+        "Developed neural monocular pipeline extracting dense 3D point clouds",
+        "Integrated geometric consistency constraints across multi-view video frames",
+        "Exported interactive meshes for simulation, VR, and digital twin analytics"
+      ]
+    }
+  },
+  {
+    id: "proj_green",
+    title: "Sustainable Electronics & Clean Tech",
+    badge: "ECO TECH",
+    icon: "☀️",
+    themeColor: "#059669",
+    pos: { x: 30, z: -210 },
+    rot: -0.45,
+    roofType: "solar_cottage",
+    wallColor: 0xF0FDF4,
+    roofColor: 0x16A34A,
+    fenceType: "wooden",
+    details: {
+      category: "Sustainable Hardware",
+      tagline: "Ultra-Low Power Systems & Solar Harvesting",
+      highlight: "Energy-harvesting sensor nodes with zero standby drain",
+      description: "Exploration of eco-conscious hardware design, solar harvesting controllers, and power-gated embedded firmware for environmental preservation.",
+      achievements: [
+        "Built MPPT solar charging circuit prototype for outdoor sensors",
+        "Optimized sleep-wake duty cycles achieving multi-month battery life",
+        "Analyzed lifecycle impact of embedded electronics assemblies"
+      ]
+    }
+  },
+  {
+    id: "proj_robot",
+    title: "Autonomous Mobile Robotics",
+    badge: "ROBOTICS",
+    icon: "🤖",
+    themeColor: "#0284C7",
+    pos: { x: -24, z: -245 },
+    rot: 0.25,
+    roofType: "gear_lab",
+    wallColor: 0xF0F9FF,
+    roofColor: 0x0284C7,
+    fenceType: "circuit",
+    details: {
+      category: "Robotics & Controls",
+      tagline: "Path Planning, Obstacle Avoidance & Actuation",
+      highlight: "Differential drive autonomous rovers with PID control",
+      description: "Designed, wired, and programmed custom mobile robots featuring LiDAR/ultrasonic obstacle avoidance and closed-loop trajectory tracking.",
+      achievements: [
+        "Built custom differential drive chassis with encoder feedback",
+        "Implemented PID trajectory control and A* grid navigation",
+        "Won podium placement in university autonomous navigation trials"
+      ]
+    }
+  }
+];
 
 // Character State & Movement (Automatic Path Following!)
 const charState = {
@@ -232,11 +407,11 @@ function initBrunoWorld() {
   const canvas = document.getElementById('world-canvas');
   if (!container || !canvas || typeof THREE === 'undefined') return;
 
-  // Scene & Soft Terracotta Clay Environment
+  // Scene & Soft Bright Warm Atmosphere (Inspired by Reference Town)
   scene = new THREE.Scene();
-  const clayColor = new THREE.Color(0xFF9B68);
-  scene.background = clayColor;
-  scene.fog = new THREE.FogExp2(0xFF9B68, 0.005);
+  const skyColor = new THREE.Color(0xFED7AA); // Warm pastel peach/amber horizon
+  scene.background = skyColor;
+  scene.fog = new THREE.FogExp2(0xFED7AA, 0.0035);
 
   // Camera: Elevated Isometric Diagonal Perspective
   const aspect = container.clientWidth / container.clientHeight;
@@ -255,13 +430,13 @@ function initBrunoWorld() {
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   // Warm Directional Sunlight & Soft Ambient
-  const ambientLight = new THREE.AmbientLight(0xFF9B68, 0.95);
+  const ambientLight = new THREE.AmbientLight(0xFFF7ED, 1.1);
   scene.add(ambientLight);
 
-  const hemiLight = new THREE.HemisphereLight(0xFFE4D6, 0xDD7A48, 0.7);
+  const hemiLight = new THREE.HemisphereLight(0xFFFBEB, 0x86EFAC, 0.85); // Warm sky to green ground bounce
   scene.add(hemiLight);
 
-  const sunLight = new THREE.DirectionalLight(0xFFF7ED, 1.45);
+  const sunLight = new THREE.DirectionalLight(0xFFFBEB, 1.55);
   sunLight.position.set(-35, 55, 30);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -276,12 +451,12 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Terracotta Ground Floor
+  // 1. Lush Green Town Lawn Floor (Inspired by Reference Image Town)
   const groundGeo = new THREE.PlaneGeometry(500, 500);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
-    color: 0xFF9B68,
-    roughness: 0.9,
+    color: 0x86EFAC, // Soft vibrant pastel green meadow
+    roughness: 0.85,
     metalness: 0.0
   });
   const ground = new THREE.Mesh(groundGeo, groundMat);
@@ -507,9 +682,9 @@ function buildClayRoad() {
   roadGeo.computeVertexNormals();
 
   const roadMat = new THREE.MeshStandardMaterial({
-    color: 0xE87E4C, // Warm terracotta asphalt
-    roughness: 0.85,
-    metalness: 0.0,
+    color: 0x334155, // Clean modern dark asphalt road from reference
+    roughness: 0.75,
+    metalness: 0.05,
     side: THREE.DoubleSide
   });
 
@@ -537,51 +712,45 @@ function buildClayRoad() {
 }
 
 /* --------------------------------------------------------------------------
-   5.5 PROJECT BANNER TEXTURE GENERATOR (CUSTOMIZABLE WITH IMAGES)
+   5.5 LOGO BADGE BANNER TEXTURE GENERATOR (INSPIRED BY REFERENCE IMAGE)
+   Creates small square logo banners with white cards, dark borders, and icons
    -------------------------------------------------------------------------- */
-function createProjectBannerTexture(data) {
+function createLogoBadgeBannerTexture(proj) {
   const canvas = document.createElement('canvas');
-  canvas.width = 512;
+  canvas.width = 256;
   canvas.height = 256;
   const ctx = canvas.getContext('2d');
 
-  // Background gradient
-  const grad = ctx.createLinearGradient(0, 0, 512, 256);
-  grad.addColorStop(0, data.bannerBg || '#2563EB');
-  grad.addColorStop(1, '#0F172A');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 512, 256);
-
-  // Decorative border
-  ctx.strokeStyle = '#FFFFFF';
-  ctx.lineWidth = 10;
-  ctx.strokeRect(10, 10, 492, 236);
-
-  // Subtle inner accent line
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-  ctx.lineWidth = 3;
-  ctx.strokeRect(20, 20, 472, 216);
-
-  // Top category badge
+  // Clean white card background with rounded aesthetic
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+  ctx.fillRect(0, 0, 256, 256);
+
+  // Outer dark frame (matching reference image signs)
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 14;
+  ctx.strokeRect(7, 7, 242, 242);
+
+  // Inner subtle accent frame
+  ctx.strokeStyle = proj.themeColor || '#2563EB';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(20, 20, 216, 216);
+
+  // Central Icon / Logo Emoji Graphic (ready to swap with image later)
+  ctx.font = '76px sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText(`★ PROJECT MILESTONE #${data.step} ★`, 256, 54);
+  ctx.textBaseline = 'middle';
+  ctx.fillText(proj.icon || '📦', 128, 100);
 
-  // Banner Main Project Title
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '900 38px "Outfit", sans-serif';
-  ctx.fillText(data.bannerTitle || data.title, 256, 120);
+  // Clean uppercase project badge label
+  ctx.fillStyle = '#0F172A';
+  ctx.font = '900 24px "Outfit", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(proj.badge || proj.title, 128, 185);
 
-  // Subtitle / Technology
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-  ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText(data.bannerSubtitle || (data.skills ? data.skills.slice(0, 2).join(' • ') : ''), 256, 168);
-
-  // Interactive Click Prompt
-  ctx.fillStyle = '#FEF08A'; // soft bright yellow
-  ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('▶ CLICK BANNER FOR DETAILS ◀', 256, 218);
+  // Subtle lower subtitle line
+  ctx.fillStyle = proj.themeColor || '#64748B';
+  ctx.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('PROJECT', 128, 215);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.needsUpdate = true;
@@ -672,55 +841,24 @@ function buildMilestoneBuildings() {
     plinth.receiveShadow = true;
     bGroup.add(plinth);
 
-    // Roadside Project Billboard & Banner
-    const milestoneData = MILESTONES_DATA.find(m => m.id === cfg.id);
-    const bannerTexture = createProjectBannerTexture(milestoneData || cfg);
+    // Clean, elegant roadside milestone signpost
+    const signPostGeo = new THREE.BoxGeometry(0.18, 1.2, 0.18);
+    const signBoardGeo = new THREE.BoxGeometry(3.6, 0.8, 0.15);
+    const signMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.4 });
+    const postMat = new THREE.MeshStandardMaterial({ color: 0x64748B, roughness: 0.8 });
 
-    // Sturdy decorative billboard timber posts
-    const postMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.8 });
-    const post1 = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 2.6, 8), postMat);
-    post1.position.set(-2.0, 1.3, 4.8);
-    post1.castShadow = true;
+    const post1 = new THREE.Mesh(signPostGeo, postMat);
+    post1.position.set(-1.4, 0.6, 4.5);
     bGroup.add(post1);
 
-    const post2 = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 2.6, 8), postMat);
-    post2.position.set(2.0, 1.3, 4.8);
-    post2.castShadow = true;
+    const post2 = new THREE.Mesh(signPostGeo, postMat);
+    post2.position.set(1.4, 0.6, 4.5);
     bGroup.add(post2);
 
-    // Golden frame backing for billboard
-    const frameGeo = new THREE.BoxGeometry(4.6, 2.4, 0.22);
-    const frameMat = new THREE.MeshStandardMaterial({ color: 0xFEF08A, roughness: 0.35, metalness: 0.2 });
-    const bannerFrame = new THREE.Mesh(frameGeo, frameMat);
-    bannerFrame.position.set(0, 1.8, 4.8);
-    bannerFrame.castShadow = true;
-    bGroup.add(bannerFrame);
-
-    // Front high-resolution canvas banner mesh
-    const bannerMat = new THREE.MeshStandardMaterial({
-      map: bannerTexture,
-      roughness: 0.3,
-      metalness: 0.05
-    });
-    const bannerBoard = new THREE.Mesh(new THREE.PlaneGeometry(4.35, 2.15), bannerMat);
-    bannerBoard.position.set(0, 1.8, 4.92);
-    bannerBoard.castShadow = true;
-    bannerBoard.userData = {
-      isProjectBanner: true,
-      milestoneId: cfg.id,
-      parentBuilding: bGroup
-    };
-    bGroup.add(bannerBoard);
-
-    // Small warm ground spotlights shining up onto the project banner
-    const spotGeo = new THREE.CylinderGeometry(0.12, 0.16, 0.35, 8);
-    const spotMat = new THREE.MeshStandardMaterial({ color: 0xFACC15, roughness: 0.2, emissive: 0xFACC15, emissiveIntensity: 0.8 });
-    [-1.6, 1.6].forEach(x => {
-      const lamp = new THREE.Mesh(spotGeo, spotMat);
-      lamp.position.set(x, 0.18, 4.3);
-      lamp.rotation.x = -0.3;
-      bGroup.add(lamp);
-    });
+    const board = new THREE.Mesh(signBoardGeo, signMat);
+    board.position.set(0, 1.2, 4.5);
+    board.castShadow = true;
+    bGroup.add(board);
 
     bGroup.userData = {
       isBuilding: true,
@@ -930,67 +1068,206 @@ function buildFoliageAndRocks() {
     scene.add(m);
   });
 
-  // 2. Cute Small Town Cottage Buildings flanking the road
-  const cuteCottages = [
-    { x: -14, z: -22, color: 0xFDE047, roofColor: 0xDC2626, scale: 0.75, rot: 0.4 },
-    { x: 18, z: -12, color: 0xBAE6FD, roofColor: 0x0284C7, scale: 0.85, rot: -0.3 },
-    { x: -22, z: -55, color: 0xFBCFE8, roofColor: 0xBE185D, scale: 0.8, rot: 0.6 },
-    { x: 28, z: -62, color: 0xBBF7D0, roofColor: 0x15803D, scale: 0.75, rot: -0.5 },
-    { x: -20, z: -135, color: 0xFEF08A, roofColor: 0xB45309, scale: 0.8, rot: 0.35 },
-    { x: 16, z: -150, color: 0xE0E7FF, roofColor: 0x4338CA, scale: 0.7, rot: -0.4 },
-    { x: -22, z: -215, color: 0xFED7AA, roofColor: 0xC2410C, scale: 0.85, rot: 0.25 },
-    { x: 12, z: -225, color: 0xCCFBF1, roofColor: 0x0F766E, scale: 0.75, rot: -0.3 },
-    { x: -16, z: -275, color: 0xF5D0FE, roofColor: 0x7E22CE, scale: 0.8, rot: 0.45 },
-    { x: 16, z: -280, color: 0xFEF9C3, roofColor: 0xB91C1C, scale: 0.7, rot: -0.2 }
-  ];
+  // 2. Distinct Town Project Buildings with Rooftop Square Logo Banners (Inspired by Reference Town)
+  townBuildingMeshes = [];
+  PROJECT_BUILDINGS_DATA.forEach(proj => {
+    const pGroup = new THREE.Group();
+    pGroup.position.set(proj.pos.x, 0, proj.pos.z);
+    pGroup.rotation.y = proj.rot;
 
-  cuteCottages.forEach(c => {
-    const cottage = new THREE.Group();
-    cottage.position.set(c.x, 0, c.z);
-    cottage.rotation.y = c.rot;
-    cottage.scale.set(c.scale, c.scale, c.scale);
+    const wallMat = new THREE.MeshStandardMaterial({ color: proj.wallColor, roughness: 0.65 });
+    const roofMat = new THREE.MeshStandardMaterial({ color: proj.roofColor, roughness: 0.55 });
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x92400E, roughness: 0.85 });
+    const winMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.2, emissive: 0xFEF08A, emissiveIntensity: 0.3 });
 
-    const houseWallMat = new THREE.MeshStandardMaterial({ color: c.color, roughness: 0.7 });
-    const houseRoofMat = new THREE.MeshStandardMaterial({ color: c.roofColor, roughness: 0.6 });
+    // Raised courtyard pavement / plinth (cobblestone / paved foundation from reference)
+    const courtGeo = new THREE.BoxGeometry(10, 0.2, 10);
+    const courtMat = new THREE.MeshStandardMaterial({ color: 0xE2E8F0, roughness: 0.9 });
+    const court = new THREE.Mesh(courtGeo, courtMat);
+    court.position.y = 0.1;
+    court.receiveShadow = true;
+    pGroup.add(court);
 
-    // House walls
-    const wall = new THREE.Mesh(new THREE.BoxGeometry(4.2, 3.2, 4.0), houseWallMat);
-    wall.position.y = 1.6;
-    wall.castShadow = true;
-    cottage.add(wall);
+    // Decorative courtyard fencing (picket, wireframe or circuit trace foundation from reference)
+    if (proj.fenceType === "wooden") {
+      // Cozy wooden pencil/picket fence
+      const fGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.2, 6);
+      const fMat = new THREE.MeshStandardMaterial({ color: 0xD97706, roughness: 0.8 });
+      for (let fx = -4.5; fx <= 4.5; fx += 0.9) {
+        [-4.5, 4.5].forEach(fz => {
+          const post = new THREE.Mesh(fGeo, fMat);
+          post.position.set(fx, 0.6, fz);
+          post.castShadow = true;
+          pGroup.add(post);
+        });
+      }
+    } else if (proj.fenceType === "wireframe") {
+      // Blueprint wireframe scaffold boundary
+      const wfMat = new THREE.MeshStandardMaterial({ color: 0x38BDF8, wireframe: true });
+      const wfBox = new THREE.Mesh(new THREE.BoxGeometry(9.2, 1.4, 9.2), wfMat);
+      wfBox.position.y = 0.8;
+      pGroup.add(wfBox);
+    } else if (proj.fenceType === "circuit") {
+      // Low tech perimeter boundary with corner beacons
+      const techBorderMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.5 });
+      const border = new THREE.Mesh(new THREE.BoxGeometry(9.4, 0.4, 9.4), techBorderMat);
+      border.position.y = 0.25;
+      pGroup.add(border);
+      // Corner beacon lights
+      [-4.5, 4.5].forEach(bx => {
+        [-4.5, 4.5].forEach(bz => {
+          const beacon = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.9, 8), new THREE.MeshStandardMaterial({ color: 0x38BDF8, emissive: 0x38BDF8, emissiveIntensity: 0.8 }));
+          beacon.position.set(bx, 0.5, bz);
+          pGroup.add(beacon);
+        });
+      });
+    }
 
-    // Pitched Roof
-    const roof = new THREE.Mesh(new THREE.ConeGeometry(3.6, 2.0, 4), houseRoofMat);
-    roof.position.y = 4.1;
-    roof.rotation.y = Math.PI / 4;
-    roof.castShadow = true;
-    cottage.add(roof);
+    // Main Architectural House Body
+    const houseBody = new THREE.Mesh(new THREE.BoxGeometry(5.4, 3.8, 5.0), wallMat);
+    houseBody.position.y = 2.0;
+    houseBody.castShadow = true;
+    pGroup.add(houseBody);
 
-    // Chimney with cozy white smoke puff
-    const chimney = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.4, 0.6), houseRoofMat);
-    chimney.position.set(1.1, 4.2, -0.6);
-    cottage.add(chimney);
+    // Front door & warm lighted windows
+    const door = new THREE.Mesh(new THREE.BoxGeometry(1.2, 2.0, 0.2), woodMat);
+    door.position.set(0, 1.1, 2.55);
+    pGroup.add(door);
 
-    const puff = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4, 0), new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.3 }));
-    puff.position.set(1.1, 5.1, -0.6);
-    cottage.add(puff);
-
-    // Front door & windows
-    const door = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.6, 0.15), woodMat);
-    door.position.set(0, 0.8, 2.05);
-    cottage.add(door);
-
-    const winMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.2, emissive: 0xFEF08A, emissiveIntensity: 0.25 });
-    [-1.2, 1.2].forEach(wx => {
-      const win = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.15), winMat);
-      win.position.set(wx, 2.0, 2.05);
-      cottage.add(win);
+    [-1.6, 1.6].forEach(wx => {
+      const win = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.0, 0.15), winMat);
+      win.position.set(wx, 2.4, 2.55);
+      pGroup.add(win);
     });
 
-    scene.add(cottage);
+    // Varied low-poly roofs & gadgets based on project type
+    let bannerMountY = 5.2;
+
+    if (proj.roofType === "pitched") {
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(4.4, 2.4, 4), roofMat);
+      roof.position.y = 4.8;
+      roof.rotation.y = Math.PI / 4;
+      roof.castShadow = true;
+      pGroup.add(roof);
+
+      const chimney = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.6, 0.7), roofMat);
+      chimney.position.set(1.4, 4.8, -0.8);
+      pGroup.add(chimney);
+
+      bannerMountY = 6.4;
+    } else if (proj.roofType === "flat_tech") {
+      const topDeck = new THREE.Mesh(new THREE.BoxGeometry(5.8, 0.5, 5.4), roofMat);
+      topDeck.position.y = 4.0;
+      topDeck.castShadow = true;
+      pGroup.add(topDeck);
+
+      // Dish antenna
+      const dish = new THREE.Mesh(new THREE.ConeGeometry(0.9, 0.4, 8), new THREE.MeshStandardMaterial({ color: 0xFFFFFF }));
+      dish.position.set(-1.4, 4.6, -1.0);
+      dish.rotation.x = -0.6;
+      pGroup.add(dish);
+
+      bannerMountY = 4.8;
+    } else if (proj.roofType === "solar_cottage") {
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(4.4, 2.2, 4), roofMat);
+      roof.position.y = 4.7;
+      roof.rotation.y = Math.PI / 4;
+      roof.castShadow = true;
+      pGroup.add(roof);
+
+      // Blue solar panel array on roof
+      const solMat = new THREE.MeshStandardMaterial({ color: 0x1E3A8A, roughness: 0.2, metalness: 0.4 });
+      const sol = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.1, 1.4), solMat);
+      sol.position.set(0, 4.9, 1.4);
+      sol.rotation.x = -0.6;
+      pGroup.add(sol);
+
+      bannerMountY = 6.2;
+    } else if (proj.roofType === "dome") {
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(2.2, 16, 16, 0, Math.PI * 2, 0, Math.PI / 2), roofMat);
+      dome.position.y = 3.9;
+      dome.castShadow = true;
+      pGroup.add(dome);
+
+      bannerMountY = 6.3;
+    } else if (proj.roofType === "wireframe_frame") {
+      // Wireframe 3D pyramid roof frame
+      const pyrMat = new THREE.MeshStandardMaterial({ color: 0x7C3AED, wireframe: true });
+      const pyr = new THREE.Mesh(new THREE.ConeGeometry(3.6, 3.0, 4), pyrMat);
+      pyr.position.y = 5.2;
+      pyr.rotation.y = Math.PI / 4;
+      pGroup.add(pyr);
+
+      bannerMountY = 6.8;
+    } else {
+      const roof = new THREE.Mesh(new THREE.BoxGeometry(5.6, 0.8, 5.2), roofMat);
+      roof.position.y = 4.2;
+      roof.castShadow = true;
+      pGroup.add(roof);
+
+      // Rotating gear graphic
+      const gear = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.3, 8), roofMat);
+      gear.position.set(0, 4.7, 0);
+      pGroup.add(gear);
+
+      bannerMountY = 5.4;
+    }
+
+    // Small Square Logo Banner mounted above rooftop (Inspired by Reference Town Image Signs)
+    const logoTexture = createLogoBadgeBannerTexture(proj);
+
+    // Sturdy dark mounting post
+    const signPole = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 1.6, 8), lamppostMat);
+    signPole.position.set(0, bannerMountY + 0.8, 0);
+    pGroup.add(signPole);
+
+    // Outer dark sign frame
+    const frameMesh = new THREE.Mesh(
+      new THREE.BoxGeometry(2.5, 2.5, 0.16),
+      new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 })
+    );
+    frameMesh.position.set(0, bannerMountY + 1.8, 0);
+    frameMesh.castShadow = true;
+    pGroup.add(frameMesh);
+
+    // Front high-res logo canvas texture
+    const bannerBoard = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.35, 2.35),
+      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.25 })
+    );
+    bannerBoard.position.set(0, bannerMountY + 1.8, 0.09);
+    bannerBoard.userData = {
+      isProjectTownBanner: true,
+      projectId: proj.id,
+      parentBuilding: pGroup
+    };
+    pGroup.add(bannerBoard);
+
+    // Back texture as well so it's readable from all orbit angles
+    const bannerBoardBack = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.35, 2.35),
+      new THREE.MeshStandardMaterial({ map: logoTexture, roughness: 0.25 })
+    );
+    bannerBoardBack.position.set(0, bannerMountY + 1.8, -0.09);
+    bannerBoardBack.rotation.y = Math.PI;
+    bannerBoardBack.userData = {
+      isProjectTownBanner: true,
+      projectId: proj.id,
+      parentBuilding: pGroup
+    };
+    pGroup.add(bannerBoardBack);
+
+    pGroup.userData = {
+      isTownProjectBuilding: true,
+      projectId: proj.id,
+      anchorPos: new THREE.Vector3(proj.pos.x, bannerMountY + 2.5, proj.pos.z)
+    };
+
+    scene.add(pGroup);
+    townBuildingMeshes.push(pGroup);
   });
 
-  // 3. Cute Street Lampposts along both sides of the road
+  // 3. Street Lampposts along the road and town courtyards
   const lamppostPoints = [
     { x: -5, z: -10 }, { x: 5, z: -10 },
     { x: 16, z: -25 }, { x: 8, z: -45 },
@@ -1020,55 +1297,67 @@ function buildFoliageAndRocks() {
     scene.add(pole);
   });
 
-  // 4. Over 70 Rich, Stylized Low-Poly Town Trees & Blossom Trees
+  // 4. Dense Forest of Green Trees, Pines & White Birch Trunks (Inspired by Reference Image Town)
+  const birchTrunkMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.6 }); // White birch trunks from reference
+
   const treePositions = [
-    // Spawn park & entrance
-    { x: -8.0, z: 12.0, h: 4.2, m: 0 }, { x: -2.5, z: 13.5, h: 4.8, m: 1 },
-    { x: 7.2, z: 13.0, h: 4.5, m: 5 }, { x: 12.0, z: 11.5, h: 3.8, m: 0 },
-    { x: -12.5, z: 6.0, h: 4.0, m: 2 }, { x: 14.5, z: 5.0, h: 4.6, m: 5 },
-    { x: -15.0, z: -6.0, h: 4.5, m: 0 }, { x: 16.0, z: -4.0, h: 5.0, m: 1 },
+    // Entrance park & groves
+    { x: -8.0, z: 12.0, h: 4.5, m: 0, birch: true }, { x: -2.5, z: 13.5, h: 5.0, m: 1, birch: false },
+    { x: 7.2, z: 13.0, h: 4.8, m: 0, birch: true }, { x: 12.0, z: 11.5, h: 4.0, m: 2, birch: false },
+    { x: -14.0, z: 6.0, h: 4.2, m: 1, birch: false }, { x: 15.0, z: 5.0, h: 4.8, m: 0, birch: true },
+    { x: -16.0, z: -6.0, h: 4.6, m: 2, birch: false }, { x: 17.0, z: -4.0, h: 5.2, m: 1, birch: false },
+    { x: -22.0, z: -8.0, h: 4.4, m: 0, birch: true }, { x: 24.0, z: -6.0, h: 4.8, m: 1, birch: false },
 
-    // Near Milestone 1 (PSBA School Town area)
-    { x: -8.5, z: -15, h: 4.5, m: 0 }, { x: 8.5, z: -18, h: 4.0, m: 1 },
-    { x: -18.0, z: -28, h: 5.2, m: 3 }, { x: -10.0, z: -32, h: 3.8, m: 2 },
-    { x: 12.0, z: -30, h: 4.8, m: 5 }, { x: 27.0, z: -28, h: 4.2, m: 0 },
-    { x: 26.0, z: -42, h: 5.2, m: 1 }, { x: -16.0, z: -45, h: 4.6, m: 0 },
+    // Surrounding Project 1 (Creative CAD) & Milestone 1 (PSBA School)
+    { x: -36.0, z: -30, h: 5.4, m: 1, birch: false }, { x: -38.0, z: -45, h: 5.0, m: 0, birch: true },
+    { x: -22.0, z: -25, h: 4.2, m: 2, birch: false }, { x: -20.0, z: -48, h: 4.6, m: 1, birch: false },
+    { x: -8.5, z: -15, h: 4.5, m: 0, birch: true }, { x: 8.5, z: -18, h: 4.0, m: 1, birch: false },
+    { x: 12.0, z: -30, h: 4.8, m: 0, birch: false }, { x: 28.0, z: -25, h: 5.2, m: 1, birch: true },
+    { x: 30.0, z: -38, h: 4.6, m: 2, birch: false }, { x: 26.0, z: -45, h: 5.0, m: 0, birch: false },
 
-    // Near Milestone 2 (MITAOE Campus Town area)
-    { x: -12.0, z: -65, h: 4.8, m: 0 }, { x: -26.0, z: -70, h: 4.5, m: 2 },
-    { x: 30.0, z: -75, h: 5.0, m: 5 }, { x: 28.0, z: -92, h: 4.2, m: 3 },
-    { x: 8.0, z: -75, h: 3.9, m: 1 }, { x: 7.0, z: -95, h: 4.6, m: 0 },
-    { x: -12.0, z: -88, h: 4.4, m: 2 }, { x: -28.0, z: -85, h: 5.4, m: 0 },
+    // Surrounding Project 2 (IoT & Edge) & Milestone 2 (MITAOE Campus)
+    { x: 38.0, z: -42, h: 5.2, m: 1, birch: false }, { x: 40.0, z: -55, h: 4.8, m: 0, birch: true },
+    { x: 24.0, z: -55, h: 4.4, m: 2, birch: false }, { x: 36.0, z: -65, h: 5.4, m: 1, birch: false },
+    { x: 8.0, z: -68, h: 4.2, m: 0, birch: true }, { x: 7.0, z: -80, h: 4.6, m: 1, birch: false },
+    { x: 28.0, z: -75, h: 5.0, m: 2, birch: false }, { x: 30.0, z: -92, h: 4.8, m: 0, birch: true },
+    { x: -12.0, z: -65, h: 4.8, m: 1, birch: false }, { x: -26.0, z: -70, h: 4.5, m: 0, birch: true },
+    { x: -30.0, z: -85, h: 5.2, m: 2, birch: false }, { x: -14.0, z: -88, h: 4.4, m: 1, birch: false },
 
-    // Near Milestone 3 (Maker Lab Town area)
-    { x: -26.0, z: -105, h: 5.0, m: 1 }, { x: -8.0, z: -118, h: 4.2, m: 5 },
-    { x: -28.0, z: -120, h: 4.8, m: 3 }, { x: 6.0, z: -110, h: 4.5, m: 0 },
-    { x: 22.0, z: -115, h: 5.2, m: 2 }, { x: 26.0, z: -130, h: 4.6, m: 4 },
-    { x: -10.0, z: -132, h: 4.0, m: 0 }, { x: -25.0, z: -145, h: 5.2, m: 1 },
+    // Surrounding Project 3 (Vision AI) & Milestone 3 (Maker Lab)
+    { x: -40.0, z: -95, h: 5.4, m: 0, birch: true }, { x: -42.0, z: -110, h: 5.0, m: 1, birch: false },
+    { x: -24.0, z: -95, h: 4.2, m: 2, birch: false }, { x: -24.0, z: -120, h: 4.8, m: 0, birch: true },
+    { x: -8.0, z: -118, h: 4.2, m: 1, birch: false }, { x: 6.0, z: -110, h: 4.5, m: 2, birch: false },
+    { x: 22.0, z: -115, h: 5.2, m: 0, birch: true }, { x: 24.0, z: -130, h: 4.6, m: 1, birch: false },
+    { x: 38.0, z: -118, h: 5.0, m: 2, birch: false }, { x: 40.0, z: -135, h: 5.4, m: 0, birch: true },
 
-    // Near Milestone 4 (Coppercloud HQ area)
-    { x: -8.0, z: -155, h: 4.5, m: 0 }, { x: -22.0, z: -160, h: 4.8, m: 2 },
-    { x: -24.0, z: -175, h: 5.0, m: 5 }, { x: 8.0, z: -162, h: 4.2, m: 1 },
-    { x: 20.0, z: -165, h: 4.6, m: 0 }, { x: 26.0, z: -175, h: 5.4, m: 3 },
-    { x: -6.0, z: -180, h: 4.0, m: 2 }, { x: 10.0, z: -182, h: 4.5, m: 1 },
+    // Surrounding Project 4 (Spatial SLAM) & Milestone 4 (Coppercloud HQ)
+    { x: 38.0, z: -140, h: 4.8, m: 1, birch: false }, { x: 42.0, z: -155, h: 5.2, m: 0, birch: true },
+    { x: 24.0, z: -145, h: 4.2, m: 2, birch: false }, { x: 22.0, z: -160, h: 4.6, m: 1, birch: false },
+    { x: 8.0, z: -162, h: 4.2, m: 0, birch: true }, { x: -8.0, z: -155, h: 4.5, m: 1, birch: false },
+    { x: -24.0, z: -150, h: 5.0, m: 2, birch: false }, { x: -26.0, z: -165, h: 5.2, m: 0, birch: true },
+    { x: -32.0, z: -175, h: 4.8, m: 1, birch: false }, { x: -6.0, z: -180, h: 4.0, m: 2, birch: false },
 
-    // Near Milestone 5 (Coppercloud R&D area)
-    { x: 30.0, z: -195, h: 5.0, m: 4 }, { x: 32.0, z: -210, h: 4.4, m: 0 },
-    { x: 12.0, z: -205, h: 4.6, m: 5 }, { x: -14.0, z: -198, h: 4.8, m: 1 },
-    { x: -26.0, z: -205, h: 5.2, m: 2 }, { x: -10.0, z: -212, h: 4.0, m: 0 },
-    { x: -28.0, z: -225, h: 4.6, m: 3 }, { x: 32.0, z: -225, h: 5.2, m: 0 },
+    // Surrounding Project 5 (3D Twins) & Milestone 5 (Coppercloud R&D)
+    { x: -36.0, z: -175, h: 5.2, m: 0, birch: true }, { x: -38.0, z: -190, h: 5.0, m: 1, birch: false },
+    { x: -20.0, z: -185, h: 4.4, m: 2, birch: false }, { x: -16.0, z: -200, h: 4.8, m: 0, birch: true },
+    { x: 10.0, z: -182, h: 4.5, m: 1, birch: false }, { x: 12.0, z: -200, h: 4.6, m: 2, birch: false },
+    { x: 32.0, z: -190, h: 5.0, m: 0, birch: true }, { x: 34.0, z: -205, h: 4.4, m: 1, birch: false },
+    { x: 40.0, z: -200, h: 5.4, m: 2, birch: false }, { x: 42.0, z: -215, h: 5.0, m: 0, birch: true },
 
-    // Near Milestone 6 (Clarity Lab IITJ area)
-    { x: 34.0, z: -240, h: 4.8, m: 5 }, { x: 16.0, z: -242, h: 4.2, m: 1 },
-    { x: 30.0, z: -250, h: 5.2, m: 2 }, { x: -12.0, z: -238, h: 4.6, m: 0 },
-    { x: -24.0, z: -245, h: 5.0, m: 3 }, { x: -16.0, z: -252, h: 4.2, m: 1 },
-    { x: 8.0, z: -255, h: 4.5, m: 0 }, { x: -26.0, z: -265, h: 5.2, m: 4 },
+    // Surrounding Project 6 (Clean Tech) & Milestone 6 (Clarity Lab IITJ)
+    { x: 38.0, z: -225, h: 5.2, m: 1, birch: false }, { x: 40.0, z: -238, h: 4.8, m: 0, birch: true },
+    { x: 22.0, z: -225, h: 4.2, m: 2, birch: false }, { x: 18.0, z: -245, h: 4.6, m: 1, birch: false },
+    { x: 34.0, z: -240, h: 4.8, m: 0, birch: true }, { x: 36.0, z: -255, h: 5.2, m: 2, birch: false },
+    { x: -14.0, z: -235, h: 4.6, m: 1, birch: false }, { x: -26.0, z: -240, h: 5.0, m: 0, birch: true },
+    { x: -34.0, z: -245, h: 5.2, m: 2, birch: false }, { x: -36.0, z: -260, h: 5.0, m: 1, birch: false },
 
-    // Near Milestone 7 & Town Outskirts (Digital Twin Lab area)
-    { x: -18.0, z: -275, h: 4.8, m: 2 }, { x: -16.0, z: -290, h: 5.0, m: 5 },
-    { x: 2.0, z: -285, h: 4.2, m: 1 }, { x: 14.0, z: -270, h: 4.6, m: 0 },
-    { x: 22.0, z: -285, h: 5.2, m: 3 }, { x: -2.0, z: -300, h: 5.0, m: 0 },
-    { x: -14.0, z: -305, h: 4.6, m: 1 }, { x: 12.0, z: -305, h: 4.8, m: 2 }
+    // Surrounding Project 7 (Robotics) & Milestone 7 (Digital Twin Lab)
+    { x: -32.0, z: -255, h: 5.2, m: 0, birch: true }, { x: -36.0, z: -270, h: 5.0, m: 1, birch: false },
+    { x: -18.0, z: -265, h: 4.4, m: 2, birch: false }, { x: -20.0, z: -285, h: 4.8, m: 0, birch: true },
+    { x: 8.0, z: -255, h: 4.5, m: 1, birch: false }, { x: 12.0, z: -270, h: 4.6, m: 2, birch: false },
+    { x: 24.0, z: -265, h: 5.2, m: 0, birch: true }, { x: 26.0, z: -285, h: 5.0, m: 1, birch: false },
+    { x: -2.0, z: -295, h: 5.0, m: 2, birch: false }, { x: 14.0, z: -298, h: 4.8, m: 0, birch: true },
+    { x: -16.0, z: -305, h: 4.6, m: 1, birch: false }, { x: 18.0, z: -310, h: 5.2, m: 0, birch: true }
   ];
 
   treePositions.forEach(tp => {
@@ -1076,10 +1365,11 @@ function buildFoliageAndRocks() {
     treeGroup.position.set(tp.x, 0, tp.z);
 
     const chosenLeafMat = leafMats[tp.m % leafMats.length];
+    const trunkMaterial = tp.birch ? birchTrunkMat : trunkMat;
 
     // Tree trunk
     const trunkHeight = tp.h * 0.42;
-    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, trunkHeight, 6), trunkMat);
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, trunkHeight, 6), trunkMaterial);
     trunk.position.y = trunkHeight / 2;
     trunk.castShadow = true;
     treeGroup.add(trunk);
@@ -1126,13 +1416,13 @@ function buildFoliageAndRocks() {
   });
 
   // 5. Flower bushes along the sidewalk edges
-  const bushColors = [0xF472B6, 0xFB7185, 0xFACC15, 0xA855F7, 0x38BDF8];
-  for (let b = 0; b < 35; b++) {
+  const bushColors = [0x22C55E, 0x16A34A, 0xFACC15, 0x4ADE80, 0x86EFAC];
+  for (let b = 0; b < 40; b++) {
     const bColor = bushColors[b % bushColors.length];
     const bMat = new THREE.MeshStandardMaterial({ color: bColor, roughness: 0.8, flatShading: true });
     const bush = new THREE.Mesh(new THREE.DodecahedronGeometry(0.55 + (b % 3) * 0.15, 0), bMat);
     const side = (b % 2 === 0 ? 1 : -1);
-    const bz = -10 - (b * 8);
+    const bz = -10 - (b * 7);
     const bx = side * (5.5 + (b % 4) * 0.8);
     bush.position.set(bx, 0.35, bz);
     bush.castShadow = true;
@@ -1635,20 +1925,34 @@ function setupWorldControls(container) {
         }
       });
     });
+    townBuildingMeshes.forEach(tb => {
+      tb.traverse(child => {
+        if (child.isMesh) {
+          hitTargets.push(child);
+        }
+      });
+    });
 
     const intersects = raycaster.intersectObjects(hitTargets, false);
     if (intersects.length > 0) {
       const hitObj = intersects[0].object;
-      // If clicked directly on the project banner billboard, open the full project description panel!
-      if (hitObj.userData && hitObj.userData.isProjectBanner) {
-        openProjectDetailPanel(hitObj.userData.milestoneId);
-        showMilestonePopup(hitObj.userData.milestoneId);
-      } else {
-        const clickedBuilding = hitObj.userData.parentBuilding || hitObj;
-        const bGroup = buildingMeshes.find(b => b === clickedBuilding || b.children.includes(hitObj));
-        if (bGroup && bGroup.userData.isBuilding) {
-          showMilestonePopup(bGroup.userData.milestoneId);
-        }
+      
+      // 1. If clicked on a Town Project Building or its Rooftop Logo Banner
+      if (hitObj.userData && (hitObj.userData.isProjectTownBanner || hitObj.userData.projectId)) {
+        openProjectDetailPanel(hitObj.userData.projectId);
+        return;
+      }
+      const townParent = townBuildingMeshes.find(tb => tb.children.includes(hitObj) || tb === hitObj);
+      if (townParent && townParent.userData.isTownProjectBuilding) {
+        openProjectDetailPanel(townParent.userData.projectId);
+        return;
+      }
+
+      // 2. If clicked on a Roadside Milestone Building
+      const clickedBuilding = hitObj.userData.parentBuilding || hitObj;
+      const bGroup = buildingMeshes.find(b => b === clickedBuilding || b.children.includes(hitObj));
+      if (bGroup && bGroup.userData.isBuilding) {
+        showMilestonePopup(bGroup.userData.milestoneId);
       }
     } else {
       closeMilestonePopup();
@@ -1679,24 +1983,28 @@ function setupWorldControls(container) {
    11. PROJECT DETAIL SLIDE-OVER PANEL HANDLERS (RICH CUSTOMIZABLE VIEW)
    -------------------------------------------------------------------------- */
 function openProjectDetailPanel(id) {
-  const data = MILESTONES_DATA.find(m => m.id === id);
+  // Check project buildings first, fallback to milestones data
+  const townProj = PROJECT_BUILDINGS_DATA.find(p => p.id === id);
+  const milestone = MILESTONES_DATA.find(m => m.id === id);
+  const data = townProj || milestone;
   if (!data) return;
 
   const panel = document.getElementById('project-detail-panel');
   if (!panel) return;
 
-  document.getElementById('panel-badge').textContent = `PROJECT MILESTONE #${data.step}`;
+  const badgeText = townProj ? `TOWN PROJECT • ${townProj.badge}` : `MILESTONE #${data.step}`;
+  document.getElementById('panel-badge').textContent = badgeText;
   document.getElementById('panel-category').textContent = data.details?.category || 'Engineering Project';
   document.getElementById('panel-title').textContent = data.title;
   document.getElementById('panel-tagline').textContent = data.details?.tagline || data.summary;
-  document.getElementById('panel-location').textContent = data.location;
-  document.getElementById('panel-timeline').textContent = data.period;
+  document.getElementById('panel-location').textContent = data.location || "Janhavi's Portfolio Town";
+  document.getElementById('panel-timeline').textContent = data.period || "Project Showcase";
   document.getElementById('panel-desc').textContent = data.details?.description || data.summary;
 
   // Placeholder slot banner label
   const slotLabel = document.getElementById('panel-slot-label');
   if (slotLabel) {
-    slotLabel.textContent = `${data.bannerTitle} — Visual Media & Architecture Diagram Slot`;
+    slotLabel.textContent = `${data.badge || data.bannerTitle || data.title} — Visual Showcase Slot`;
   }
 
   // Achievements list
@@ -1712,7 +2020,8 @@ function openProjectDetailPanel(id) {
   // Technologies tags
   const techContainer = document.getElementById('panel-tech-tags');
   techContainer.innerHTML = '';
-  data.skills.forEach(skill => {
+  const tags = data.skills || [data.badge, "3D Systems", "Engineering"];
+  tags.forEach(skill => {
     const span = document.createElement('span');
     span.className = 'panel-tech-tag';
     span.textContent = skill;
