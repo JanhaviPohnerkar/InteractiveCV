@@ -210,12 +210,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Generative Art & Creative CAD",
     badge: "CREATIVE",
     icon: "🎨",
-    themeColor: "#C08497",
+    themeColor: "#DB2777",
     pos: { x: -28, z: -38 },
     rot: 0.45,
     roofType: "pitched",
-    wallColor: 0xFAF6F0,
-    roofColor: 0xC4929E,
+    wallColor: 0xFEF3C7, // Cheerful warm honey butter
+    roofColor: 0xDB2777, // Cheerful warm berry pink
     fenceType: "wooden",
     details: {
       category: "Creative Computation",
@@ -234,12 +234,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Smart IoT & Embedded Telemetry",
     badge: "IOT & EDGE",
     icon: "📡",
-    themeColor: "#64748B",
+    themeColor: "#2563EB",
     pos: { x: 30, z: -48 },
     rot: -0.4,
     roofType: "flat_tech",
-    wallColor: 0xF3F5F7,
-    roofColor: 0x7E99B7,
+    wallColor: 0xEDE9FE, // Soft lavender blue
+    roofColor: 0x3B82F6, // Vibrant cornflower blue
     fenceType: "circuit",
     details: {
       category: "Embedded IoT",
@@ -258,12 +258,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Computer Vision & Optical Inspection",
     badge: "VISION AI",
     icon: "👁️",
-    themeColor: "#5E8B7E",
+    themeColor: "#059669",
     pos: { x: -32, z: -100 },
     rot: 0.5,
     roofType: "pitched",
-    wallColor: 0xF2F7F4,
-    roofColor: 0x6E9A85,
+    wallColor: 0xDCFCE7, // Crisp mint green
+    roofColor: 0x059669, // Deep emerald teal
     fenceType: "wireframe",
     details: {
       category: "Industrial Vision",
@@ -282,12 +282,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Spatial SLAM & 360° Video Systems",
     badge: "SPATIAL AI",
     icon: "🌐",
-    themeColor: "#C98A60",
+    themeColor: "#D97706",
     pos: { x: 32, z: -125 },
     rot: -0.35,
     roofType: "dome",
-    wallColor: 0xFAF7F2,
-    roofColor: 0xCCA07A,
+    wallColor: 0xFFEDD5, // Warm apricot cream
+    roofColor: 0xD97706, // Cheerful golden amber
     fenceType: "circuit",
     details: {
       category: "Spatial Robotics",
@@ -306,12 +306,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Monocular 3D Digital Twins",
     badge: "3D TWINS",
     icon: "🧊",
-    themeColor: "#8E7CC3",
+    themeColor: "#7C3AED",
     pos: { x: -28, z: -180 },
     rot: 0.35,
     roofType: "wireframe_frame",
-    wallColor: 0xF7F5FA,
-    roofColor: 0x9D8DBE,
+    wallColor: 0xF3E8FF, // Soft purple haze
+    roofColor: 0x8B5CF6, // Cheerful electric violet
     fenceType: "wireframe",
     details: {
       category: "Frontier 3D Research",
@@ -330,12 +330,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Sustainable Electronics & Clean Tech",
     badge: "ECO TECH",
     icon: "☀️",
-    themeColor: "#729B79",
+    themeColor: "#15803D",
     pos: { x: 30, z: -210 },
     rot: -0.45,
     roofType: "solar_cottage",
-    wallColor: 0xF5F9F6,
-    roofColor: 0x7EAB86,
+    wallColor: 0xFEF9C3, // Cheerful sunlight cream
+    roofColor: 0x16A34A, // Rich leaf green
     fenceType: "wooden",
     details: {
       category: "Sustainable Hardware",
@@ -354,12 +354,12 @@ const PROJECT_BUILDINGS_DATA = [
     title: "Autonomous Mobile Robotics",
     badge: "ROBOTICS",
     icon: "🤖",
-    themeColor: "#6B8E9B",
+    themeColor: "#0284C7",
     pos: { x: -24, z: -245 },
     rot: 0.25,
     roofType: "gear_lab",
-    wallColor: 0xF4F8FA,
-    roofColor: 0x7CA4B5,
+    wallColor: 0xE0F2FE, // Cheerful cyan mist
+    roofColor: 0x0284C7, // Vibrant electric cyan
     fenceType: "circuit",
     details: {
       category: "Robotics & Controls",
@@ -407,11 +407,11 @@ function initBrunoWorld() {
   const canvas = document.getElementById('world-canvas');
   if (!container || !canvas || typeof THREE === 'undefined') return;
 
-  // Scene & Soft Pastel Environment (Gentle, Relaxing & Easy on the Eyes)
+  // Scene & Cheerful Warm Atmosphere (Vibrant yet Soft on the Eyes)
   scene = new THREE.Scene();
-  const skyColor = new THREE.Color(0xF1EDE6); // Warm soft creamy off-white / light oat horizon
+  const skyColor = new THREE.Color(0xFEE2D5); // Warm cheerful sunrise peach / morning sky
   scene.background = skyColor;
-  scene.fog = new THREE.FogExp2(0xF1EDE6, 0.0038);
+  scene.fog = new THREE.FogExp2(0xFEE2D5, 0.0032);
 
   // Camera: Elevated Isometric Diagonal Perspective
   const aspect = container.clientWidth / container.clientHeight;
@@ -429,14 +429,14 @@ function initBrunoWorld() {
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-  // Gentle, Non-Glare Warm Ambient & Hemisphere Lighting
-  const ambientLight = new THREE.AmbientLight(0xFDFBF7, 0.95);
+  // Cheerful Warm Natural Sunlight & Sky/Ground Bounce
+  const ambientLight = new THREE.AmbientLight(0xFFF1E6, 1.05); // Cheerful warm fill
   scene.add(ambientLight);
 
-  const hemiLight = new THREE.HemisphereLight(0xF8F5EE, 0xC4D7B2, 0.75); // Soft cream sky to muted sage bounce
+  const hemiLight = new THREE.HemisphereLight(0xFDE68A, 0x86EFAC, 0.85); // Cheerful sun-yellow sky to fresh spring green meadow bounce
   scene.add(hemiLight);
 
-  const sunLight = new THREE.DirectionalLight(0xFFFDF7, 1.25); // Soft warm natural daylight
+  const sunLight = new THREE.DirectionalLight(0xFFFBEB, 1.45); // Golden sunny directional light
   sunLight.position.set(-35, 55, 30);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 2048;
@@ -451,12 +451,12 @@ function initBrunoWorld() {
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
 
-  // 1. Soft Muted Sage/Olive Meadow Ground (Easy on the eyes, low eye fatigue)
+  // 1. Cheerful Warm Spring Meadow (Vibrant yet pastel, removes dull washed-out look)
   const groundGeo = new THREE.PlaneGeometry(500, 500);
   groundGeo.rotateX(-Math.PI / 2);
   const groundMat = new THREE.MeshStandardMaterial({
-    color: 0xB8CDB5, // Muted pastel sage meadow
-    roughness: 0.95,
+    color: 0x93C572, // Pistachio / Fresh Spring Meadow green (cheerful & easy on eyes)
+    roughness: 0.88,
     metalness: 0.0
   });
   const ground = new THREE.Mesh(groundGeo, groundMat);
@@ -525,8 +525,8 @@ function buildBigSculpturalText() {
   textGroup.position.set(0, 0, 7.5);
 
   const letterMat = new THREE.MeshStandardMaterial({
-    color: 0xFFFFFF,
-    roughness: 0.35,
+    color: 0xFBBF24, // Warm cheerful golden honey clay (replaces plain white)
+    roughness: 0.4,
     metalness: 0.05
   });
 
@@ -835,7 +835,7 @@ function buildMilestoneBuildings() {
     createProceduralBuilding(bGroup, cfg);
 
     const plinthGeo = new THREE.BoxGeometry(9, 0.25, 9);
-    const plinthMat = new THREE.MeshStandardMaterial({ color: 0xF1F5F9, roughness: 0.9 });
+    const plinthMat = new THREE.MeshStandardMaterial({ color: 0xD8B28A, roughness: 0.85 }); // Warm biscuit sandstone foundation
     const plinth = new THREE.Mesh(plinthGeo, plinthMat);
     plinth.position.y = 0.12;
     plinth.receiveShadow = true;
@@ -1023,23 +1023,23 @@ function createProceduralBuilding(group, cfg) {
 }
 
 function buildFoliageAndRocks() {
-  const rockMat = new THREE.MeshStandardMaterial({ color: 0xEAE7E1, roughness: 0.9, flatShading: true });
-  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8C7866, roughness: 0.9 });
+  const rockMat = new THREE.MeshStandardMaterial({ color: 0xD8D4CB, roughness: 0.9, flatShading: true });
+  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x78553D, roughness: 0.85 }); // Warm chocolate mahogany trunk
 
-  // Soft, cohesive pastel foliage materials (gentle & harmonious)
+  // Cheerful, harmonious nature foliage palette (rich greens, warm golden yellows & blush)
   const leafMats = [
-    new THREE.MeshStandardMaterial({ color: 0x8DAA82, roughness: 0.8, flatShading: true }), // Soft Forest Sage
-    new THREE.MeshStandardMaterial({ color: 0x76977A, roughness: 0.8, flatShading: true }), // Muted Eucalyptus
-    new THREE.MeshStandardMaterial({ color: 0x98AF88, roughness: 0.85, flatShading: true }), // Pale Moss Green
-    new THREE.MeshStandardMaterial({ color: 0xD4C697, roughness: 0.8, flatShading: true }), // Soft Muted Ochre
-    new THREE.MeshStandardMaterial({ color: 0xD8B28A, roughness: 0.8, flatShading: true }), // Gentle Warm Sand
-    new THREE.MeshStandardMaterial({ color: 0xE6B8B8, roughness: 0.85, flatShading: true })  // Soft Dusty Rose / Blossom
+    new THREE.MeshStandardMaterial({ color: 0x6DAF55, roughness: 0.75, flatShading: true }), // Cheerful Spring Olive
+    new THREE.MeshStandardMaterial({ color: 0x489659, roughness: 0.75, flatShading: true }), // Crisp Emerald Grove
+    new THREE.MeshStandardMaterial({ color: 0x88C057, roughness: 0.75, flatShading: true }), // Sunny Apple Green
+    new THREE.MeshStandardMaterial({ color: 0xE5AD45, roughness: 0.75, flatShading: true }), // Warm Golden Sunlight
+    new THREE.MeshStandardMaterial({ color: 0xE89858, roughness: 0.75, flatShading: true }), // Warm Apricot Amber
+    new THREE.MeshStandardMaterial({ color: 0xF2A4B8, roughness: 0.75, flatShading: true })  // Cheerful Cherry Blossom
   ];
 
   // Town Props Materials (Gentle, low-contrast finishes)
-  const woodMat = new THREE.MeshStandardMaterial({ color: 0x8C7355, roughness: 0.85 });
-  const lamppostMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.7 });
-  const lampLightMat = new THREE.MeshStandardMaterial({ color: 0xFEF9C3, emissive: 0xFEF08A, emissiveIntensity: 0.6 });
+  const woodMat = new THREE.MeshStandardMaterial({ color: 0x965A38, roughness: 0.85 });
+  const lamppostMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
+  const lampLightMat = new THREE.MeshStandardMaterial({ color: 0xFDE047, emissive: 0xFACC15, emissiveIntensity: 0.9 });
 
   // 1. Scattered Low-Poly Boulders
   const rockPositions = [
@@ -1077,9 +1077,9 @@ function buildFoliageAndRocks() {
     const woodMat = new THREE.MeshStandardMaterial({ color: 0x92400E, roughness: 0.85 });
     const winMat = new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.2, emissive: 0xFEF08A, emissiveIntensity: 0.3 });
 
-    // Raised courtyard pavement / plinth (cobblestone / paved foundation from reference)
+    // Raised courtyard pavement / plinth (Warm Tuscan cobblestone paver from reference)
     const courtGeo = new THREE.BoxGeometry(10, 0.2, 10);
-    const courtMat = new THREE.MeshStandardMaterial({ color: 0xE2E8F0, roughness: 0.9 });
+    const courtMat = new THREE.MeshStandardMaterial({ color: 0xD97746, roughness: 0.85 }); // Warm rustic Tuscan paver
     const court = new THREE.Mesh(courtGeo, courtMat);
     court.position.y = 0.1;
     court.receiveShadow = true;
