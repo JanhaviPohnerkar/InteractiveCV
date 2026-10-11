@@ -637,16 +637,19 @@ function initBrunoWorld() {
 }
 
 /* --------------------------------------------------------------------------
-   4. BIG 3D EXTRUDED TEXT "JANHAVI"
+   4. BIG 3D EXTRUDED TEXT "JANHAVI'S PORTFOLIO"
    -------------------------------------------------------------------------- */
 function buildBigSculpturalText() {
   const textGroup = new THREE.Group();
-  textGroup.position.set(0, 0, 7.5);
+  // Elevated slightly and placed clearly in front of the camera at spawn with no boulder blockage
+  textGroup.position.set(0, 0.2, 9.5);
 
   const letterMat = new THREE.MeshStandardMaterial({
-    color: 0xFBBF24, // Warm cheerful golden honey clay (replaces plain white)
-    roughness: 0.4,
-    metalness: 0.05
+    color: 0xF59E0B, // Rich warm amber golden honey clay
+    roughness: 0.35,
+    metalness: 0.1,
+    emissive: 0xD97706,
+    emissiveIntensity: 0.15
   });
 
   function stroke(w, h, d, x, y, z) {
@@ -658,81 +661,142 @@ function buildBigSculpturalText() {
     return m;
   }
 
-  const thick = 0.55;
-  const h = 2.4;
-  const bar = 0.45;
+  // Helper letter builder
+  function createLetter(char, h, bar, thick) {
+    const g = new THREE.Group();
+    switch (char) {
+      case 'J': {
+        g.add(stroke(bar, h, thick, 0.35, 0, 0));
+        g.add(stroke(1.0, bar, thick, -0.1, 0, 0));
+        g.add(stroke(bar, 0.75, thick, -0.55, 0, 0));
+        g.add(stroke(1.2, bar, thick, 0, h - bar, 0));
+        break;
+      }
+      case 'A': {
+        const legL = stroke(bar, h, thick, -0.45, 0, 0);
+        legL.rotation.z = -0.12;
+        const legR = stroke(bar, h, thick, 0.45, 0, 0);
+        legR.rotation.z = 0.12;
+        g.add(legL);
+        g.add(legR);
+        g.add(stroke(1.0, bar, thick, 0, h - bar, 0));
+        g.add(stroke(0.85, bar, thick, 0, h * 0.42, 0));
+        break;
+      }
+      case 'N': {
+        // True unmirrored N: vertical left, vertical right, diagonal from top-left to bottom-right
+        g.add(stroke(bar, h, thick, -0.55, 0, 0)); // Left upright
+        g.add(stroke(bar, h, thick, 0.55, 0, 0));  // Right upright
+        const diag = stroke(bar, h * 1.12, thick, 0, -0.05, 0);
+        diag.rotation.z = 0.48; // Positive rotation tilts top-left to bottom-right!
+        g.add(diag);
+        break;
+      }
+      case 'H': {
+        g.add(stroke(bar, h, thick, -0.55, 0, 0));
+        g.add(stroke(bar, h, thick, 0.55, 0, 0));
+        g.add(stroke(1.0, bar, thick, 0, h * 0.48, 0));
+        break;
+      }
+      case 'V': {
+        const legVL = stroke(bar, h * 1.05, thick, -0.38, 0, 0);
+        legVL.rotation.z = 0.22;
+        const legVR = stroke(bar, h * 1.05, thick, 0.38, 0, 0);
+        legVR.rotation.z = -0.22;
+        g.add(legVL);
+        g.add(legVR);
+        break;
+      }
+      case 'I': {
+        g.add(stroke(bar, h, thick, 0, 0, 0));
+        g.add(stroke(1.0, bar, thick, 0, h - bar, 0));
+        g.add(stroke(1.0, bar, thick, 0, 0, 0));
+        break;
+      }
+      case "'": {
+        // Apostrophe
+        g.add(stroke(bar * 0.8, 0.65, thick, 0, h * 0.65, 0));
+        break;
+      }
+      case 'S': {
+        g.add(stroke(1.0, bar, thick, 0, h - bar, 0)); // top
+        g.add(stroke(1.0, bar, thick, 0, h * 0.48, 0)); // mid
+        g.add(stroke(1.0, bar, thick, 0, 0, 0));        // bot
+        g.add(stroke(bar, h * 0.45, thick, -0.45, h * 0.52, 0)); // top-left
+        g.add(stroke(bar, h * 0.45, thick, 0.45, 0.05, 0));      // bot-right
+        break;
+      }
+      case 'P': {
+        g.add(stroke(bar, h, thick, -0.45, 0, 0));
+        g.add(stroke(0.9, bar, thick, 0, h - bar, 0));
+        g.add(stroke(0.9, bar, thick, 0, h * 0.48, 0));
+        g.add(stroke(bar, h * 0.48, thick, 0.45, h * 0.48, 0));
+        break;
+      }
+      case 'O': {
+        g.add(stroke(bar, h, thick, -0.48, 0, 0));
+        g.add(stroke(bar, h, thick, 0.48, 0, 0));
+        g.add(stroke(0.95, bar, thick, 0, h - bar, 0));
+        g.add(stroke(0.95, bar, thick, 0, 0, 0));
+        break;
+      }
+      case 'R': {
+        g.add(stroke(bar, h, thick, -0.45, 0, 0));
+        g.add(stroke(0.9, bar, thick, 0, h - bar, 0));
+        g.add(stroke(0.9, bar, thick, 0, h * 0.48, 0));
+        g.add(stroke(bar, h * 0.48, thick, 0.45, h * 0.48, 0));
+        const legR = stroke(bar, h * 0.55, thick, 0.28, 0, 0);
+        legR.rotation.z = -0.32;
+        g.add(legR);
+        break;
+      }
+      case 'T': {
+        g.add(stroke(bar, h, thick, 0, 0, 0));
+        g.add(stroke(1.2, bar, thick, 0, h - bar, 0));
+        break;
+      }
+      case 'F': {
+        g.add(stroke(bar, h, thick, -0.45, 0, 0));
+        g.add(stroke(1.0, bar, thick, 0.05, h - bar, 0));
+        g.add(stroke(0.8, bar, thick, -0.05, h * 0.5, 0));
+        break;
+      }
+      case 'L': {
+        g.add(stroke(bar, h, thick, -0.45, 0, 0));
+        g.add(stroke(1.0, bar, thick, 0.05, 0, 0));
+        break;
+      }
+    }
+    return g;
+  }
 
-  // J
-  const gJ = new THREE.Group();
-  gJ.position.x = -8.2;
-  gJ.add(stroke(bar, h, thick, 0.45, 0, 0));
-  gJ.add(stroke(1.2, bar, thick, -0.1, 0, 0));
-  gJ.add(stroke(bar, 0.9, thick, -0.65, 0, 0));
-  gJ.add(stroke(1.4, bar, thick, 0, h - bar, 0));
-  textGroup.add(gJ);
+  // Row 1: "JANHAVI'S"
+  const row1Letters = ['J', 'A', 'N', 'H', 'A', 'V', 'I', "'", 'S'];
+  const h1 = 2.4, bar1 = 0.42, thick1 = 0.55;
+  const spacing1 = [2.0, 2.2, 2.2, 2.2, 2.2, 2.2, 1.4, 1.0, 2.0];
+  const totalW1 = spacing1.reduce((a, b) => a + b, 0);
+  let curX1 = -totalW1 / 2 + 0.9;
 
-  // A
-  const gA1 = new THREE.Group();
-  gA1.position.x = -5.4;
-  const legLeft = stroke(bar, h, thick, -0.55, 0, 0);
-  legLeft.rotation.z = -0.12;
-  const legRight = stroke(bar, h, thick, 0.55, 0, 0);
-  legRight.rotation.z = 0.12;
-  gA1.add(legLeft);
-  gA1.add(legRight);
-  gA1.add(stroke(1.2, bar, thick, 0, h - bar, 0));
-  gA1.add(stroke(1.0, bar, thick, 0, 1.0, 0));
-  textGroup.add(gA1);
+  row1Letters.forEach((char, idx) => {
+    const lg = createLetter(char, h1, bar1, thick1);
+    lg.position.set(curX1, 2.0, 0); // Elevated so it stands proudly
+    textGroup.add(lg);
+    curX1 += spacing1[idx];
+  });
 
-  // N
-  const gN = new THREE.Group();
-  gN.position.x = -2.6;
-  gN.add(stroke(bar, h, thick, -0.65, 0, 0));
-  gN.add(stroke(bar, h, thick, 0.65, 0, 0));
-  const diagN = stroke(bar, h * 1.1, thick, 0, -0.1, 0);
-  diagN.rotation.z = -0.48;
-  gN.add(diagN);
-  textGroup.add(gN);
+  // Row 2: "PORTFOLIO"
+  const row2Letters = ['P', 'O', 'R', 'T', 'F', 'O', 'L', 'I', 'O'];
+  const h2 = 1.6, bar2 = 0.32, thick2 = 0.5;
+  const spacing2 = [1.5, 1.5, 1.5, 1.4, 1.4, 1.5, 1.4, 1.0, 1.5];
+  const totalW2 = spacing2.reduce((a, b) => a + b, 0);
+  let curX2 = -totalW2 / 2 + 0.7;
 
-  // H
-  const gH = new THREE.Group();
-  gH.position.x = 0.2;
-  gH.add(stroke(bar, h, thick, -0.65, 0, 0));
-  gH.add(stroke(bar, h, thick, 0.65, 0, 0));
-  gH.add(stroke(1.2, bar, thick, 0, 1.1, 0));
-  textGroup.add(gH);
-
-  // A
-  const gA2 = new THREE.Group();
-  gA2.position.x = 3.0;
-  const legL2 = stroke(bar, h, thick, -0.55, 0, 0);
-  legL2.rotation.z = -0.12;
-  const legR2 = stroke(bar, h, thick, 0.55, 0, 0);
-  legR2.rotation.z = 0.12;
-  gA2.add(legL2);
-  gA2.add(legR2);
-  gA2.add(stroke(1.2, bar, thick, 0, h - bar, 0));
-  gA2.add(stroke(1.0, bar, thick, 0, 1.0, 0));
-  textGroup.add(gA2);
-
-  // V
-  const gV = new THREE.Group();
-  gV.position.x = 5.8;
-  const legVL = stroke(bar, h * 1.05, thick, -0.45, 0, 0);
-  legVL.rotation.z = 0.22;
-  const legVR = stroke(bar, h * 1.05, thick, 0.45, 0, 0);
-  legVR.rotation.z = -0.22;
-  gV.add(legVL);
-  gV.add(legVR);
-  textGroup.add(gV);
-
-  // I
-  const gI = new THREE.Group();
-  gI.position.x = 8.2;
-  gI.add(stroke(bar, h, thick, 0, 0, 0));
-  gI.add(stroke(1.2, bar, thick, 0, h - bar, 0));
-  gI.add(stroke(1.2, bar, thick, 0, 0, 0));
-  textGroup.add(gI);
+  row2Letters.forEach((char, idx) => {
+    const lg = createLetter(char, h2, bar2, thick2);
+    lg.position.set(curX2, 0, 0.6); // Front step
+    textGroup.add(lg);
+    curX2 += spacing2[idx];
+  });
 
   scene.add(textGroup);
 }
@@ -1472,11 +1536,11 @@ function buildFoliageAndRocks() {
   const lamppostMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.7 });
   const lampLightMat = new THREE.MeshStandardMaterial({ color: 0xFDE047, emissive: 0xFACC15, emissiveIntensity: 0.9 });
 
-  // 1. Scattered Low-Poly Boulders
+  // 1. Scattered Low-Poly Boulders (Placed outside the entrance text boulevard)
   const rockPositions = [
-    { x: -9.5, z: 9.5, s: 1.3 }, { x: -5.8, z: 10.2, s: 0.9 },
-    { x: 3.5, z: 10.0, s: 1.4 }, { x: 9.5, z: 9.2, s: 1.1 },
-    { x: -3.5, z: 3.2, s: 0.8 }, { x: 4.5, z: 2.8, s: 1.0 },
+    { x: -14.5, z: 12.0, s: 1.2 }, { x: -16.8, z: 8.5, s: 0.9 },
+    { x: 14.5, z: 12.0, s: 1.2 },  { x: 16.5, z: 8.0, s: 1.0 },
+    { x: -12.5, z: 1.5, s: 0.8 },  { x: 13.5, z: 1.5, s: 0.9 },
     { x: 10, z: -25, s: 1.5 }, { x: -8, z: -50, s: 1.2 },
     { x: 26, z: -70, s: 1.6 }, { x: -24, z: -95, s: 1.8 },
     { x: 8, z: -130, s: 1.4 }, { x: -14, z: -155, s: 1.2 },
@@ -1860,11 +1924,11 @@ function buildFoliageAndRocks() {
 
   // Clustered grove anchor points across town greenbelts and meadows
   const treeGroves = [
-    // Entrance park & welcome groves
-    { cx: -8.5, cz: 13.0, count: 5, radius: 3.5, baseH: 4.8 },
-    { cx: 8.0,  cz: 13.5, count: 5, radius: 3.2, baseH: 4.6 },
-    { cx: -18.0, cz: 6.0,  count: 4, radius: 4.0, baseH: 5.0 },
-    { cx: 18.0,  cz: 4.0,  count: 4, radius: 3.8, baseH: 4.8 },
+    // Entrance park & welcome groves (flanking the sides with a clear grand avenue for the 3D title)
+    { cx: -15.5, cz: 13.0, count: 5, radius: 3.5, baseH: 4.8 },
+    { cx: 15.0,  cz: 13.5, count: 5, radius: 3.2, baseH: 4.6 },
+    { cx: -22.0, cz: 6.0,  count: 4, radius: 4.0, baseH: 5.0 },
+    { cx: 22.0,  cz: 4.0,  count: 4, radius: 3.8, baseH: 4.8 },
     { cx: -24.0, cz: -10,  count: 5, radius: 4.5, baseH: 5.2 },
     { cx: 25.0,  cz: -8,   count: 5, radius: 4.5, baseH: 5.0 },
 
