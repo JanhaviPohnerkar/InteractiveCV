@@ -109,6 +109,33 @@ html, body {
   gap: 0.5rem;
 }
 
+.jump-projects-btn {
+  background: linear-gradient(135deg, #FFF7ED, #FFEDD5);
+  backdrop-filter: blur(12px);
+  padding: 0.6rem 1.1rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #C2410C;
+  border: 1.5px solid #FDBA74;
+  box-shadow: 0 10px 25px -6px rgba(194, 65, 12, 0.25);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.jump-projects-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: #FFFBEB;
+  box-shadow: 0 14px 28px -6px rgba(194, 65, 12, 0.35);
+}
+
+.jump-projects-btn:active {
+  transform: translateY(1px) scale(0.97);
+}
+
 .reset-car-btn {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
@@ -813,19 +840,36 @@ html, body {
   box-shadow: 0 6px 18px rgba(241, 90, 36, 0.45);
 }
 
-.welcome-start-btn:active {
-  transform: scale(0.98);
+/* Direct Jump to Projects Boulevard Button */
+.welcome-jump-projects-btn {
+  width: 100%;
+  margin-top: 0.65rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 1.1rem;
+  border: 1.5px solid rgba(20, 35, 75, 0.2);
+  background: rgba(255, 255, 255, 0.55);
+  color: #14234B;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Soft light sparkle in the lower corner */
-.card-sparkle {
-  position: absolute;
-  bottom: 16px;
-  right: -10px;
-  font-size: 2.2rem;
-  color: rgba(255, 255, 255, 0.65);
-  pointer-events: none;
-  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.4));
+.welcome-jump-projects-btn:hover {
+  background: #FFFFFF;
+  border-color: #F15A24;
+  color: #F15A24;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(241, 90, 36, 0.15);
+}
+
+.welcome-jump-projects-btn:active {
+  transform: scale(0.98);
 }
 
 /* Responsive handling */

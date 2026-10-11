@@ -3555,6 +3555,8 @@ function setupWorldControls(container) {
   // Welcome & Navigation Guide Modal handler
   const welcomeModal = document.getElementById('welcome-modal-backdrop');
   const welcomeStartBtn = document.getElementById('welcome-start-btn');
+  const welcomeJumpBtn = document.getElementById('welcome-jump-projects-btn');
+  const hudJumpBtn = document.getElementById('jump-projects-btn');
 
   function closeWelcomeModal() {
     if (welcomeModal && !welcomeModal.classList.contains('hidden')) {
@@ -3565,8 +3567,55 @@ function setupWorldControls(container) {
     }
   }
 
+  // Jump/Teleport Directly to Projects Boulevard Entrance (Archway at z = -325)
+  function jumpToProjectsBoulevard() {
+    closeWelcomeModal();
+    closeMilestonePopup();
+    closeProjectDetailPanel();
+
+    if (roadCurve && characterGroup) {
+      // Find progress t on road curve closest to z = -325
+      const samples = roadCurve.getPoints(500);
+      let targetT = 0.44; // default near archway
+      let minDist = Infinity;
+      const targetPos = new THREE.Vector3(0, 0, -325);
+      samples.forEach((sp, idx) => {
+        const d = sp.distanceTo(targetPos);
+        if (d < minDist) {
+          minDist = d;
+          targetT = idx / (samples.length - 1);
+        }
+      });
+
+      charState.progress = targetT;
+      charState.speed = 0;
+      input.forward = false;
+      input.backward = false;
+
+      const pt = roadCurve.getPointAt(targetT);
+      const tan = roadCurve.getTangentAt(targetT).normalize();
+      characterGroup.position.set(pt.x, 0, pt.z);
+      charState.rotation = Math.atan2(tan.x, tan.z);
+      characterGroup.rotation.y = charState.rotation;
+
+      // Position camera nicely behind the character facing into the grand archway
+      if (camera) {
+        camera.position.set(pt.x - 14, 12, pt.z + 18);
+        camera.lookAt(pt.x, 2.5, pt.z - 15);
+      }
+    }
+  }
+
   if (welcomeStartBtn) {
     welcomeStartBtn.addEventListener('click', closeWelcomeModal);
+  }
+
+  if (welcomeJumpBtn) {
+    welcomeJumpBtn.addEventListener('click', jumpToProjectsBoulevard);
+  }
+
+  if (hudJumpBtn) {
+    hudJumpBtn.addEventListener('click', jumpToProjectsBoulevard);
   }
 
   if (welcomeModal) {
