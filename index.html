@@ -46,6 +46,68 @@
     </button>
   </aside>
 
+  <!-- Welcome & Navigation Guide Modal -->
+  <div id="welcome-modal-backdrop" class="welcome-modal-backdrop">
+    <div class="welcome-modal-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+      <!-- Animated Avatar / Friendly Icon -->
+      <div class="welcome-avatar-wrapper">
+        <span class="welcome-avatar-emoji">👋</span>
+        <span class="welcome-avatar-sparkle">✨</span>
+      </div>
+
+      <!-- Welcome Greeting -->
+      <div class="welcome-header">
+        <span class="welcome-badge">INTERACTIVE 3D ODYSSEY</span>
+        <h1 id="welcome-title" class="welcome-title">Hey! Welcome to my portfolio!</h1>
+        <p class="welcome-subtitle">Step into my low-poly interactive universe — exploring my engineering journey, milestones, and technical projects.</p>
+      </div>
+
+      <!-- Quick Navigation Instructions -->
+      <div class="welcome-guide-grid">
+        <div class="guide-item">
+          <div class="guide-icon-pill">🚶‍♂️</div>
+          <div class="guide-text">
+            <strong>Walk Forward</strong>
+            <span>Press <kbd>W</kbd> / <kbd>↑</kbd> or click & hold the <strong>[▲ Walk]</strong> button on screen.</span>
+          </div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-icon-pill">🏛️</div>
+          <div class="guide-text">
+            <strong>Discover Milestones & Projects</strong>
+            <span>Walk past buildings along the road to unlock them, or click directly on any building to view full details.</span>
+          </div>
+        </div>
+
+        <div class="guide-item">
+          <div class="guide-icon-pill">👀</div>
+          <div class="guide-text">
+            <strong>Free Camera Look</strong>
+            <span>Drag the screen with your mouse or finger anytime while idle to pan and view the scenery.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wander till the end highlight note -->
+      <div class="welcome-wander-tip">
+        <span class="wander-tip-icon">🌟</span>
+        <div class="wander-tip-content">
+          <strong>Please wander till the end!</strong>
+          <span>Beyond the career milestones lies the grand <strong>"MY PROJECTS" Portal</strong> and the full project boulevard showcasing embedded AI, robotics, and computer vision systems!</span>
+        </div>
+      </div>
+
+      <!-- Start Exploring Button -->
+      <div class="welcome-actions">
+        <button id="welcome-start-btn" class="welcome-start-btn">
+          <span>Let's Explore!</span>
+          <span class="start-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Small Minimal Milestone Popup (Anchored directly over clicked building) -->
   <div id="milestone-popup-container" class="milestone-popup-container">
     <div class="milestone-popup-card">

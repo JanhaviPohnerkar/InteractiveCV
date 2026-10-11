@@ -3551,6 +3551,42 @@ function setupWorldControls(container) {
   const panelBackdrop = document.getElementById('panel-backdrop');
   if (panelCloseBtn) panelCloseBtn.addEventListener('click', closeProjectDetailPanel);
   if (panelBackdrop) panelBackdrop.addEventListener('click', closeProjectDetailPanel);
+
+  // Welcome & Navigation Guide Modal handler
+  const welcomeModal = document.getElementById('welcome-modal-backdrop');
+  const welcomeStartBtn = document.getElementById('welcome-start-btn');
+
+  function closeWelcomeModal() {
+    if (welcomeModal && !welcomeModal.classList.contains('hidden')) {
+      welcomeModal.classList.add('hidden');
+      setTimeout(() => {
+        welcomeModal.style.display = 'none';
+      }, 350);
+    }
+  }
+
+  if (welcomeStartBtn) {
+    welcomeStartBtn.addEventListener('click', closeWelcomeModal);
+  }
+
+  if (welcomeModal) {
+    welcomeModal.addEventListener('click', (e) => {
+      // Close if user clicks outside the modal card
+      if (e.target === welcomeModal) {
+        closeWelcomeModal();
+      }
+    });
+  }
+
+  // Allow pressing Enter or Space to quickly start
+  window.addEventListener('keydown', (e) => {
+    if (welcomeModal && !welcomeModal.classList.contains('hidden')) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+        closeWelcomeModal();
+        e.preventDefault();
+      }
+    }
+  });
 }
 
 /* --------------------------------------------------------------------------
