@@ -460,7 +460,15 @@ const charState = {
   friction: 0.85,
   turnSpeed: 0.072,
   walkCycle: 0,
-  isWalking: false
+  isWalking: false,
+  // Welcome wave greeting sequence on site load
+  isWaving: true,
+  waveTime: 0,
+  waveDuration: 2.8,      // Wave at user for ~2.8 seconds
+  turnDuration: 1.0,      // Turn around to face the journey road for ~1.0 second
+  introPhase: 'waving',   // 'waving' -> 'turning' -> 'done'
+  startRotation: 0,       // Faces camera initially
+  targetRotation: 0       // Faces road path tangent
 };
 
 const input = {
@@ -3333,9 +3341,22 @@ function buildAdventurerCharacter() {
   characterGroup.scale.set(1.15, 1.15, 1.15);
   scene.add(characterGroup);
 
-  charState.x = 0;
-  charState.z = 0;
-  charState.rotation = -Math.PI / 2;
+  if (roadCurve) {
+    const pt = roadCurve.getPointAt(0);
+    const tan = roadCurve.getTangentAt(0).normalize();
+    charState.x = pt.x;
+    charState.z = pt.z;
+    charState.targetRotation = Math.atan2(tan.x, tan.z);
+    // Face the isometric camera initially: camera is at (-18, 13.5, 22), so character faces toward (-18, 22)
+    charState.startRotation = Math.atan2(-18 - pt.x, 22 - pt.z);
+    charState.rotation = charState.startRotation;
+  } else {
+    charState.x = 0;
+    charState.z = 0;
+    charState.startRotation = -Math.PI / 4;
+    charState.targetRotation = -Math.PI / 2;
+    charState.rotation = charState.startRotation;
+  }
   characterGroup.position.set(charState.x, 0, charState.z);
   characterGroup.rotation.y = charState.rotation;
 }
@@ -3422,7 +3443,13 @@ function updateCharacterPhysics(delta) {
     characterGroup.rotation.y = charState.rotation;
   }
 
-  // ----- ANIMATION (scaled with speed) -----
+  // If user inputs movement during intro, smoothly complete intro immediately
+  if (charState.isWaving && (input.forward || input.backward || input.left || input.right)) {
+    charState.isWaving = false;
+    charState.introPhase = 'done';
+  }
+
+  // ----- ANIMATION (scaled with speed or waving) -----
   const isMoving = Math.abs(charState.speed) > 0.05;
   if (isMoving) {
     const gaitSpeed = Math.abs(charState.speed) * 0.75;
@@ -3436,16 +3463,83 @@ function updateCharacterPhysics(delta) {
     // Legs stride
     leftLegPivot.rotation.x = Math.sin(charState.walkCycle) * 0.75;
     rightLegPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.75;
-    // Arms counter‑swing
+    leftLegPivot.rotation.z *= 0.8;
+    rightLegPivot.rotation.z *= 0.8;
+    // Arms counter-swing
     leftArmPivot.rotation.x = -Math.sin(charState.walkCycle) * 0.65;
+    leftArmPivot.rotation.z = 0;
     rightArmPivot.rotation.x = Math.sin(charState.walkCycle) * 0.55;
+    rightArmPivot.rotation.z = 0;
+  } else if (charState.isWaving) {
+    // Return lower body smoothly to ground
+    characterBody.position.y *= 0.85;
+    leftLegPivot.rotation.x *= 0.8;
+    rightLegPivot.rotation.x *= 0.8;
+    rightArmPivot.rotation.x *= 0.8;
+    rightArmPivot.rotation.z *= 0.8;
+
+    charState.waveTime += delta;
+
+    if (charState.introPhase === 'waving') {
+      // Keep character facing user / camera during wave
+      characterGroup.rotation.y = charState.startRotation;
+
+      // Friendly wave using Left Arm (raised high & swaying rhythmically)
+      const targetRaiseZ = 2.45; // Raise arm up and outwards toward the user
+      const targetRaiseX = 0.35;
+      leftArmPivot.rotation.z = THREE.MathUtils.lerp(leftArmPivot.rotation.z, targetRaiseZ, 0.12);
+      leftArmPivot.rotation.x = THREE.MathUtils.lerp(leftArmPivot.rotation.x, targetRaiseX, 0.12);
+
+      // Cute lively hand wave oscillation
+      const waveOsc = Math.sin(charState.waveTime * 8.5) * 0.42;
+      leftArmPivot.rotation.z = targetRaiseZ + waveOsc;
+
+      // Slight cheerful head/body tilt with the wave
+      characterBody.rotation.z = Math.sin(charState.waveTime * 8.5) * 0.05;
+
+      if (charState.waveTime >= charState.waveDuration) {
+        charState.introPhase = 'turning';
+        charState.waveTime = 0;
+      }
+    } else if (charState.introPhase === 'turning') {
+      // Lower arm back down smoothly
+      leftArmPivot.rotation.z = THREE.MathUtils.lerp(leftArmPivot.rotation.z, 0, 0.14);
+      leftArmPivot.rotation.x = THREE.MathUtils.lerp(leftArmPivot.rotation.x, 0, 0.14);
+      characterBody.rotation.z *= 0.85;
+
+      // Smoothly turn around from facing user to facing the road journey
+      const t = Math.min(charState.waveTime / charState.turnDuration, 1.0);
+      // Smooth step easing
+      const ease = t * t * (3 - 2 * t);
+
+      // Shortest angle interpolation
+      let diff = charState.targetRotation - charState.startRotation;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+
+      characterGroup.rotation.y = charState.startRotation + diff * ease;
+      charState.rotation = characterGroup.rotation.y;
+
+      // Subtle step bounce during turnaround
+      characterBody.position.y = Math.sin(t * Math.PI) * 0.08;
+
+      if (t >= 1.0) {
+        charState.introPhase = 'done';
+        charState.isWaving = false;
+        characterGroup.rotation.y = charState.targetRotation;
+        charState.rotation = charState.targetRotation;
+      }
+    }
   } else {
     // Return smoothly to idle pose
     characterBody.position.y *= 0.8;
+    characterBody.rotation.z *= 0.8;
     leftLegPivot.rotation.x *= 0.8;
     rightLegPivot.rotation.x *= 0.8;
     leftArmPivot.rotation.x *= 0.8;
+    leftArmPivot.rotation.z *= 0.8;
     rightArmPivot.rotation.x *= 0.8;
+    rightArmPivot.rotation.z *= 0.8;
     if (ponytailMesh) ponytailMesh.rotation.x *= 0.8;
   }
 
@@ -3604,12 +3698,18 @@ function setupWorldControls(container) {
       milestoneVisited.clear();
       projectVisited.clear();
       closeMilestonePopup();
-      closeProjectDetailPanel();
       if (roadCurve && characterGroup) {
         const pt = roadCurve.getPointAt(0);
         const tan = roadCurve.getTangentAt(0).normalize();
+        charState.x = pt.x;
+        charState.z = pt.z;
+        charState.targetRotation = Math.atan2(tan.x, tan.z);
+        charState.startRotation = Math.atan2(-18 - pt.x, 22 - pt.z);
+        charState.rotation = charState.startRotation;
+        charState.isWaving = true;
+        charState.waveTime = 0;
+        charState.introPhase = 'waving';
         characterGroup.position.set(pt.x, 0, pt.z);
-        charState.rotation = Math.atan2(tan.x, tan.z);
         characterGroup.rotation.y = charState.rotation;
       }
     });
