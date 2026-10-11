@@ -3727,12 +3727,33 @@ function setupWorldControls(container) {
   const welcomeJumpBtn = document.getElementById('welcome-jump-projects-btn');
   const hudJumpBtn = document.getElementById('jump-projects-btn');
 
+  function triggerWaveGreeting() {
+    if (!characterGroup || !roadCurve) return;
+    // Only wave if near start (progress < 0.05) and not walking
+    if (charState.progress < 0.05 && Math.abs(charState.speed) < 0.05) {
+      const pt = roadCurve.getPointAt(0);
+      const tan = roadCurve.getTangentAt(0).normalize();
+      charState.x = pt.x;
+      charState.z = pt.z;
+      charState.targetRotation = Math.atan2(tan.x, tan.z);
+      charState.startRotation = Math.atan2(-18 - pt.x, 22 - pt.z);
+      charState.rotation = charState.startRotation;
+      charState.waveTime = 0;
+      charState.isWaving = true;
+      charState.introPhase = 'waving';
+      characterGroup.position.set(pt.x, 0, pt.z);
+      characterGroup.rotation.y = charState.rotation;
+    }
+  }
+
   function closeWelcomeModal() {
     if (welcomeModal && !welcomeModal.classList.contains('hidden')) {
       welcomeModal.classList.add('hidden');
       setTimeout(() => {
         welcomeModal.style.display = 'none';
       }, 350);
+      // Give a cheerful wave right as the user closes the modal to explore!
+      triggerWaveGreeting();
     }
   }
 
