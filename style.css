@@ -46,42 +46,6 @@ html, body {
   display: block;
 }
 
-/* Minimalist HUD Header (Top Left) */
-.hud-header {
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 10;
-  pointer-events: auto;
-}
-
-.hud-title-badge {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 0.75rem 1.25rem;
-  border-radius: 1.25rem;
-  box-shadow: 0 12px 30px -8px rgba(180, 80, 30, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-.hud-title {
-  font-size: 1.125rem;
-  font-weight: 800;
-  color: #1E293B;
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.hud-subtitle {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #64748B;
-  margin-top: 0.15rem;
-}
-
 /* Minimal Controls Pill (Top Right) */
 .hud-controls-pill {
   position: absolute;

@@ -1139,11 +1139,16 @@ function createLogoBadgeBannerTexture(proj) {
 
       ctx.drawImage(img, dx, dy, dw, dh);
     } else {
-      // High-visibility fallback icon
-      ctx.font = '200px sans-serif';
+      // Clean high-contrast geometric badge fallback (No emojis)
+      ctx.fillStyle = proj.themeColor || '#2563EB';
+      ctx.font = '800 68px "Outfit", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(proj.icon || '🚀', 512, 320);
+      ctx.fillText(proj.badge || 'PROJECT', 512, 300);
+
+      ctx.fillStyle = '#64748B';
+      ctx.font = '600 32px "Outfit", sans-serif';
+      ctx.fillText('ENGINEERING SHOWCASE', 512, 370);
     }
 
     // Bold title banner bar at the bottom
@@ -3672,7 +3677,6 @@ function openProjectDetailPanel(id) {
     } else {
       bannerSlot.innerHTML = `
         <div class="panel-image-placeholder">
-          <span class="placeholder-icon">${data.icon || '🖼️'}</span>
           <span class="placeholder-title" id="panel-slot-label">${data.badge || data.bannerTitle || data.title} — Technical Showcase</span>
           <span class="placeholder-hint">Interactive project module</span>
         </div>
