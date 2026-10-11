@@ -47,64 +47,85 @@
   </aside>
 
   <!-- Welcome & Navigation Guide Modal -->
+  <!-- Welcome & Navigation Guide Modal (Simplistic, Friendly & Colorful) -->
   <div id="welcome-modal-backdrop" class="welcome-modal-backdrop">
     <div class="welcome-modal-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-      <!-- Animated Avatar / Friendly Icon -->
-      <div class="welcome-avatar-wrapper">
-        <span class="welcome-avatar-emoji">👋</span>
-        <span class="welcome-avatar-sparkle">✨</span>
+      <!-- Fun decorative floating doodles -->
+      <span class="float-bubble bubble-1">✨</span>
+      <span class="float-bubble bubble-2">🌸</span>
+      <span class="float-bubble bubble-3">⭐</span>
+      <span class="float-bubble bubble-4">🍃</span>
+
+      <!-- Friendly Character Illustration Bar -->
+      <div class="welcome-character-banner">
+        <div class="char-figure girl-adventurer" title="Adventurer Janhavi">
+          <div class="char-avatar-ring">
+            <span class="char-emoji">🎒</span>
+          </div>
+          <span class="char-label">Adventurer</span>
+        </div>
+        <div class="char-figure bunny-pal" title="Bunny Companion">
+          <div class="char-avatar-ring ring-yellow">
+            <span class="char-emoji">🐰</span>
+          </div>
+          <span class="char-label">Hop Along!</span>
+        </div>
+        <div class="char-figure deer-pal" title="Forest Friend">
+          <div class="char-avatar-ring ring-orange">
+            <span class="char-emoji">🦌</span>
+          </div>
+          <span class="char-label">Explore</span>
+        </div>
       </div>
 
-      <!-- Welcome Greeting -->
-      <div class="welcome-header">
-        <span class="welcome-badge">INTERACTIVE 3D ODYSSEY</span>
-        <h1 id="welcome-title" class="welcome-title">Hey! Welcome to my portfolio!</h1>
-        <p class="welcome-subtitle">Step into my low-poly interactive universe — exploring my engineering journey, milestones, and technical projects.</p>
-      </div>
+      <!-- Welcome Title & Greeting -->
+      <h1 id="welcome-title" class="welcome-title">
+        Hey! Welcome to my portfolio! <span class="wave-emoji">👋</span>
+      </h1>
+      <p class="welcome-subtitle">
+        I’m <strong>Janhavi</strong>! Take a fun stroll down my interactive 3D world to discover my journey, skills, and projects.
+      </p>
 
-      <!-- Quick Navigation Instructions -->
-      <div class="welcome-guide-grid">
-        <div class="guide-item">
-          <div class="guide-icon-pill">🚶‍♂️</div>
-          <div class="guide-text">
-            <strong>Walk Forward</strong>
-            <span>Press <kbd>W</kbd> / <kbd>↑</kbd> or click & hold the <strong>[▲ Walk]</strong> button on screen.</span>
+      <!-- 3 Colorful Bite-Sized Navigation Chips -->
+      <div class="welcome-nav-chips">
+        <div class="nav-chip chip-walk">
+          <span class="chip-icon">🚶</span>
+          <div class="chip-info">
+            <strong>Walk</strong>
+            <span>Press <kbd>W</kbd> / <kbd>↑</kbd> or hold <strong>[▲ Walk]</strong></span>
           </div>
         </div>
 
-        <div class="guide-item">
-          <div class="guide-icon-pill">🏛️</div>
-          <div class="guide-text">
-            <strong>Discover Milestones & Projects</strong>
-            <span>Walk past buildings along the road to unlock them, or click directly on any building to view full details.</span>
+        <div class="nav-chip chip-look">
+          <span class="chip-icon">👀</span>
+          <div class="chip-info">
+            <strong>Look Around</strong>
+            <span>Drag mouse / swipe to look around freely</span>
           </div>
         </div>
 
-        <div class="guide-item">
-          <div class="guide-icon-pill">👀</div>
-          <div class="guide-text">
-            <strong>Free Camera Look</strong>
-            <span>Drag the screen with your mouse or finger anytime while idle to pan and view the scenery.</span>
+        <div class="nav-chip chip-open">
+          <span class="chip-icon">🏛️</span>
+          <div class="chip-info">
+            <strong>Inspect</strong>
+            <span>Walk close or click any building for details</span>
           </div>
         </div>
       </div>
 
-      <!-- Wander till the end highlight note -->
-      <div class="welcome-wander-tip">
-        <span class="wander-tip-icon">🌟</span>
-        <div class="wander-tip-content">
-          <strong>Please wander till the end!</strong>
-          <span>Beyond the career milestones lies the grand <strong>"MY PROJECTS" Portal</strong> and the full project boulevard showcasing embedded AI, robotics, and computer vision systems!</span>
-        </div>
+      <!-- Playful Wander Reminder Strip -->
+      <div class="wander-strip">
+        <span class="wander-strip-badge">🚀 Don't Miss</span>
+        <p class="wander-strip-text">
+          <strong>Please wander till the end!</strong> The road leads past milestones into the big <strong>Projects Boulevard</strong> with all my robotics & AI creations! 🌈
+        </p>
       </div>
 
-      <!-- Start Exploring Button -->
-      <div class="welcome-actions">
-        <button id="welcome-start-btn" class="welcome-start-btn">
-          <span>Let's Explore!</span>
-          <span class="start-arrow">→</span>
-        </button>
-      </div>
+      <!-- Big Friendly Start Button -->
+      <button id="welcome-start-btn" class="welcome-start-btn">
+        <span>Start Exploring!</span>
+        <span class="start-btn-icon">✨</span>
+      </button>
     </div>
   </div>
 
