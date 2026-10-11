@@ -24,6 +24,132 @@
     <canvas id="world-canvas"></canvas>
   </main>
 
+  <!-- Game-Themed Character Skills Dropdown (Top Left) -->
+  <div class="skills-dropdown-wrapper" id="skills-dropdown-wrapper">
+    <button class="skills-trigger-btn" id="skills-trigger-btn" aria-expanded="false" aria-haspopup="true">
+      <span class="trigger-badge">LVL 99</span>
+      <span class="trigger-label">Character Skills</span>
+      <span class="trigger-arrow">▼</span>
+    </button>
+
+    <div class="skills-dropdown-panel" id="skills-dropdown-panel" role="region" aria-label="Player Skills and Stats">
+      <div class="skills-panel-header">
+        <div class="skills-header-title">CHARACTER ATTRIBUTES & SKILLS</div>
+        <div class="skills-header-subtitle">Field Engineering & AI Proficiency</div>
+      </div>
+
+      <div class="skills-scroll-container">
+        <!-- 1. Computer Vision -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Computer Vision</span>
+            <span class="skill-lvl-badge lvl-master">LVL 95 • Master</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 95%;"></div>
+          </div>
+          <div class="skill-desc">Industrial defect detection, sub-pixel measurement, classical image processing</div>
+        </div>
+
+        <!-- 2. 3D Vision -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">3D Vision</span>
+            <span class="skill-lvl-badge lvl-master">LVL 92 • Master</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 92%;"></div>
+          </div>
+          <div class="skill-desc">Monocular depth estimation, stereo depth mapping, point clouds, 3D reconstruction</div>
+        </div>
+
+        <!-- 3. Visual SLAM -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Visual SLAM</span>
+            <span class="skill-lvl-badge lvl-expert">LVL 88 • Expert</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 88%;"></div>
+          </div>
+          <div class="skill-desc">ORB-SLAM3 on Raspberry Pi 4B and Jetson Orin Nano</div>
+        </div>
+
+        <!-- 4. Embedded Systems -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Embedded Systems</span>
+            <span class="skill-lvl-badge lvl-master">LVL 90 • Master</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 90%;"></div>
+          </div>
+          <div class="skill-desc">STM32, ESP32, Arduino, interrupt-driven data acquisition</div>
+        </div>
+
+        <!-- 5. Edge AI -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Edge AI</span>
+            <span class="skill-lvl-badge lvl-expert">LVL 86 • Expert</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 86%;"></div>
+          </div>
+          <div class="skill-desc">ARM optimization, ONNX Runtime inference, NanoEdge AI</div>
+        </div>
+
+        <!-- 6. Medical AI -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Medical AI</span>
+            <span class="skill-lvl-badge lvl-expert">LVL 85 • Expert</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 85%;"></div>
+          </div>
+          <div class="skill-desc">Diabetic retinopathy detection and grading, EMG gesture recognition</div>
+        </div>
+
+        <!-- 7. Biomedical Signal and Image Processing -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Biomedical Signals & Imaging</span>
+            <span class="skill-lvl-badge lvl-advanced">LVL 82 • Advanced</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 82%;"></div>
+          </div>
+          <div class="skill-desc">MRI segmentation, ECG filtering, EMG analysis</div>
+        </div>
+
+        <!-- 8. Planetary & Remote Sensing Imaging -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Planetary & Remote Sensing</span>
+            <span class="skill-lvl-badge lvl-advanced">LVL 80 • Advanced</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill" style="width: 80%;"></div>
+          </div>
+          <div class="skill-desc">Mars DEM generation using Shape-from-Shading</div>
+        </div>
+
+        <!-- 9. Robotics -->
+        <div class="skill-card">
+          <div class="skill-card-top">
+            <span class="skill-name">Robotics</span>
+            <span class="skill-lvl-badge lvl-active">LVL 78 • In Progress</span>
+          </div>
+          <div class="skill-exp-bar-bg">
+            <div class="skill-exp-bar-fill fill-active" style="width: 78%;"></div>
+          </div>
+          <div class="skill-desc">SLAM, prosthetics control, multi-servo systems; ROS2, Gazebo & Nav2 in progress</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Minimal Controls Pill (Top Right) -->
   <aside class="hud-controls-pill">
     <div class="control-badge">

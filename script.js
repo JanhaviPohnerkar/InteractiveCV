@@ -3705,6 +3705,34 @@ function setupWorldControls(container) {
       }
     }
   });
+
+  // Skills Dropdown Toggle Handlers (Top Left RPG Menu)
+  const skillsWrapper = document.getElementById('skills-dropdown-wrapper');
+  const skillsTriggerBtn = document.getElementById('skills-trigger-btn');
+
+  if (skillsTriggerBtn && skillsWrapper) {
+    skillsTriggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isActive = skillsWrapper.classList.toggle('active');
+      skillsTriggerBtn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!skillsWrapper.contains(e.target)) {
+        skillsWrapper.classList.remove('active');
+        skillsTriggerBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && skillsWrapper.classList.contains('active')) {
+        skillsWrapper.classList.remove('active');
+        skillsTriggerBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 }
 
 /* --------------------------------------------------------------------------
