@@ -24,15 +24,16 @@
     <canvas id="world-canvas"></canvas>
   </main>
 
-  <!-- Game-Themed Character Skills Dropdown (Top Left) -->
-  <div class="skills-dropdown-wrapper" id="skills-dropdown-wrapper">
-    <button class="skills-trigger-btn" id="skills-trigger-btn" aria-expanded="false" aria-haspopup="true">
-      <span class="trigger-badge">LVL 99</span>
-      <span class="trigger-label">Character Skills</span>
-      <span class="trigger-arrow">▼</span>
-    </button>
+  <!-- Top Left HUD Group: Skills Dropdown & Resume Download Tab -->
+  <div class="top-left-hud-group">
+    <div class="skills-dropdown-wrapper" id="skills-dropdown-wrapper">
+      <button class="skills-trigger-btn" id="skills-trigger-btn" aria-expanded="false" aria-haspopup="true">
+        <span class="trigger-badge">LVL 99</span>
+        <span class="trigger-label">Character Skills</span>
+        <span class="trigger-arrow">▼</span>
+      </button>
 
-    <div class="skills-dropdown-panel" id="skills-dropdown-panel" role="region" aria-label="Player Skills and Stats">
+      <div class="skills-dropdown-panel" id="skills-dropdown-panel" role="region" aria-label="Player Skills and Stats">
       <div class="skills-panel-header">
         <div class="skills-header-title">CHARACTER ATTRIBUTES & SKILLS</div>
         <div class="skills-header-subtitle">Field Engineering & AI Proficiency</div>
@@ -148,6 +149,11 @@
         </div>
       </div>
     </div>
+
+    <!-- Resume Download Tab directly beside Skills Tab -->
+    <a id="download-resume-btn" class="download-resume-btn" href="Resume_Janhavi.pdf" download="Resume_Janhavi.pdf" target="_blank" rel="noopener noreferrer" title="Download Resume">
+      <span>Resume</span>
+    </a>
   </div>
 
   <!-- Minimal Controls Pill (Top Right) -->
@@ -158,9 +164,6 @@
     <button id="jump-projects-btn" class="jump-projects-btn" title="Jump directly to Projects Boulevard">
       <span>Projects Boulevard</span>
     </button>
-    <a id="download-resume-btn" class="download-resume-btn" href="Resume_Janhavi.pdf" download="Resume_Janhavi.pdf" target="_blank" rel="noopener noreferrer" title="Download Resume">
-      <span>Resume</span>
-    </a>
     <button id="reset-char-btn" class="reset-car-btn" title="Reset Adventurer to Start">
       <span>Reset</span>
     </button>

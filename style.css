@@ -47,13 +47,21 @@ html, body {
 }
 
 /* ==========================================================================
-   Game-Themed Character Skills Dropdown (Top Left Corner)
+   Top Left HUD Group (Skills Dropdown + Resume Tab)
    ========================================================================== */
-.skills-dropdown-wrapper {
+.top-left-hud-group {
   position: absolute;
   top: 1.5rem;
   left: 1.5rem;
   z-index: 30;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.skills-dropdown-wrapper {
+  position: relative;
   pointer-events: auto;
   font-family: var(--font-family);
 }
@@ -353,6 +361,7 @@ html, body {
   -webkit-backdrop-filter: blur(14px);
   padding: 0.75rem 1.45rem;
   border-radius: 9999px;
+  font-family: 'Fredoka', 'Quicksand', 'Outfit', sans-serif;
   font-size: 0.96rem;
   font-weight: 700;
   color: #047857;
