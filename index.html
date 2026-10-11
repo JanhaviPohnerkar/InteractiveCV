@@ -46,86 +46,49 @@
     </button>
   </aside>
 
-  <!-- Welcome & Navigation Guide Modal -->
-  <!-- Welcome & Navigation Guide Modal (Simplistic, Friendly & Colorful) -->
+  <!-- Welcome & Navigation Guide Modal (Exact match to reference design) -->
   <div id="welcome-modal-backdrop" class="welcome-modal-backdrop">
     <div class="welcome-modal-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
-      <!-- Fun decorative floating doodles -->
-      <span class="float-bubble bubble-1">✨</span>
-      <span class="float-bubble bubble-2">🌸</span>
-      <span class="float-bubble bubble-3">⭐</span>
-      <span class="float-bubble bubble-4">🍃</span>
+      <!-- Welcome Title & Subtitle -->
+      <h1 id="welcome-title" class="welcome-title">Welcome to My Portfolio</h1>
+      <div class="welcome-intro">
+        <p class="intro-greeting">Hi, I'm Janhavi,</p>
+        <p class="intro-subtext">Take a stroll through my interactive 3D world to discover my journey, skills, and projects</p>
+      </div>
 
-      <!-- Friendly Character Illustration Bar -->
-      <div class="welcome-character-banner">
-        <div class="char-figure girl-adventurer" title="Adventurer Janhavi">
-          <div class="char-avatar-ring">
-            <span class="char-emoji">🎒</span>
-          </div>
-          <span class="char-label">Adventurer</span>
+      <!-- Navigation Instruction Cards -->
+      <div class="nav-cards-list">
+        <div class="nav-item-card">
+          <div class="nav-item-title">Walk</div>
+          <div class="nav-item-desc">Press <strong>W</strong> , <strong>Up Arrow</strong>, or hold <strong>Shift+Up</strong></div>
         </div>
-        <div class="char-figure bunny-pal" title="Bunny Companion">
-          <div class="char-avatar-ring ring-yellow">
-            <span class="char-emoji">🐰</span>
-          </div>
-          <span class="char-label">Hop Along!</span>
+
+        <div class="nav-item-card">
+          <div class="nav-item-title">Look Around</div>
+          <div class="nav-item-desc">Drag mouse or swipe to look around freely</div>
         </div>
-        <div class="char-figure deer-pal" title="Forest Friend">
-          <div class="char-avatar-ring ring-orange">
-            <span class="char-emoji">🦌</span>
-          </div>
-          <span class="char-label">Explore</span>
+
+        <div class="nav-item-card">
+          <div class="nav-item-title">Inspect</div>
+          <div class="nav-item-desc">Walk close or click any building for details</div>
         </div>
       </div>
 
-      <!-- Welcome Title & Greeting -->
-      <h1 id="welcome-title" class="welcome-title">
-        Hey! Welcome to my portfolio! <span class="wave-emoji">👋</span>
-      </h1>
-      <p class="welcome-subtitle">
-        I’m <strong>Janhavi</strong>! Take a fun stroll down my interactive 3D world to discover my journey, skills, and projects.
-      </p>
-
-      <!-- 3 Colorful Bite-Sized Navigation Chips -->
-      <div class="welcome-nav-chips">
-        <div class="nav-chip chip-walk">
-          <span class="chip-icon">🚶</span>
-          <div class="chip-info">
-            <strong>Walk</strong>
-            <span>Press <kbd>W</kbd> / <kbd>↑</kbd> or hold <strong>[▲ Walk]</strong></span>
-          </div>
-        </div>
-
-        <div class="nav-chip chip-look">
-          <span class="chip-icon">👀</span>
-          <div class="chip-info">
-            <strong>Look Around</strong>
-            <span>Drag mouse / swipe to look around freely</span>
-          </div>
-        </div>
-
-        <div class="nav-chip chip-open">
-          <span class="chip-icon">🏛️</span>
-          <div class="chip-info">
-            <strong>Inspect</strong>
-            <span>Walk close or click any building for details</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Playful Wander Reminder Strip -->
-      <div class="wander-strip">
-        <span class="wander-strip-badge">🚀 Don't Miss</span>
-        <p class="wander-strip-text">
-          <strong>Please wander till the end!</strong> The road leads past milestones into the big <strong>Projects Boulevard</strong> with all my robotics & AI creations! 🌈
+      <!-- Don't Miss! Box with Orange Border -->
+      <div class="dont-miss-card">
+        <div class="dont-miss-title">Don't Miss!</div>
+        <p class="dont-miss-text">
+          <strong>Wander till the end.</strong> The road leads past milestones into the big <span class="highlight-orange">Projects Boulevard</span> with all my projects and accreditions.
         </p>
       </div>
 
-      <!-- Big Friendly Start Button -->
+      <!-- Start Exploring Button -->
       <button id="welcome-start-btn" class="welcome-start-btn">
-        <span>Start Exploring!</span>
-        <span class="start-btn-icon">✨</span>
+        Start Exploring
       </button>
+
+      <!-- Bottom-right soft sparkle -->
+      <span class="card-sparkle">✦</span>
     </div>
   </div>
 

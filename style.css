@@ -619,7 +619,7 @@ html, body {
 }
 
 /* ==========================================================================
-   Welcome & Navigation Guide Modal (Simplistic, Friendly & Colorful)
+   Welcome & Navigation Guide Modal (Exact match to reference image)
    ========================================================================== */
 .welcome-modal-backdrop {
   position: fixed;
@@ -628,9 +628,9 @@ html, body {
   width: 100vw;
   height: 100vh;
   z-index: 1000;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -647,27 +647,27 @@ html, body {
   pointer-events: none;
 }
 
+/* Card: Soft pastel sky blue with generous rounded corners */
 .welcome-modal-card {
   position: relative;
   width: 100%;
-  max-width: 490px;
-  background: #FFFFFF;
+  max-width: 440px;
+  background-color: #BBE1FA;
+  background: #BBE1FA;
   border-radius: 2.25rem;
-  box-shadow: 0 25px 60px -15px rgba(212, 122, 107, 0.3), 0 0 0 4px #FFF7ED;
-  border: 2px solid #FED7AA;
-  padding: 2rem 1.85rem 1.75rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+  padding: 2.4rem 2.2rem 2.2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  animation: playfulPopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  text-align: left;
+  animation: modalScaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   overflow: visible;
 }
 
-@keyframes playfulPopIn {
+@keyframes modalScaleIn {
   from {
     opacity: 0;
-    transform: scale(0.88) translateY(20px);
+    transform: scale(0.92) translateY(12px);
   }
   to {
     opacity: 1;
@@ -675,333 +675,185 @@ html, body {
   }
 }
 
-/* Floating decorative bubbles */
-.float-bubble {
-  position: absolute;
-  font-size: 1.4rem;
-  pointer-events: none;
-  animation: floatBob 3s ease-in-out infinite alternate;
-}
-.bubble-1 { top: -14px; left: 24px; animation-delay: 0s; }
-.bubble-2 { top: -12px; right: 28px; animation-delay: 0.6s; }
-.bubble-3 { bottom: 35px; left: -16px; animation-delay: 1.2s; font-size: 1.2rem; }
-.bubble-4 { bottom: 50px; right: -16px; animation-delay: 1.8s; font-size: 1.2rem; }
-
-@keyframes floatBob {
-  from { transform: translateY(0) rotate(-6deg); }
-  to { transform: translateY(-8px) rotate(8deg); }
-}
-
-/* Character figure row */
-.welcome-character-banner {
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 1.25rem;
-  margin-bottom: 1rem;
-}
-
-.char-figure {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.char-figure:hover {
-  transform: translateY(-4px) scale(1.06);
-}
-
-.char-avatar-ring {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
-  border: 3px solid #86EFAC;
-  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.22);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.girl-adventurer .char-avatar-ring {
-  width: 66px;
-  height: 66px;
-  background: linear-gradient(135deg, #FEF08A, #FDE047);
-  border-color: #FACC15;
-  box-shadow: 0 8px 20px rgba(234, 179, 8, 0.28);
-}
-
-.ring-yellow {
-  background: linear-gradient(135deg, #FFEDD5, #FED7AA);
-  border-color: #FDBA74;
-  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.2);
-}
-
-.ring-orange {
-  background: linear-gradient(135deg, #E0E7FF, #C7D2FE);
-  border-color: #A5B4FC;
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.2);
-}
-
-.char-emoji {
-  font-size: 1.9rem;
-  line-height: 1;
-}
-
-.girl-adventurer .char-emoji {
-  font-size: 2.2rem;
-}
-
-.char-label {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #64748B;
-  background: #F8FAFC;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid #E2E8F0;
-}
-
-.girl-adventurer .char-label {
-  color: #B45309;
-  background: #FEF3C7;
-  border-color: #FDE68A;
-}
-
-/* Heading & Subtitle */
+/* Big bold dark navy title */
 .welcome-title {
-  font-size: 1.55rem;
-  font-weight: 900;
-  color: #1E293B;
-  letter-spacing: -0.025em;
-  margin-bottom: 0.35rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-}
-
-.wave-emoji {
-  display: inline-block;
-  animation: handWave 2s infinite ease-in-out;
-  transform-origin: 75% 75%;
-}
-
-@keyframes handWave {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(18deg); }
-  75% { transform: rotate(-12deg); }
-}
-
-.welcome-subtitle {
-  font-size: 0.88rem;
-  color: #475569;
-  line-height: 1.45;
-  margin-bottom: 1.15rem;
-  max-width: 410px;
-}
-
-.welcome-subtitle strong {
-  color: #EE4B3B;
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.15rem;
   font-weight: 800;
+  color: #14234B;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin-bottom: 1.1rem;
 }
 
-/* 3 Colorful Nav Chips */
-.welcome-nav-chips {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.55rem;
-  margin-bottom: 1rem;
-}
-
-.nav-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 0.95rem;
-  border-radius: 1.15rem;
-  text-align: left;
-  border: 2px solid transparent;
-  transition: transform 0.2s ease;
-}
-
-.nav-chip:hover {
-  transform: translateX(3px);
-}
-
-.chip-walk {
-  background: #FFF7ED;
-  border-color: #FFEDD5;
-}
-
-.chip-look {
-  background: #F0FDF4;
-  border-color: #DCFCE7;
-}
-
-.chip-open {
-  background: #EFF6FF;
-  border-color: #DBEAFE;
-}
-
-.chip-icon {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  border-radius: 0.75rem;
-  background: #FFFFFF;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-}
-
-.chip-info {
+/* Intro greeting */
+.welcome-intro {
+  margin-bottom: 1.35rem;
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 0.35rem;
 }
 
-.chip-info strong {
-  font-size: 0.84rem;
-  font-weight: 800;
+.intro-greeting {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #14234B;
+  line-height: 1.2;
+}
+
+.intro-subtext {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 500;
   color: #1E293B;
+  line-height: 1.38;
 }
 
-.chip-info span {
-  font-size: 0.75rem;
-  color: #64748B;
+/* Navigation items container */
+.nav-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.15rem;
+}
+
+/* White translucent instruction card */
+.nav-item-card {
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 0.95rem;
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: 0 1px 3px rgba(20, 35, 75, 0.04);
+}
+
+.nav-item-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #14234B;
+}
+
+.nav-item-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #1E293B;
   line-height: 1.3;
 }
 
-.chip-info kbd {
-  display: inline-block;
-  padding: 0.1rem 0.35rem;
-  background: #FFFFFF;
-  border: 1px solid #CBD5E1;
-  border-bottom: 2px solid #94A3B8;
-  border-radius: 0.3rem;
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: #1E293B;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+.nav-item-desc strong {
+  font-weight: 700;
+  color: #14234B;
 }
 
-/* Playful wander strip */
-.wander-strip {
-  width: 100%;
-  padding: 0.75rem 0.95rem;
-  border-radius: 1.15rem;
-  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
-  border: 2px dashed #F59E0B;
+/* Don't Miss! Box with crisp orange outline */
+.dont-miss-card {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1.8px solid #C85A27;
+  border-radius: 0.95rem;
+  padding: 0.95rem 1.25rem;
+  margin-bottom: 1.4rem;
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-align: left;
-  margin-bottom: 1.2rem;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.wander-strip-badge {
-  background: #F59E0B;
-  color: #FFFFFF;
-  font-size: 0.65rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.28rem 0.55rem;
-  border-radius: 0.6rem;
-  white-space: nowrap;
+.dont-miss-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #14234B;
 }
 
-.wander-strip-text {
-  font-size: 0.76rem;
-  color: #92400E;
+.dont-miss-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: #1E293B;
   line-height: 1.35;
   margin: 0;
 }
 
-.wander-strip-text strong {
-  color: #78350F;
-  font-weight: 800;
+.dont-miss-text strong {
+  font-weight: 700;
+  color: #14234B;
 }
 
-/* Start Exploring Button */
+.highlight-orange {
+  color: #C85A27;
+  font-weight: 700;
+}
+
+/* Start Exploring Button: Vibrant solid orange rounded pill */
 .welcome-start-btn {
   width: 100%;
-  padding: 0.9rem 1.5rem;
+  padding: 1.05rem 1.5rem;
   border-radius: 1.25rem;
   border: none;
-  background: linear-gradient(135deg, #EE4B3B, #F97316);
+  background: #F15A24;
   color: #FFFFFF;
-  font-family: inherit;
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.22rem;
+  font-weight: 700;
   letter-spacing: -0.01em;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
   cursor: pointer;
-  box-shadow: 0 10px 25px -4px rgba(238, 75, 59, 0.45);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 14px rgba(241, 90, 36, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .welcome-start-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  background: linear-gradient(135deg, #DC2626, #EA580C);
-  box-shadow: 0 16px 30px -4px rgba(238, 75, 59, 0.55);
+  background: #DE4C17;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(241, 90, 36, 0.45);
 }
 
 .welcome-start-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
-.start-btn-icon {
-  font-size: 1.25rem;
-  animation: sparkleRotate 2.5s infinite linear;
+/* Soft light sparkle in the lower corner */
+.card-sparkle {
+  position: absolute;
+  bottom: 16px;
+  right: -10px;
+  font-size: 2.2rem;
+  color: rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.4));
 }
 
-@keyframes sparkleRotate {
-  0% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.25) rotate(180deg); }
-  100% { transform: scale(1) rotate(360deg); }
-}
-
-/* Responsive adjustments */
-@media (max-width: 520px) {
+/* Responsive handling */
+@media (max-width: 480px) {
   .welcome-modal-card {
-    padding: 1.6rem 1.2rem 1.4rem;
+    padding: 1.8rem 1.4rem 1.6rem;
     border-radius: 1.8rem;
   }
   .welcome-title {
-    font-size: 1.35rem;
-  }
-  .welcome-character-banner {
-    gap: 0.8rem;
-  }
-  .char-avatar-ring {
-    width: 48px;
-    height: 48px;
-  }
-  .girl-adventurer .char-avatar-ring {
-    width: 56px;
-    height: 56px;
-  }
-  .char-emoji {
-    font-size: 1.5rem;
-  }
-  .girl-adventurer .char-emoji {
     font-size: 1.8rem;
   }
-  .wander-strip {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.35rem;
+  .intro-greeting {
+    font-size: 1.15rem;
+  }
+  .intro-subtext {
+    font-size: 0.94rem;
+  }
+  .nav-item-card {
+    padding: 0.75rem 1rem;
+  }
+  .dont-miss-card {
+    padding: 0.8rem 1rem;
+  }
+  .welcome-start-btn {
+    padding: 0.95rem 1.2rem;
+    font-size: 1.1rem;
   }
 }
+
 
 
